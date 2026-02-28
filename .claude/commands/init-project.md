@@ -1,61 +1,65 @@
 # Initialize Project
 
-Run the following commands to set up and start the project locally:
+Set up and start the Habit Tracker application locally.
 
-## 1. Create Environment File
+## 1. Install Backend Dependencies
+
 ```bash
-cp .env.example .env
+cd backend && uv sync
 ```
-Creates your local environment configuration from the example template.
 
-## 2. Install Dependencies
+Installs all Python packages including dev dependencies (pytest, ruff, httpx).
+
+## 2. Install Frontend Dependencies
+
 ```bash
-uv sync
+cd frontend && npm install
 ```
-Installs all Python packages defined in pyproject.toml.
 
-## 3. Start Database
+Installs React, Vite, TanStack Query, Tailwind CSS, and other frontend packages.
+
+## 3. Start Backend Server
+
 ```bash
-docker-compose up -d db
+cd backend && uv run uvicorn app.main:app --reload --port 8000
 ```
-Starts PostgreSQL 18 in a Docker container on port 5433.
 
-## 4. Run Database Migrations
+Starts FastAPI server with hot-reload on port 8000. SQLite database (habits.db) is created automatically on first run.
+
+## 4. Start Frontend Server (new terminal)
+
 ```bash
-uv run alembic upgrade head
+cd frontend && npm run dev
 ```
-Applies all pending database migrations.
 
-## 5. Start Development Server
-```bash
-uv run uvicorn app.main:app --reload --port 8123
-```
-Starts the FastAPI server with hot-reload on port 8123.
+Starts Vite dev server on port 5173.
 
-## 6. Validate Setup
+## 5. Validate Setup
 
 Check that everything is working:
 
 ```bash
 # Test API health
-curl -s http://localhost:8123/health
+curl -s http://localhost:8000/api/habits
 
-# Test database connection
-curl -s http://localhost:8123/health/db
+# Check Swagger docs load
+curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" http://localhost:8000/docs
 ```
-
-Both should return `{"status":"healthy"}` responses.
 
 ## Access Points
 
-- Swagger UI: http://localhost:8123/docs
-- Health Check: http://localhost:8123/health
-- Database: localhost:5433
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs (Swagger)**: http://localhost:8000/docs
 
 ## Cleanup
 
 To stop services:
-```bash
-# Stop dev server: Ctrl+C
-# Stop database: docker-compose down
-```
+- Backend: Ctrl+C in terminal
+- Frontend: Ctrl+C in terminal
+
+## Notes
+
+- No environment file (.env) required - uses SQLite with sensible defaults
+- Database file created at `backend/habits.db` on first API call
+- Backend and frontend can be started in any order

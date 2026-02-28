@@ -22,25 +22,38 @@ The platform follows a modular, component-based architecture designed for:
 
 ```
 PLATFORM ARCHITECTURE:
-├── Frontend Layer
-│   ├── Headless Commerce (Next.js / React)
-│   ├── CDN Edge Delivery
+├── Frontend Layer (Next.js 15)
+│   ├── App Router with Server Components
+│   ├── TanStack Query (Server State)
+│   ├── Zustand (Client State)
+│   ├── CDN Edge Delivery (Vercel)
 │   └── Progressive Web App (PWA) Capabilities
 │
-├── Commerce Layer
-│   ├── Shopify Plus Backend
-│   ├── Inventory Management
-│   └── Order Processing
+├── Admin Layer (React 19 + Vite 6.x)
+│   ├── Dashboard & Analytics (Recharts)
+│   ├── Product & Inventory Management
+│   ├── Order Management & Fulfillment
+│   ├── Customer & Membership Management
+│   ├── Drop Scheduling & Campaign Tools
+│   └── Content Management (Collections, Journal)
+│
+├── Commerce Layer (Custom Backend)
+│   ├── Express + TypeScript API
+│   ├── MongoDB (Products, Orders, Users)
+│   ├── Redis (Sessions, Cache, Real-time)
+│   └── Inventory Management
 │
 ├── Data Layer
-│   ├── Customer Data Platform
-│   ├── Analytics Pipeline
-│   └── Search Infrastructure
+│   ├── MongoDB Atlas (Primary Database)
+│   ├── Upstash Redis (Caching)
+│   ├── Analytics Pipeline (PostHog)
+│   └── Search Infrastructure (MongoDB Atlas Search)
 │
 └── Integration Layer
-    ├── Payment Gateways
-    ├── Email/SMS Services
-    └── Third-party APIs
+    ├── Razorpay (UPI, Cards, Wallets)
+    ├── Email (Resend/AWS SES)
+    ├── SMS (WATI/Twilio)
+    └── Cloudinary (Media)
 ```
 
 ---
@@ -1170,38 +1183,61 @@ Monitoring:
 
 # 7. TECHNOLOGY STACK
 
-## 7.1 Recommended Stack
+## 7.1 Implemented Stack
 
-| Layer | Recommendation | Rationale |
-|-------|----------------|-----------|
-| **E-Commerce Platform** | Shopify Plus | Proven fashion infrastructure, Indian payment support, scalability |
-| **Headless Alternative** | Shopify + Custom Frontend (Next.js) | Maximum design flexibility, better performance |
-| **CDN** | Shopify CDN or Cloudflare | Global edge delivery |
-| **Search** | Algolia | Superior search UX, merchandising |
-| **Email** | Klaviyo | E-commerce native, segmentation, flows |
-| **SMS** | Postscript or WATI | Indian market support |
-| **Analytics** | GA4 + Segment | Comprehensive tracking, data warehouse capability |
-| **Customer Support** | Gorgias or Zendesk | Multi-channel support management |
-| **Inventory** | Shopify native or Cin7 | Inventory management |
-| **Loyalty** | Smile.io or LoyaltyLion | Membership/rewards infrastructure |
+| Layer | Technology | Rationale |
+|-------|------------|-----------|
+| **Frontend Framework** | Next.js 15 (App Router) | Server components, streaming, optimal performance |
+| **UI Library** | React 19 + TypeScript 5.x | Type safety, modern hooks, React Compiler |
+| **Styling** | Tailwind CSS 3.x + shadcn/ui | Utility-first, consistent design system |
+| **Server State** | TanStack Query 5.x | Caching, deduplication, optimistic updates |
+| **Client State** | Zustand 4.x | Lightweight, TypeScript-native stores |
+| **Forms** | React Hook Form + Zod | Performant forms, runtime validation |
+| **Backend API** | Express + TypeScript | RESTful API, middleware ecosystem |
+| **Database** | MongoDB + Mongoose | Flexible schema, scalable document store |
+| **Caching** | Redis (Upstash) | Sessions, cart holds, real-time inventory |
+| **CDN/Hosting** | Vercel (Frontend) | Edge network, instant deployments |
+| **Backend Hosting** | Railway/Render | Auto-scaling, managed infrastructure |
+| **Media** | Cloudinary | Image optimization, transformations |
+| **Search** | MongoDB Atlas Search | Full-text search, faceted filtering |
+| **Email** | Resend / AWS SES | Transactional + marketing emails |
+| **SMS** | WATI / Twilio | Indian market support, WhatsApp |
+| **Analytics** | PostHog + GA4 | Product analytics, funnel tracking |
+| **Error Tracking** | Sentry | Real-time error monitoring |
+| **Testing** | Vitest + Playwright | Unit, integration, E2E coverage |
 
-## 7.2 Integration Requirements
+## 7.2 Admin Dashboard Stack
 
-### 7.2.1 Payment Gateways
-- Razorpay (primary - UPI, cards, wallets)
+| Layer | Technology | Rationale |
+|-------|------------|-----------|
+| **Framework** | React 19 + Vite 6.x | Fast builds, HMR, optimal DX |
+| **Routing** | React Router 6.x | Nested routes, loaders |
+| **Data Tables** | TanStack Table | Sorting, filtering, pagination |
+| **Charts** | Recharts | Composable chart components |
+| **Forms** | React Hook Form + Zod | Consistent with storefront |
+
+## 7.3 Integration Requirements
+
+### 7.3.1 Payment Gateways
+- Razorpay (primary - UPI, cards, wallets, netbanking)
 - PayU (backup)
 - COD integration with delivery partners
 
-### 7.2.2 Shipping & Logistics
-- Shiprocket or Delhivery integration
+### 7.3.2 Shipping & Logistics
+- Shiprocket / Delhivery integration
 - Real-time tracking API
-- Returns management
+- Returns management (RTO handling)
 
-### 7.2.3 Marketing Integrations
+### 7.3.3 Marketing Integrations
 - Facebook Pixel / Meta Conversions API
 - Google Analytics 4
 - Google Ads conversion tracking
 - Instagram Shopping
+
+### 7.3.4 Communication
+- Resend / AWS SES (transactional emails)
+- WATI / Twilio (SMS, WhatsApp)
+- Push notifications (web, progressive)
 
 ---
 

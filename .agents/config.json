@@ -1,0 +1,128 @@
+{
+  "project": "UrbanCart",
+  "version": "1.0",
+  "description": "Agent configuration for UrbanCart development and operations",
+  "agents": {
+    "browser": {
+      "name": "Browser Agent",
+      "description": "Automated browser testing and web interaction",
+      "mcp": "playwright",
+      "capabilities": [
+        "Navigate websites",
+        "Fill forms",
+        "Take screenshots",
+        "Run E2E tests",
+        "Extract data from web pages",
+        "Test payment flows",
+        "Validate UI interactions"
+      ],
+      "tools": [
+        "page.goto()",
+        "page.fill()",
+        "page.click()",
+        "page.screenshot()",
+        "page.evaluate()",
+        "expect().toContain()"
+      ],
+      "environment": {
+        "headless": true,
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "slowMo": 0
+      }
+    },
+    "git": {
+      "name": "Git Agent",
+      "description": "Git operations and version control",
+      "mcp": "gitlens",
+      "capabilities": [
+        "Commit changes",
+        "Create branches",
+        "Manage pull requests",
+        "View git blame",
+        "Check status",
+        "Push to remote",
+        "Stash changes"
+      ],
+      "tools": [
+        "mcp_gitkraken_git_add_or_commit",
+        "mcp_gitkraken_git_branch",
+        "mcp_gitkraken_git_checkout",
+        "mcp_gitkraken_git_log_or_diff",
+        "mcp_gitkraken_git_push",
+        "mcp_gitkraken_git_status",
+        "mcp_gitkraken_gitlens_commit_composer"
+      ]
+    },
+    "code": {
+      "name": "Code Analysis Agent",
+      "description": "Code analysis, refactoring, and quality checks",
+      "capabilities": [
+        "Static code analysis",
+        "Detect code smells",
+        "Suggest refactoring",
+        "Check type safety",
+        "Validate conventions",
+        "Generate documentation"
+      ],
+      "tools": [
+        "semantic_search",
+        "grep_search",
+        "get_errors",
+        "list_code_usages"
+      ],
+      "eslint": {
+        "enabled": true,
+        "config": "frontend/.eslintrc.json"
+      }
+    }
+  },
+  "workflows": {
+    "development": {
+      "name": "Development Workflow",
+      "steps": [
+        "code-analysis",
+        "unit-tests",
+        "build"
+      ]
+    },
+    "testing": {
+      "name": "Testing Workflow",
+      "steps": [
+        "lint",
+        "type-check",
+        "unit-tests",
+        "integration-tests",
+        "e2e-tests"
+      ]
+    },
+    "deployment": {
+      "name": "Deployment Workflow",
+      "steps": [
+        "lint",
+        "test",
+        "build",
+        "security-scan",
+        "deploy"
+      ]
+    }
+  },
+  "mcp_servers": {
+    "playwright": {
+      "name": "Playwright MCP",
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ],
+      "description": "Browser automation and testing",
+      "status": "available"
+    },
+    "gitlens": {
+      "name": "GitKraken MCP",
+      "description": "Git and version control operations",
+      "status": "available"
+    }
+  }
+}
