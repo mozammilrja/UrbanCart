@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#b3380f",
+                        "background-light": "#fcf9f8",
+                        "background-dark": "#1b110d",
+                        "neutral-ivory": "#f3eae7",
+                        "neutral-charcoal": "#2d1d17",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-neutral-charcoal dark:text-background-light antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-neutral-ivory px-10 py-5 sticky top-0 bg-background-light/95 backdrop-blur-md z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-neutral-charcoal">
+<span class="material-symbols-outlined text-primary text-3xl">auto_awesome</span>
+<h2 class="text-neutral-charcoal text-xl font-extrabold leading-tight tracking-[-0.015em] uppercase">MODERN FASHION</h2>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-10">
+<a class="text-neutral-charcoal text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors" href="#">Shop</a>
+<a class="text-neutral-charcoal text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors" href="#">Collections</a>
+<a class="text-neutral-charcoal text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors" href="#">About</a>
+<a class="text-neutral-charcoal text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors" href="#">Journal</a>
+<a class="text-neutral-charcoal text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors" href="#">Store</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center bg-neutral-ivory rounded-lg px-3 py-1.5">
+<span class="material-symbols-outlined text-primary text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-32 placeholder:text-neutral-charcoal/50" placeholder="Search" type="text"/>
+</div>
+<button class="p-2 hover:bg-neutral-ivory rounded-lg transition-colors">
+<span class="material-symbols-outlined text-neutral-charcoal">person</span>
+</button>
+<button class="p-2 hover:bg-neutral-ivory rounded-lg transition-colors relative">
+<span class="material-symbols-outlined text-neutral-charcoal">shopping_bag</span>
+<span class="absolute top-1 right-1 bg-primary text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">2</span>
+</button>
+</div>
+</header>
+<main class="flex-1">
+<!-- Hero Section -->
+<section class="px-4 py-4 md:px-10">
+<div class="relative min-h-[85vh] flex flex-col items-center justify-center rounded-xl overflow-hidden bg-cover bg-center" data-alt="Editorial fashion photography of a high-end luxury outfit in soft lighting" style='background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5-wKs_xdBrinJsOaGUGKcJUHGYsu6YsgeaWbeFn6PNjkCWJhHn6AWoSL3U02tMlm2tgCqlORv89rFDOatUVJ3YXNnSO4ujYEgRv38coioBvljLFeHUQiHUDgSUFXZ81Qu-InHOKv6oeeiJ5HuaGJ6bHUJW2EcNB2qF0fspyNspVcS8eVeRrfz6lV32Oqc7aV8RIyKyg3JvxmnOYR0BhJ1h8tCMX41P46PBhszZw-KdbryD_Pgu8tWLFCkuVVOKE1kZtR4VxUTc5ow");'>
+<div class="z-10 text-center px-6 max-w-4xl">
+<span class="text-white/80 uppercase tracking-[0.3em] text-sm mb-4 block">Summer / Spring 2024</span>
+<h1 class="text-white text-5xl md:text-7xl font-black leading-tight tracking-tight mb-8">
+                            THE NEW STANDARD <br/> OF ELEGANCE
+                        </h1>
+<button class="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-lg font-bold uppercase tracking-widest transition-all transform hover:scale-105">
+                            Explore Collection
+                        </button>
+</div>
+</div>
+</section>
+<!-- 2-Column Featured Collection Grid -->
+<section class="px-4 md:px-10 py-20">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="text-neutral-charcoal text-3xl font-bold tracking-tight mb-2">Featured Series</h2>
+<p class="text-neutral-charcoal/60 uppercase text-xs tracking-widest">Seasonal Highlights</p>
+</div>
+<a class="text-primary font-bold text-sm underline underline-offset-4" href="#">View All Collections</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="group cursor-pointer">
+<div class="aspect-[4/5] overflow-hidden rounded-xl mb-6">
+<img alt="Silk garments draped elegantly" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Luxury silk garments draped on a minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwjMbyeXjUXwKUuEk7Fr6MbsOiJ2Qo_HOk2-9AeJwvrucyYpzQcAU4G2d0SFCF6m79LfevwVa__3NbvFolABNX_snAotLYpNMUd6lukRmEbg2Xeu_IDE_sTN3MALfJXGebExVujk_ozUCzyDTTCuj30BQQrCcy7hUSTeWOzJdL1MBC_mJ4Ho25o-OQQUfb4gHylV0qa3q72e7PHtSRD7Z_6jFjTa2cqTwXgfcue41tSVSvRCvIaUh_viuW00BcOWnSGkdQyRmKTpqF"/>
+</div>
+<h3 class="text-2xl font-bold text-neutral-charcoal mb-1">The Silk Series</h3>
+<p class="text-neutral-charcoal/50 text-sm uppercase tracking-widest">Chapter One: Fluidity</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[4/5] overflow-hidden rounded-xl mb-6">
+<img alt="Minimalist tailoring jacket" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A clean minimalist tailored luxury jacket in beige" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJHDpzfSSXquEAifGxFIZE8Pjl4bpQpQL5YSv1JBOnBuQq-FTvqW08Bpxs8E7GJ5CCtq3F1Bxp4FW1jaV2Nj45IY-HFEWWZ5U7GEWI4ukX1N3rU3aYMsvox-aM52p2CdLvWNNYU0uh0R_mBQFPpkTpqqdeRNrbVlB-W1zxFSNb86pidTw19li6ucqS_OrUGUGbogGrKcKK4JHrgiED3Dgd7wSm_wI72LRV9ipnB0zC4G_1fDIcLgvaP5_ecc-32tRsrOgwlu5Fp5rf"/>
+</div>
+<h3 class="text-2xl font-bold text-neutral-charcoal mb-1">Minimalist Tailoring</h3>
+<p class="text-neutral-charcoal/50 text-sm uppercase tracking-widest">Chapter Two: Structure</p>
+</div>
+</div>
+</section>
+<!-- Large Typography Manifesto Block -->
+<section class="bg-neutral-ivory py-32 px-10 text-center">
+<div class="max-w-4xl mx-auto">
+<span class="material-symbols-outlined text-primary text-5xl mb-8">format_quote</span>
+<h2 class="text-neutral-charcoal text-3xl md:text-5xl font-light leading-snug italic">
+                        "We believe in the longevity of style, the integrity of craftsmanship, and the beauty of intentional design. Our manifesto is simple: <span class="text-primary font-bold not-italic">create with purpose, wear with pride.</span>"
+                    </h2>
+<div class="mt-12 h-px w-24 bg-primary mx-auto"></div>
+</div>
+</section>
+<!-- Full-Width Editorial Image Section -->
+<section class="px-4 md:px-10 py-20">
+<div class="relative h-[600px] rounded-xl overflow-hidden group">
+<img alt="Editorial lifestyle fashion shot" class="w-full h-full object-cover" data-alt="Full width high fashion editorial lifestyle photo in a modern architectural setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr7upIN6_kRVfbLM7G9pDQFVGxt9xJs2l65jnUUaq4hUgnDOPH4cpXHMsGg-6N2KicHMI3To5TwkBqqe7ENYt115_JV9UhrP5HYzfBFcUIgjwWihwQKeU0ieP3e3whs1TCQpBpB9UeS8jeIvkh9D5gYgM8grg8Zm-3MQph4knxtKteacpfYn6xinxdaY4LtteDfGg0NEEd5Qnwr-UGfZGJXigqBdQjByWnfFZTh2Es5ixfR9Fo9dfLTpxclPrTqF9KVRTekkcjT1Nl"/>
+<div class="absolute inset-0 bg-neutral-charcoal/20 group-hover:bg-neutral-charcoal/10 transition-colors"></div>
+<div class="absolute bottom-10 left-10 text-white">
+<h4 class="text-4xl font-bold mb-4">Behind the Scenes</h4>
+<p class="max-w-md text-white/80 mb-6">Explore the making of our Summer 2024 campaign in the hills of Tuscany.</p>
+<button class="flex items-center gap-2 font-bold uppercase tracking-widest text-sm group/btn">
+                            Read the Journal <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Refined Footer -->
+<footer class="bg-neutral-charcoal text-background-light py-20 px-10 mt-10">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary text-2xl">auto_awesome</span>
+<h2 class="text-white text-lg font-extrabold uppercase tracking-tight">MODERN FASHION</h2>
+</div>
+<p class="text-background-light/60 text-sm leading-relaxed mb-8">
+                        Redefining modern luxury through sustainable practices and timeless aesthetic choices.
+                    </p>
+<div class="flex gap-4">
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">public</span>
+</a>
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">camera</span>
+</a>
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">alternate_email</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold uppercase tracking-widest text-sm mb-6">Shop</h4>
+<ul class="space-y-4 text-background-light/60 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">New Arrivals</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Women's Collection</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Men's Collection</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Accessories</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold uppercase tracking-widest text-sm mb-6">Company</h4>
+<ul class="space-y-4 text-background-light/60 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Sustainability</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">The Archive</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold uppercase tracking-widest text-sm mb-6">Newsletter</h4>
+<p class="text-background-light/60 text-sm mb-6">Join our editorial list for exclusive previews.</p>
+<div class="flex flex-col gap-3">
+<input class="bg-white/5 border-white/10 rounded-lg py-3 px-4 focus:ring-primary focus:border-primary text-sm" placeholder="Email Address" type="email"/>
+<button class="bg-primary hover:bg-primary/90 py-3 rounded-lg font-bold text-sm uppercase tracking-widest transition-colors">Subscribe</button>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto border-t border-white/5 mt-20 pt-10 flex flex-col md:flex-row justify-between items-center text-xs text-background-light/40 gap-4">
+<p>© 2024 MODERN FASHION EDITORIAL. ALL RIGHTS RESERVED.</p>
+<div class="flex gap-8">
+<a class="hover:text-background-light transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-background-light transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-background-light transition-colors" href="#">Cookies</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

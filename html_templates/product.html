@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#b3380f",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221510",
+              "warm-black": "#1a1513",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"],
+              "serif": ["Noto Serif", "serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-background-light/80 backdrop-blur-md dark:bg-background-dark/80 px-6 lg:px-20 py-4">
+<div class="mx-auto flex max-w-7xl items-center justify-between">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-2 group cursor-pointer">
+<span class="material-symbols-outlined text-primary text-3xl">unfold_more</span>
+<h1 class="text-xl font-extrabold tracking-tighter uppercase italic">AURA</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors uppercase tracking-widest" href="#">New Arrivals</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors uppercase tracking-widest text-primary underline underline-offset-8" href="#">Shop</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors uppercase tracking-widest" href="#">Sustainability</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors uppercase tracking-widest" href="#">Journal</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden sm:flex items-center bg-primary/5 rounded-full px-4 py-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-primary text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-32 lg:w-48 placeholder:text-slate-400" placeholder="Search collection" type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button class="p-2 hover:bg-primary/10 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="absolute top-1 right-1 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">2</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="mx-auto max-w-7xl w-full flex flex-col lg:flex-row flex-1">
+<!-- Left Side: Scrollable Image Stack -->
+<div class="w-full lg:w-7/12 flex flex-col gap-4 p-4 lg:p-10">
+<div class="w-full aspect-[3/4] overflow-hidden rounded-xl bg-slate-200">
+<img alt="Main view of signature oversized wool coat" class="w-full h-full object-cover" data-alt="Premium oversized wool coat front view in oatmeal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW-YN9al3YuONp7Xjcgpp3TeNSsTSIJje4PdgpSYRn_2bdRAZYatB3BOxb2hZv-LA6lqbgJJlcwQuQ8g-y2iuF1KOy7VA_kR8ibFvknOrEQ2_NYSCp2QZ_CyHxlvhoBgGE3N-bZ2Akle2Fc-qqqYFVqMsiQoNWlwDAhbSqeObaTI4JNPPsM0KNEbt7X4JAEWY3st0SQlxGfHE7DHdawm3e9zZweEF4frT716cY6cf315FuptPs5Da2WQKzFqmJLAu8GVkQ4OnaBkdB"/>
+</div>
+<div class="w-full aspect-[3/4] overflow-hidden rounded-xl bg-slate-200">
+<img alt="Detail shot of the fabric texture" class="w-full h-full object-cover" data-alt="Close up detail of high quality wool fabric weave" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMtfJdKdNY4YJprOFEMbmLqQfEpf43nRb3-mtkUggQcGJkAyCH7gUyrx31pt1G9aro68PVDwb17xWijE1uEmMbF19Ss0i4DJmluZvSIAttswoDZr9GtCVeNhVJYEfcA16RLZaiFIVU_Rkml2UJv-Vj-hnI7YvdiuXRt8djfgiFmvPYShyWU3I2uimLq7f39pbMRJwnQPbUU3z8gZnA0J7jIrcX5CVxI3h9DG09aE-OVMd554HiXVq_zSUOKGvH2PBFG_E9d2gHZRQb"/>
+</div>
+<div class="w-full aspect-[3/4] overflow-hidden rounded-xl bg-slate-200">
+<img alt="Back view of the coat on model" class="w-full h-full object-cover" data-alt="Minimalist back profile of long wool overcoat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8yUHztTwtQjNDUDZPSUosj6OCcs3kz4L5wluK3xWgM-sU4phaZwlt9rUTv8mGZ23di93nTqrPpJf3MKn3wbtRl-w_v_Wfi4qYXn1shakjfgzAPsEQhnEgUuIQWdhYLC4tbKvAxfneDBHU-bhx6oGhuknjWtFzpQCn16_8RXbGp7eSqqdceomLrBR9shhrVURfmTan-Sgc5d-9cqf_wg7FnC5SnhjGZaDDqLvd1yREGrTMsK5AQJaLfU6tXqVECrmyndxF60-F_qUw"/>
+</div>
+<div class="w-full aspect-[3/4] overflow-hidden rounded-xl bg-slate-200">
+<img alt="Lifestyle shot of the product in studio" class="w-full h-full object-cover" data-alt="Modern fashion editorial shot of beige overcoat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAplOZ5_CADLGbIk1gyosWvd1QViHGGyYf6-UenCgVJri-7RSNhlPal0ce3FLPI1T-uMH9WpWRZTmmF5UXXk2VdU3xrXHVPPLi9XvNrbIHkU8FhU8FrLGLim66Jomfo7uP84zXYl4Vh1BfHjgke7-KJclIMsbHQRSJweFZ9XMRFSku--wSbyQRSYL-pAMrCR81yfSA7GY1KZjMdA6mXqYjXkuoCfYOCwGWozsXVziozefPtpKKU3bUPOMTTP3BIuYKLfojhVICtag3a"/>
+</div>
+</div>
+<!-- Right Side: Sticky Info Panel -->
+<aside class="w-full lg:w-5/12 p-6 lg:p-10 lg:sticky lg:top-24 h-fit">
+<nav class="flex items-center gap-2 text-xs uppercase tracking-widest text-slate-500 mb-8">
+<a class="hover:text-primary" href="#">Shop</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<a class="hover:text-primary" href="#">Outerwear</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100">Oversized Overcoat</span>
+</nav>
+<h1 class="font-serif text-5xl lg:text-6xl text-warm-black dark:text-slate-100 mb-4 leading-tight">
+                    The Signature Oversized Overcoat
+                </h1>
+<div class="flex items-center justify-between mb-10 border-b border-primary/10 pb-6">
+<p class="text-2xl font-light text-primary">$1,250.00</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 fill-1">star</span>
+<span class="text-sm font-bold">4.9</span>
+<span class="text-xs text-slate-400">(42 Reviews)</span>
+</div>
+</div>
+<div class="mb-10">
+<div class="flex justify-between items-end mb-4">
+<label class="text-xs font-bold uppercase tracking-widest text-slate-500">Select Size</label>
+<a class="text-xs underline text-slate-400 hover:text-primary" href="#">Size Guide</a>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<button class="h-12 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-medium hover:border-primary transition-colors rounded-lg">XS</button>
+<button class="h-12 border-2 border-primary flex items-center justify-center text-sm font-bold bg-primary/5 rounded-lg">S</button>
+<button class="h-12 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-medium hover:border-primary transition-colors rounded-lg">M</button>
+<button class="h-12 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-medium hover:border-primary transition-colors rounded-lg">L</button>
+</div>
+</div>
+<div class="mb-12 space-y-4">
+<button class="w-full bg-warm-black dark:bg-primary text-white h-16 rounded-xl font-bold text-lg uppercase tracking-widest flex items-center justify-center gap-3 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+<button class="w-full border border-warm-black/20 dark:border-white/20 h-16 rounded-xl font-bold text-lg uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+                        Wishlist
+                    </button>
+</div>
+<!-- Product Details Accordion/Sections -->
+<div class="space-y-8">
+<section class="border-t border-primary/10 pt-8">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">eco</span>
+                            Fabric &amp; Care
+                        </h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-light">
+                            Crafted from 100% premium double-faced wool sourced from Italy. This piece is unlined to maintain its fluid silhouette and lightweight feel. 
+                            <br/><br/>
+                            Dry clean only. Store on a wide-shoulder hanger to maintain shape.
+                        </p>
+</section>
+<section class="border-t border-primary/10 pt-8">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">stylus</span>
+                            Styling Suggestions
+                        </h3>
+<ul class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-light list-disc list-inside">
+<li>Pair with our Cashmere Turtleneck for a tonal look</li>
+<li>Wear open over tailored trousers for business casual</li>
+<li>Cinch with the detachable belt for a structured waistline</li>
+</ul>
+</section>
+<section class="border-t border-primary/10 pt-8">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">local_shipping</span>
+                            Shipping &amp; Returns
+                        </h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm font-light">
+                            Complimentary carbon-neutral shipping on all orders. Returns accepted within 30 days.
+                        </p>
+</section>
+</div>
+</aside>
+</main>
+<!-- Footer Recommendation Section -->
+<footer class="bg-primary/5 dark:bg-background-dark py-20 px-6 lg:px-20 mt-20 border-t border-primary/10">
+<div class="mx-auto max-w-7xl">
+<h2 class="font-serif text-3xl mb-12">Complete the Look</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-xl mb-4 relative">
+<img alt="Related product - Trousers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Wide leg pleated wool trousers in cream" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkh-w-Uu0_IO7IsNnHtGDymwJ2sQ2GFEzIInFFIP-gOtbTLv7a7ZTz_RbQwBPZHCfWHqFDdfRWbhphF8TPUULb-qkIeDnXMXPKafGppeLrwhh2qOQiDPgS_Uc35AomV8p2F2lcIlbEKQ4RE84xkbfexslh5KzwqBvztgP1KagKMQWBcevy0IyNh_MkZa38Viv1IofQD0vJ_lookmLYB3S1EFg6XKyX8jPyfj-PHvY6JgT8vFd9R4eLnx7kHAzBgiYOzTRtQ5jEu1o2"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<h4 class="font-bold text-sm">Pleated Wide Trousers</h4>
+<p class="text-slate-500 text-sm">$450.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-xl mb-4 relative">
+<img alt="Related product - Knitwear" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Soft cashmere turtleneck sweater in ivory" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIvH4KnDGfdCJjNu99qEwg1YE7YIFIY8V0vbaWg4JNkSsqUNIc1AUyGkZLK8-Q_xDZyDvzI5HZyQvmYabjopH4yDxsuHyon-2KxNBaH7q76zybwTx86hxeH-lGm_GHTfJ1C7uoqslrRBNnL8BdbX4_IA56SCN6cbHYGT1qNkaB9g5ayCQCJ7GTi5XkzvN7xpAmdtEKHTc9pCddzNgB3rXSxgAi1W-dab9jd0v90JlX7z5eTIL5DO6nNTQvlIh2F6hDDOLvTHbeP1F"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<h4 class="font-bold text-sm">Essential Cashmere Knit</h4>
+<p class="text-slate-500 text-sm">$320.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-xl mb-4 relative">
+<img alt="Related product - Shoes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Minimalist leather ankle boots in sand" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuaxib_loaL9ej4AA7H0xsFzfMJwkgytpSlNdDuCxXZSEi98Ve13c-eH1X3mAHS-Myc0ntJT8fh-k7h5Ki6eLpltyO9AQhxDd-u3mURVmk2-YwTDqW634unh4XAsKKfGndL7e2aSLvQ7soH26liDzLjOemiJRm1hsdG_51z3pQjfEGT7fEuGjXz9b-U-L4xQ6Ux5kApTygD6XyToQ5KFQuj-JIOjhLlerNsJllmZcEvxAtNU3zS3YGgUt83foSbdWb6jkrY01IUeUM"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<h4 class="font-bold text-sm">Pointed Leather Boots</h4>
+<p class="text-slate-500 text-sm">$590.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-xl mb-4 relative">
+<img alt="Related product - Bag" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Structured leather tote bag in dark brown" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq2plUSWASL2MEZcio0uMlD0v9qwlurfZtqlRW9238HXIhsfkGLYq9IR6Ipweyw5NBZJgUtrKtIbKh1pSvMLLHqQx-ca0nJs5EVYDyscQ3SgcCoFVnP2-iikMMBu-YlNiQwqxGftA4T9i3JMYZp-v-RDM5ifeIoZ8rVGrPL_v8OfGvl78KemX_q0BzaW2KFOKmk_owTIUXWQegcVAH9-JMSbMDYTpM3X7HfT4ZBuL2u8SViAkSZmo4R_J3qUYj9cTYSd-T8plnGjKV"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<h4 class="font-bold text-sm">Structured Day Tote</h4>
+<p class="text-slate-500 text-sm">$850.00</p>
+</div>
+</div>
+</div>
+<div class="mx-auto max-w-7xl mt-24 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-primary/10 pt-12">
+<div class="flex flex-col items-center md:items-start gap-4">
+<h1 class="text-2xl font-extrabold tracking-tighter uppercase italic">AURA</h1>
+<p class="text-xs text-slate-500 uppercase tracking-widest text-center md:text-left">© 2024 Aura Fashion House. <br class="hidden md:block"/>Defining modern elegance.</p>
+</div>
+<div class="flex gap-12">
+<div class="flex flex-col gap-2">
+<h5 class="text-[10px] font-bold uppercase tracking-widest mb-2">Help</h5>
+<a class="text-xs hover:text-primary" href="#">Contact</a>
+<a class="text-xs hover:text-primary" href="#">Returns</a>
+</div>
+<div class="flex flex-col gap-2">
+<h5 class="text-[10px] font-bold uppercase tracking-widest mb-2">Social</h5>
+<a class="text-xs hover:text-primary" href="#">Instagram</a>
+<a class="text-xs hover:text-primary" href="#">TikTok</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>
