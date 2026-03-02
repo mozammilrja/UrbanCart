@@ -1,0 +1,59 @@
+{
+  "layers": {
+    "base": {
+      "value": 0,
+      "description": "Default layer for static content"
+    },
+    "dropdown": {
+      "value": 10,
+      "description": "Dropdown menus and popovers"
+    },
+    "sticky": {
+      "value": 20,
+      "description": "Sticky elements like headers"
+    },
+    "fixed": {
+      "value": 30,
+      "description": "Fixed position elements"
+    },
+    "drawer": {
+      "value": 40,
+      "description": "Side drawers and panels"
+    },
+    "modal-backdrop": {
+      "value": 50,
+      "description": "Modal backdrop/overlay"
+    },
+    "modal": {
+      "value": 60,
+      "description": "Modal dialogs"
+    },
+    "popover": {
+      "value": 70,
+      "description": "Popovers and tooltips"
+    },
+    "toast": {
+      "value": 80,
+      "description": "Toast notifications"
+    },
+    "tooltip": {
+      "value": 90,
+      "description": "Tooltips"
+    },
+    "max": {
+      "value": 100,
+      "description": "Maximum layer for critical overlays"
+    }
+  },
+  "component": {
+    "header": 20,
+    "sidebar": 30,
+    "mobileMenu": 40,
+    "cartDrawer": 40,
+    "searchOverlay": 50,
+    "modal": 60,
+    "quickView": 60,
+    "imageGallery": 70,
+    "toast": 80
+  }
+}

@@ -45,11 +45,25 @@ Design artifacts should reference these template IDs from the execution plan:
 
 ## Status
 
-- [ ] Dashboard mockups (revenue charts, KPI cards)
-- [ ] Product list with filters and bulk actions
-- [ ] Product creation form (all steps)
-- [ ] Image upload and variant editor
-- [ ] Order management screens
-- [ ] Customer management screens
+- [x] Dashboard mockups (revenue charts, KPI cards)
+- [x] Product list with filters and bulk actions
+- [x] Product creation form (all steps)
+- [x] Image upload and variant editor
+- [x] Order management screens
+- [x] Customer management screens
 - [ ] Permission-based UI variations
 - [ ] Workflow diagrams
+
+## Created Pages
+
+```
+pages/
+├── T-ADMIN-001-login.md
+├── T-ADMIN-002-dashboard.md
+├── T-ADMIN-003-products-list.md
+├── T-ADMIN-004-005-product-form.md
+├── T-ADMIN-007-008-009-collections.md
+├── T-ADMIN-012-orders-list.md
+├── T-ADMIN-013-order-detail.md
+└── T-ADMIN-014-015-customers.md
+```

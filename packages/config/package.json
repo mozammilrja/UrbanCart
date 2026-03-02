@@ -1,0 +1,14 @@
+{
+  "name": "@urbancart/config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.ts",
+  "files": ["tailwind.config.ts", "postcss.config.js", "index.ts"],
+  "dependencies": {
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

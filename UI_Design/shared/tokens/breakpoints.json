@@ -1,0 +1,66 @@
+{
+  "breakpoints": {
+    "xs": {
+      "value": "480px",
+      "description": "Extra small devices (portrait phones)"
+    },
+    "sm": {
+      "value": "640px",
+      "description": "Small devices (landscape phones)"
+    },
+    "md": {
+      "value": "768px",
+      "description": "Medium devices (tablets)"
+    },
+    "lg": {
+      "value": "1024px",
+      "description": "Large devices (laptops/desktops)"
+    },
+    "xl": {
+      "value": "1280px",
+      "description": "Extra large devices (large desktops)"
+    },
+    "2xl": {
+      "value": "1536px",
+      "description": "2X large devices (larger desktops)"
+    }
+  },
+  "containers": {
+    "sm": "640px",
+    "md": "768px",
+    "lg": "1024px",
+    "xl": "1280px",
+    "2xl": "1400px"
+  },
+  "mediaQueries": {
+    "mobile": "(max-width: 639px)",
+    "tablet": "(min-width: 640px) and (max-width: 1023px)",
+    "desktop": "(min-width: 1024px)",
+    "largeDesktop": "(min-width: 1280px)",
+    "touch": "(hover: none) and (pointer: coarse)",
+    "mouse": "(hover: hover) and (pointer: fine)",
+    "reducedMotion": "(prefers-reduced-motion: reduce)",
+    "darkMode": "(prefers-color-scheme: dark)",
+    "lightMode": "(prefers-color-scheme: light)",
+    "highContrast": "(prefers-contrast: more)",
+    "portrait": "(orientation: portrait)",
+    "landscape": "(orientation: landscape)"
+  },
+  "grid": {
+    "columns": {
+      "mobile": 4,
+      "tablet": 8,
+      "desktop": 12
+    },
+    "gutter": {
+      "mobile": "1rem",
+      "tablet": "1.5rem",
+      "desktop": "2rem"
+    },
+    "margin": {
+      "mobile": "1rem",
+      "tablet": "2rem",
+      "desktop": "4rem"
+    }
+  }
+}

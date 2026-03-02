@@ -50,12 +50,29 @@ Design artifacts should reference these template IDs from the execution plan:
 
 ## Status
 
-- [ ] Home page mockups
-- [ ] Shop catalog variations (grid, filters)
-- [ ] Product detail page (all variants)
-- [ ] Cart and checkout flow
-- [ ] Account dashboard suite
+- [x] Home page mockups
+- [x] Shop catalog variations (grid, filters)
+- [x] Product detail page (all variants)
+- [x] Cart and checkout flow
+- [x] Account dashboard suite
 - [ ] Static pages
 - [ ] Component library in Figma/Storybook
-- [ ] Mobile-first responsive layouts
-- [ ] Accessibility audit
+- [x] Mobile-first responsive layouts
+- [x] Accessibility audit
+
+## Created Pages
+
+```
+pages/
+├── T-CLIENT-001-home.md
+├── T-CLIENT-002-shop.md
+├── T-CLIENT-003-product-detail.md
+├── T-CLIENT-004-collection.md
+├── T-CLIENT-006-search.md
+├── T-CLIENT-007-cart.md
+├── T-CLIENT-008-checkout.md
+├── T-CLIENT-011-login.md
+├── T-CLIENT-014-account-dashboard.md
+├── T-CLIENT-015-order-history.md
+└── T-CLIENT-018-wishlist.md
+```
