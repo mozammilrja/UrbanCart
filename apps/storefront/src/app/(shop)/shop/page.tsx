@@ -3,336 +3,360 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Button,
-  Input,
-  Badge,
-  Card,
-  CardContent,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Checkbox,
-  Separator,
-} from '@urbancart/ui';
-import { SlidersHorizontal, Grid3X3, LayoutList, ChevronDown, X, Heart } from 'lucide-react';
+import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 
+// Mock products data
 const products = [
   {
     id: '1',
     name: 'Urban Oversized Tee',
+    variant: 'Black',
     price: 1999,
     originalPrice: 2499,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=600&h=750&fit=crop',
+    colors: ['Black', 'White', 'Grey'],
     category: 'T-Shirts',
     badge: 'Bestseller',
-    colors: ['Black', 'White', 'Grey'],
   },
   {
     id: '2',
     name: 'Street Drop Hoodie',
+    variant: 'Navy',
     price: 3499,
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&h=750&fit=crop',
+    colors: ['Black', 'Navy'],
     category: 'Hoodies',
     badge: 'New',
-    colors: ['Black', 'Navy'],
   },
   {
     id: '3',
     name: 'Classic Cargo Pants',
+    variant: 'Olive',
     price: 2999,
-    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&h=500&fit=crop',
-    category: 'Pants',
+    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&h=750&fit=crop',
     colors: ['Olive', 'Black', 'Beige'],
+    category: 'Pants',
   },
   {
     id: '4',
     name: 'Limited Edition Cap',
+    variant: 'Black',
     price: 999,
-    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1534215754734-18e55d13e346?w=600&h=750&fit=crop',
+    colors: ['Black', 'White'],
     category: 'Accessories',
     badge: 'Limited',
-    colors: ['Black', 'White'],
   },
   {
     id: '5',
     name: 'Premium Sneakers',
+    variant: 'White',
     price: 5999,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=500&fit=crop',
-    category: 'Footwear',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=600&h=750&fit=crop',
     colors: ['White', 'Black'],
+    category: 'Footwear',
   },
   {
     id: '6',
     name: 'Graphic Print Tee',
+    variant: 'Black',
     price: 1499,
-    image: 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop',
-    category: 'T-Shirts',
+    image: 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=750&fit=crop',
     colors: ['Black', 'White'],
+    category: 'T-Shirts',
   },
   {
     id: '7',
     name: 'Essential Joggers',
+    variant: 'Grey',
     price: 2499,
-    image: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=400&h=500&fit=crop',
-    category: 'Pants',
+    image: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=750&fit=crop',
     colors: ['Grey', 'Black'],
+    category: 'Pants',
   },
   {
     id: '8',
     name: 'Chain Necklace',
+    variant: 'Gold',
     price: 1299,
-    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600&h=750&fit=crop',
+    colors: ['Gold', 'Silver'],
     category: 'Accessories',
     badge: 'New',
-    colors: ['Gold', 'Silver'],
+  },
+  {
+    id: '9',
+    name: 'Relaxed Fit Shirt',
+    variant: 'White',
+    price: 3299,
+    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600&h=750&fit=crop',
+    colors: ['White', 'Blue', 'Pink'],
+    category: 'Shirts',
+  },
+  {
+    id: '10',
+    name: 'Vintage Denim Jacket',
+    variant: 'Blue',
+    price: 4999,
+    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=600&h=750&fit=crop',
+    colors: ['Blue', 'Black'],
+    category: 'Jackets',
+  },
+  {
+    id: '11',
+    name: 'Logo Embroidered Beanie',
+    variant: 'Black',
+    price: 799,
+    image: 'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1576871337589-9cfb8c8b3743?w=600&h=750&fit=crop',
+    colors: ['Black', 'Grey', 'Navy'],
+    category: 'Accessories',
+  },
+  {
+    id: '12',
+    name: 'Knit Sweater',
+    variant: 'Cream',
+    price: 3999,
+    image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=750&fit=crop',
+    hoverImage: 'https://images.unsplash.com/photo-1580331451062-99ff652288d7?w=600&h=750&fit=crop',
+    colors: ['Cream', 'Black', 'Brown'],
+    category: 'Sweaters',
   },
 ];
 
-const categories = ['All', 'T-Shirts', 'Hoodies', 'Pants', 'Accessories', 'Footwear'];
-const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const categories = ['All', 'T-Shirts', 'Hoodies', 'Pants', 'Shirts', 'Jackets', 'Sweaters', 'Accessories', 'Footwear'];
 
 const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(price);
+  return `Rs. ${price.toLocaleString('en-IN')}`;
 };
 
 export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [showFilters, setShowFilters] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [visibleProducts, setVisibleProducts] = useState(12);
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
 
   const filteredProducts = selectedCategory === 'All'
     ? products
     : products.filter((p) => p.category === selectedCategory);
 
+  const handleLoadMore = () => {
+    setVisibleProducts((prev) => Math.min(prev + 8, filteredProducts.length));
+  };
+
   return (
-    <div className="container py-8">
-      {/* Breadcrumb */}
-      <nav className="mb-6 text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-foreground">Home</Link>
-        <span className="mx-2">/</span>
-        <span className="text-foreground">Shop</span>
-      </nav>
+    <div className="min-h-screen bg-neutral-950">
+      {/* Page Header */}
+      <div className="border-b border-neutral-800">
+        <div className="container py-8 sm:py-12">
+          <h1 className="text-center text-2xl font-light tracking-wide text-white sm:text-3xl md:text-4xl">
+            Shop <span className="font-medium">All</span>
+          </h1>
+        </div>
+      </div>
 
-      <div className="flex flex-col gap-8 lg:flex-row">
-        {/* Sidebar filters - Desktop */}
-        <aside className="hidden w-64 shrink-0 lg:block">
-          <div className="sticky top-24 space-y-6">
-            <div>
-              <h3 className="mb-4 font-semibold">Categories</h3>
-              <div className="space-y-2">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`block w-full text-left text-sm ${
-                      selectedCategory === category
-                        ? 'font-medium text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
+      {/* Category Tabs */}
+      <div className="border-b border-neutral-800 overflow-x-auto">
+        <div className="container flex items-center gap-6 py-4">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => {
+                setSelectedCategory(category);
+                setVisibleProducts(12);
+              }}
+              className={`whitespace-nowrap text-sm transition-colors ${
+                selectedCategory === category
+                  ? 'font-medium text-white'
+                  : 'text-neutral-500 hover:text-neutral-300'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
 
-            <Separator />
-
-            <div>
-              <h3 className="mb-4 font-semibold">Size</h3>
-              <div className="flex flex-wrap gap-2">
-                {sizes.map((size) => (
-                  <button
-                    key={size}
-                    className="flex h-9 w-9 items-center justify-center rounded border text-sm hover:border-primary hover:bg-primary hover:text-primary-foreground"
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <Separator />
-
-            <div>
-              <h3 className="mb-4 font-semibold">Price Range</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Checkbox id="price-1" />
-                  <label htmlFor="price-1" className="text-sm">Under ₹1,000</label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Checkbox id="price-2" />
-                  <label htmlFor="price-2" className="text-sm">₹1,000 - ₹2,500</label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Checkbox id="price-3" />
-                  <label htmlFor="price-3" className="text-sm">₹2,500 - ₹5,000</label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Checkbox id="price-4" />
-                  <label htmlFor="price-4" className="text-sm">Above ₹5,000</label>
-                </div>
-              </div>
-            </div>
+      {/* Filter Bar */}
+      <div className="border-b border-neutral-800">
+        <div className="container flex items-center justify-between py-4">
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-neutral-400">
+              Items: <span className="text-white">{filteredProducts.length}</span>
+            </span>
           </div>
-        </aside>
-
-        {/* Main content */}
-        <div className="flex-1">
-          {/* Header */}
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Shop All</h1>
-              <p className="text-muted-foreground">{filteredProducts.length} products</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                size="sm"
-                className="lg:hidden"
-                onClick={() => setShowFilters(!showFilters)}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className="flex items-center gap-2 text-sm text-white transition-colors hover:text-neutral-300"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              Filter
+            </button>
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="appearance-none bg-transparent pr-6 text-sm text-white outline-none"
               >
-                <SlidersHorizontal className="mr-2 h-4 w-4" />
-                Filters
-              </Button>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="featured">Featured</SelectItem>
-                  <SelectItem value="newest">Newest</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="bestselling">Bestselling</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="hidden sm:flex">
-                <Button
-                  variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
-                  size="icon"
-                  onClick={() => setViewMode('grid')}
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-                  size="icon"
-                  onClick={() => setViewMode('list')}
-                >
-                  <LayoutList className="h-4 w-4" />
-                </Button>
-              </div>
+                <option value="featured" className="bg-neutral-900">Sort By</option>
+                <option value="newest" className="bg-neutral-900">Newest</option>
+                <option value="price-low" className="bg-neutral-900">Price: Low to High</option>
+                <option value="price-high" className="bg-neutral-900">Price: High to Low</option>
+                <option value="bestselling" className="bg-neutral-900">Bestselling</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-white" />
             </div>
-          </div>
-
-          {/* Mobile filters */}
-          {showFilters && (
-            <div className="mb-6 rounded-lg border p-4 lg:hidden">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">Filters</h3>
-                <Button variant="ghost" size="sm" onClick={() => setShowFilters(false)}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? 'primary' : 'outline'}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Products grid */}
-          <div
-            className={
-              viewMode === 'grid'
-                ? 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3'
-                : 'space-y-4'
-            }
-          >
-            {filteredProducts.map((product) => (
-              <Link key={product.id} href={`/product/${product.id}`} className="group">
-                <Card className="overflow-hidden border-0 shadow-none">
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-muted">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    {product.badge && (
-                      <Badge className="absolute left-3 top-3" variant="secondary">
-                        {product.badge}
-                      </Badge>
-                    )}
-                    <button
-                      className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 opacity-0 transition-opacity group-hover:opacity-100"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // Add to wishlist
-                      }}
-                    >
-                      <Heart className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <CardContent className="px-0 pt-4">
-                    <p className="text-xs text-muted-foreground">{product.category}</p>
-                    <h3 className="font-medium group-hover:text-accent">{product.name}</h3>
-                    <div className="mt-1 flex items-center gap-2">
-                      <span className="font-semibold">{formatPrice(product.price)}</span>
-                      {product.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">
-                          {formatPrice(product.originalPrice)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-2 flex gap-1">
-                      {product.colors.slice(0, 3).map((color) => (
-                        <span
-                          key={color}
-                          className="text-xs text-muted-foreground"
-                        >
-                          {color}
-                          {product.colors.indexOf(color) < Math.min(product.colors.length, 3) - 1 && ', '}
-                        </span>
-                      ))}
-                      {product.colors.length > 3 && (
-                        <span className="text-xs text-muted-foreground">
-                          +{product.colors.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-
-          {/* Load more */}
-          <div className="mt-12 text-center">
-            <Button variant="outline" size="lg">
-              Load More Products
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
           </div>
         </div>
+      </div>
+
+      {/* Filter Panel */}
+      {isFilterOpen && (
+        <div className="border-b border-neutral-800 bg-neutral-900/50">
+          <div className="container py-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-medium text-white">Filters</h3>
+              <button
+                onClick={() => setIsFilterOpen(false)}
+                className="text-neutral-400 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+              <div>
+                <h4 className="mb-3 text-xs uppercase tracking-wider text-neutral-500">Size</h4>
+                <div className="flex flex-wrap gap-2">
+                  {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+                    <button
+                      key={size}
+                      className="flex h-8 w-8 items-center justify-center border border-neutral-700 text-xs text-neutral-400 transition-colors hover:border-white hover:text-white"
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="mb-3 text-xs uppercase tracking-wider text-neutral-500">Price</h4>
+                <div className="space-y-2 text-sm text-neutral-400">
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-white">
+                    <input type="checkbox" className="form-checkbox bg-transparent" />
+                    Under Rs.1,000
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-white">
+                    <input type="checkbox" className="form-checkbox bg-transparent" />
+                    Rs.1,000 - Rs.2,500
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-white">
+                    <input type="checkbox" className="form-checkbox bg-transparent" />
+                    Rs.2,500 - Rs.5,000
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-white">
+                    <input type="checkbox" className="form-checkbox bg-transparent" />
+                    Above Rs.5,000
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Products Grid */}
+      <div className="container py-8">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:gap-8">
+          {filteredProducts.slice(0, visibleProducts).map((product) => (
+            <Link
+              key={product.id}
+              href={`/product/${product.id}`}
+              className="group block"
+              onMouseEnter={() => setHoveredProduct(product.id)}
+              onMouseLeave={() => setHoveredProduct(null)}
+            >
+              {/* Product Image */}
+              <div className="relative aspect-[4/5] overflow-hidden bg-neutral-900">
+                <Image
+                  src={hoveredProduct === product.id ? product.hoverImage : product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover transition-all duration-500 ease-out"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                />
+                
+                {/* Badge */}
+                {product.badge && (
+                  <span className="absolute left-3 top-3 bg-white px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-neutral-900">
+                    {product.badge}
+                  </span>
+                )}
+
+                {/* Quick shop overlay */}
+                <div className="absolute inset-x-0 bottom-0 translate-y-full bg-white/95 p-3 text-center transition-transform duration-300 group-hover:translate-y-0">
+                  <span className="text-xs font-medium uppercase tracking-wider text-neutral-900">
+                    Quick Shop
+                  </span>
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div className="mt-4 space-y-1">
+                <h3 className="text-sm font-medium text-white transition-colors group-hover:text-neutral-300">
+                  {product.name}
+                  {product.variant && (
+                    <span className="font-normal text-neutral-400"> - {product.variant}</span>
+                  )}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-neutral-400">{formatPrice(product.price)}</span>
+                  {product.originalPrice && (
+                    <span className="text-sm text-neutral-600 line-through">
+                      {formatPrice(product.originalPrice)}
+                    </span>
+                  )}
+                </div>
+                
+                {/* Color swatches */}
+                {product.colors.length > 1 && (
+                  <div className="flex gap-2 pt-1">
+                    {product.colors.map((color, idx) => (
+                      <span
+                        key={idx}
+                        className="text-xs text-neutral-500 hover:text-neutral-300"
+                      >
+                        {color}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Load More Button */}
+        {visibleProducts < filteredProducts.length && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={handleLoadMore}
+              className="inline-flex items-center gap-2 border border-neutral-700 bg-transparent px-8 py-3 text-sm font-medium uppercase tracking-wider text-white transition-colors hover:border-white hover:bg-white hover:text-neutral-900"
+            >
+              Load More
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

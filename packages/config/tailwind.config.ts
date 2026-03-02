@@ -3,6 +3,23 @@ import type { Config } from 'tailwindcss';
 const config: Omit<Config, 'content'> = {
   darkMode: ['class'],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '4rem',
+        xl: '5rem',
+        '2xl': '6rem',
+      },
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1400px',
+      },
+    },
     extend: {
       colors: {
         // shadcn/ui CSS variable colors
@@ -39,51 +56,49 @@ const config: Omit<Config, 'content'> = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Brand Colors
+        // Brand Colors (CSS Variables)
         brand: {
-          black: '#000000',
-          white: '#FFFFFF',
-          accent: '#FF6B35',
-          'accent-dark': '#E55A2B',
-          'accent-light': '#FF8A5C',
+          black: 'hsl(var(--neutral-900))',
+          white: 'hsl(var(--neutral-50))',
+          accent: 'hsl(var(--brand-accent))',
+          'accent-dark': 'hsl(var(--brand-accent-dark))',
+          'accent-light': 'hsl(var(--brand-accent-light))',
         },
-        // Semantic Colors
+        // Semantic Colors (CSS Variables)
         success: {
           DEFAULT: 'hsl(var(--success))',
           foreground: 'hsl(var(--success-foreground))',
-          50: '#ECFDF5',
-          500: '#10B981',
-          600: '#059669',
         },
         warning: {
           DEFAULT: 'hsl(var(--warning))',
           foreground: 'hsl(var(--warning-foreground))',
-          50: '#FFFBEB',
-          500: '#F59E0B',
-          600: '#D97706',
         },
         error: {
-          50: '#FEF2F2',
-          500: '#EF4444',
-          600: '#DC2626',
+          DEFAULT: 'hsl(var(--error))',
+          foreground: 'hsl(var(--error-foreground))',
         },
         info: {
-          50: '#EFF6FF',
-          500: '#3B82F6',
-          600: '#2563EB',
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
         },
-        // Neutral
+        // Neutral Scale (CSS Variables)
         neutral: {
-          50: '#FAFAFA',
-          100: '#F5F5F5',
-          200: '#E5E5E5',
-          300: '#D4D4D4',
-          400: '#A3A3A3',
-          500: '#737373',
-          600: '#525252',
-          700: '#404040',
-          800: '#262626',
-          900: '#171717',
+          50: 'hsl(var(--neutral-50))',
+          100: 'hsl(var(--neutral-100))',
+          200: 'hsl(var(--neutral-200))',
+          300: 'hsl(var(--neutral-300))',
+          400: 'hsl(var(--neutral-400))',
+          500: 'hsl(var(--neutral-500))',
+          600: 'hsl(var(--neutral-600))',
+          700: 'hsl(var(--neutral-700))',
+          800: 'hsl(var(--neutral-800))',
+          900: 'hsl(var(--neutral-900))',
+        },
+        // Surface colors
+        surface: {
+          DEFAULT: 'hsl(var(--surface))',
+          raised: 'hsl(var(--surface-raised))',
+          overlay: 'hsl(var(--surface-overlay))',
         },
       },
       borderRadius: {
@@ -93,9 +108,9 @@ const config: Omit<Config, 'content'> = {
         '4xl': '2rem',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Outfit', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
       fontSize: {
         'display-lg': ['4rem', { lineHeight: '1.1', fontWeight: '700' }],
@@ -117,11 +132,11 @@ const config: Omit<Config, 'content'> = {
         '128': '32rem',
       },
       boxShadow: {
-        'elevation-1': '0 1px 2px rgba(0, 0, 0, 0.05)',
-        'elevation-2': '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
-        'elevation-3': '0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
-        'elevation-4': '0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05)',
-        'elevation-5': '0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04)',
+        'elevation-1': 'var(--elevation-1)',
+        'elevation-2': 'var(--elevation-2)',
+        'elevation-3': 'var(--elevation-3)',
+        'elevation-4': 'var(--elevation-4)',
+        'elevation-5': 'var(--elevation-5)',
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-out',
@@ -131,6 +146,7 @@ const config: Omit<Config, 'content'> = {
         'scale-in': 'scaleIn 0.2s ease-out',
         shimmer: 'shimmer 2s infinite linear',
         'spin-slow': 'spin 3s linear infinite',
+        marquee: 'marquee 20s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -144,6 +160,10 @@ const config: Omit<Config, 'content'> = {
         slideUp: {
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-33.33%)' },
         },
         slideDown: {
           '0%': { transform: 'translateY(-10px)', opacity: '0' },
