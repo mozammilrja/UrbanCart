@@ -6,17 +6,17 @@ Pay special attention to naming of existing utils, types, and models. Import fro
 
 ## Feature Description
 
-Build the complete React/Next.js storefront for UrbanCart. This includes setting up a Vite + React 19 + TypeScript project with TanStack Query for server state, Zustand for client state, Tailwind CSS for styling, implementing all core pages (homepage, shop, product detail, cart, checkout), components (product cards, filters, cart drawer), and E2E validation with Playwright.
+Build the complete React/Next.js storefront for APOSTLE. This includes setting up a Vite + React 19 + TypeScript project with TanStack Query for server state, Zustand for client state, Tailwind CSS for styling, implementing all core pages (homepage, shop, product detail, cart, checkout), components (product cards, filters, cart drawer), and E2E validation with Playwright.
 
 ## User Story
 
 As an online shopper,
 I want to browse products, filter/search, add items to cart, and checkout
-So that I can purchase streetwear from UrbanCart seamlessly
+So that I can purchase streetwear from APOSTLE seamlessly
 
 ## Problem Statement
 
-The backend API exists with all endpoints implemented, but users cannot interact with it. Without a frontend, UrbanCart cannot accept orders or generate revenue. A professional, responsive storefront is critical for MVP launch.
+The backend API exists with all endpoints implemented, but users cannot interact with it. Without a frontend, APOSTLE cannot accept orders or generate revenue. A professional, responsive storefront is critical for MVP launch.
 
 ## Solution Statement
 
@@ -47,7 +47,7 @@ Build a modern Next.js 15 + React 19 storefront using TypeScript, TanStack Query
 
 **Habit Tracker does this:** Check `backend/app/routers/` for exact response formats
 
-**UrbanCart must do:** Check `.claude/PRD.md` Section 6.2 API Specifications for:
+**APOSTLE must do:** Check `.claude/PRD.md` Section 6.2 API Specifications for:
 - `GET /api/v1/products` - Product list with filters
 - `GET /api/v1/products/:slug` - Product detail
 - `GET /api/v1/categories` - Categories
@@ -376,7 +376,7 @@ Set up environment variables for API connection and third-party services.
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000
 NEXT_PUBLIC_RAZORPAY_KEY_ID=your_key_here
-NEXT_PUBLIC_APP_NAME=UrbanCart
+NEXT_PUBLIC_APP_NAME=APOSTLE
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 ```
 
@@ -679,7 +679,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold">
-          UrbanCart
+          APOSTLE
         </Link>
 
         {/* Navigation (desktop) */}
@@ -1058,7 +1058,7 @@ export async function initiatePayment(orderId: string, amount: number) {
     key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     amount: amount * 100, // Convert to paise
     currency: 'INR',
-    name: 'UrbanCart',
+    name: 'APOSTLE',
     order_id: orderId,
     handler: (response: any) => {
       // Handle successful payment
@@ -1141,7 +1141,7 @@ import { test, expect } from '@playwright/test';
 test('browsing flow: homepage → shop → product → cart', async ({ page }) => {
   // Navigate to homepage
   await page.goto('/');
-  await expect(page).toHaveTitle(/UrbanCart/);
+  await expect(page).toHaveTitle(/APOSTLE/);
 
   // Go to shop
   await page.click('a[href="/shop"]');
@@ -1182,7 +1182,7 @@ test('browsing flow: homepage → shop → product → cart', async ({ page }) =
 
 3. **Homepage Loads**
    - Visit http://localhost:3000
-   - Should show UrbanCart header and featured products
+   - Should show APOSTLE header and featured products
 
 4. **API Integration**
    - Check Network tab in DevTools

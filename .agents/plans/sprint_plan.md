@@ -1,4 +1,4 @@
-# UrbanCart Sprint Planning Template
+# APOSTLE Sprint Planning Template
 
 **Sprint Cycle:** Bi-weekly (2 weeks)  
 **Planning Date:** Every other Monday  

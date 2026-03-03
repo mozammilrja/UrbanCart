@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import sharedConfig from '@urbancart/config/tailwind.config';
+import sharedConfig from '@apostle/config/tailwind.config';
 
 const config: Config = {
   presets: [sharedConfig],

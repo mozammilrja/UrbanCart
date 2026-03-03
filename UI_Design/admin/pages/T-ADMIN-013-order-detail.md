@@ -8,7 +8,7 @@ Comprehensive order management with status updates, fulfillment, refunds, and cu
 ### Desktop (1440px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Orders / #12350                                           │
@@ -104,7 +104,7 @@ Comprehensive order management with status updates, fulfillment, refunds, and cu
 │                    │  └─────────────────────────────────────────────────────────┘│
 │                    │                                                            │
 ├────────────────────┴────────────────────────────────────────────────────────────┤
-│  © 2024 UrbanCart Admin                                                         │
+│  © 2024 APOSTLE Admin                                                         │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 

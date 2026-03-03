@@ -2,7 +2,7 @@
 
 ## Overview
 
-Reusable interaction patterns and compound components used throughout UrbanCart. These patterns ensure consistency in user experience across the platform.
+Reusable interaction patterns and compound components used throughout APOSTLE. These patterns ensure consistency in user experience across the platform.
 
 ## Data Display Patterns
 

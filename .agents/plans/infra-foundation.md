@@ -1,7 +1,7 @@
 # Infrastructure Foundation
 
 ## Feature Description
-Provision and standardize infrastructure for UrbanCart across local, staging, and production: hosting, networking, databases, caching, secrets, observability, CI/CD, and backup/recovery.
+Provision and standardize infrastructure for APOSTLE across local, staging, and production: hosting, networking, databases, caching, secrets, observability, CI/CD, and backup/recovery.
 
 ## Problem Statement
 Application feature plans assume infrastructure exists, but no dedicated plan defines environment setup, operational guardrails, or deployment reliability. This creates blockers for backend/frontend/admin execution.

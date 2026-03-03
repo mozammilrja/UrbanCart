@@ -1,11 +1,11 @@
-# UrbanCart Monorepo
+# APOSTLE Monorepo
 
 A premium Indian streetwear e-commerce platform built with Next.js 14, featuring a customer storefront and admin dashboard.
 
 ## 🏗️ Architecture
 
 ```
-UrbanCart/
+APOSTLE/
 ├── apps/
 │   ├── admin/          # Admin Dashboard (Next.js 14)
 │   └── storefront/     # Customer Storefront (Next.js 14)
@@ -51,16 +51,16 @@ pnpm dev
 ### Demo Credentials
 
 **Admin Login:**
-- Email: `admin@urbancart.com`
+- Email: `admin@apostle.com`
 - Password: `admin123`
 
 **Customer Login:**
-- Email: `demo@urbancart.com`
+- Email: `demo@apostle.com`
 - Password: `demo123`
 
 ## 📦 Packages
 
-### @urbancart/ui
+### @apostle/ui
 Shared UI components built with Radix UI primitives and Tailwind CSS:
 - Button, Input, Textarea, Select
 - Card, Badge, Avatar
@@ -68,21 +68,21 @@ Shared UI components built with Radix UI primitives and Tailwind CSS:
 - Toast notifications
 - And more...
 
-### @urbancart/types
+### @apostle/types
 Comprehensive TypeScript types for:
 - Products, Orders, Customers
 - Cart, Wishlist
 - API responses
 - Dashboard metrics
 
-### @urbancart/hooks
+### @apostle/hooks
 Zustand-powered state management:
 - `useCart` - Shopping cart state
 - `useWishlist` - Wishlist management
 - `useAuth` - Authentication state
 - Common utility hooks
 
-### @urbancart/mocks
+### @apostle/mocks
 MSW (Mock Service Worker) handlers for:
 - Products API
 - Orders API
@@ -91,7 +91,7 @@ MSW (Mock Service Worker) handlers for:
 - Authentication
 - Dashboard stats
 
-### @urbancart/config
+### @apostle/config
 Shared configuration:
 - Tailwind CSS design tokens
 - PostCSS configuration
@@ -183,4 +183,4 @@ pnpm test:e2e
 
 ## 📝 License
 
-Private - UrbanCart © 2024
+Private - APOSTLE © 2024

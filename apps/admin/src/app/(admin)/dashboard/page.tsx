@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-} from '@urbancart/ui';
+} from '@apostle/ui';
 import {
   TrendingUp,
   TrendingDown,

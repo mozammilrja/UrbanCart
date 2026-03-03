@@ -35,7 +35,7 @@ export const collections: Collection[] = [
     isFeatured: true,
     sortOrder: 1,
     seo: {
-      title: 'Streetwear Essentials | UrbanCart',
+      title: 'Streetwear Essentials | APOSTLE',
       description: 'Shop essential streetwear pieces - oversized tees, hoodies, cargo pants and more.',
     },
     createdAt: '2023-01-01T00:00:00Z',
@@ -55,7 +55,7 @@ export const collections: Collection[] = [
     isFeatured: true,
     sortOrder: 2,
     seo: {
-      title: 'Limited Drops | UrbanCart',
+      title: 'Limited Drops | APOSTLE',
       description: 'Exclusive limited edition streetwear releases. Limited quantities available.',
     },
     createdAt: '2023-06-15T00:00:00Z',
@@ -75,7 +75,7 @@ export const collections: Collection[] = [
     isFeatured: false,
     sortOrder: 3,
     seo: {
-      title: 'Summer 2024 Collection | UrbanCart',
+      title: 'Summer 2024 Collection | APOSTLE',
       description: 'Shop our Summer 2024 collection - lightweight streetwear for the warm season.',
     },
     createdAt: '2024-01-01T00:00:00Z',
@@ -127,7 +127,7 @@ export const collections: Collection[] = [
     isFeatured: true,
     sortOrder: 6,
     seo: {
-      title: 'Artist Collaborations | UrbanCart',
+      title: 'Artist Collaborations | APOSTLE',
       description: 'Exclusive artist collaboration streetwear. Limited edition designs.',
     },
     createdAt: '2023-09-01T00:00:00Z',

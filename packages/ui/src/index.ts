@@ -85,4 +85,4 @@ export { Spinner, type SpinnerProps } from './components/spinner';
 export { cn, formatPrice, formatDate, formatNumber, slugify, truncate, getInitials, debounce } from './lib/utils';
 
 // Note: Import globals.css directly in your app's entry point
-// import '@urbancart/ui/globals.css';
+// import '@apostle/ui/globals.css';

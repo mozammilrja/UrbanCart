@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@urbancart/ui';
+} from '@apostle/ui';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 
 export default function LoginPage() {
@@ -50,10 +50,10 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@urbancart.in"
+                  placeholder="admin@apostle.in"
                   className="pl-9"
                   required
-                  defaultValue="admin@urbancart.in"
+                  defaultValue="admin@apostle.in"
                 />
               </div>
             </div>
@@ -94,7 +94,7 @@ export default function LoginPage() {
           </form>
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>Demo credentials:</p>
-            <p>Email: admin@urbancart.in</p>
+            <p>Email: admin@apostle.in</p>
             <p>Password: admin123</p>
           </div>
         </CardContent>

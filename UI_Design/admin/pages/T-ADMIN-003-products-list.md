@@ -8,7 +8,7 @@ Product catalog management with filtering, bulk actions, and inventory overview.
 ### Desktop (1440px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Products / All Products                                   │
@@ -58,7 +58,7 @@ Product catalog management with filtering, bulk actions, and inventory overview.
 │                    │  └─────────────────────────────────────────────────────────┘│
 │                    │                                                            │
 ├────────────────────┴────────────────────────────────────────────────────────────┤
-│  © 2024 UrbanCart Admin                                              v1.0.0     │
+│  © 2024 APOSTLE Admin                                              v1.0.0     │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 

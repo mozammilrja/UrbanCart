@@ -2,7 +2,7 @@
 
 ## Overview
 
-UrbanCart is committed to providing an accessible shopping experience for all users, including those with disabilities. This document outlines our accessibility requirements and best practices.
+APOSTLE is committed to providing an accessible shopping experience for all users, including those with disabilities. This document outlines our accessibility requirements and best practices.
 
 ## Standards
 

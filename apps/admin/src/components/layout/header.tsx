@@ -1,7 +1,7 @@
 'use client';
 
 import { Bell, Search, Moon, Sun } from 'lucide-react';
-import { Button, Input, Avatar, AvatarFallback, AvatarImage, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@urbancart/ui';
+import { Button, Input, Avatar, AvatarFallback, AvatarImage, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@apostle/ui';
 import { useState } from 'react';
 
 export function Header() {
@@ -54,7 +54,7 @@ export function Header() {
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">Admin User</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  admin@urbancart.in
+                  admin@apostle.in
                 </p>
               </div>
             </DropdownMenuLabel>

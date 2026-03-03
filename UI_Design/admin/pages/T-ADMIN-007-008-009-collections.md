@@ -8,7 +8,7 @@ Create and manage product collections with rules-based or manual curation, cover
 ### Desktop (1440px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Collections                                               │
@@ -48,7 +48,7 @@ Create and manage product collections with rules-based or manual curation, cover
 │                    │  └─────────────────────────────────────────────────────────┘│
 │                    │                                                            │
 ├────────────────────┴────────────────────────────────────────────────────────────┤
-│  © 2024 UrbanCart Admin                                                         │
+│  © 2024 APOSTLE Admin                                                         │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -57,7 +57,7 @@ Create and manage product collections with rules-based or manual curation, cover
 ### Create/Edit Collection
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Collections / Create Collection                           │
@@ -233,18 +233,18 @@ Operator Options:
 │                                                                                 │
 │  Search engine preview                                                          │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐│
-│  │ Summer '24 Collection - UrbanCart                                           ││
-│  │ urbancart.in/collections/summer-24                                          ││
+│  │ Summer '24 Collection - APOSTLE                                           ││
+│  │ apostle.in/collections/summer-24                                          ││
 │  │ Hot new styles for the summer season. Shop the latest trends...             ││
 │  └─────────────────────────────────────────────────────────────────────────────┘│
 │                                                                                 │
 │  Page Title                                                                     │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐│
-│  │ Summer '24 Collection - UrbanCart                                           ││
+│  │ Summer '24 Collection - APOSTLE                                           ││
 │  └─────────────────────────────────────────────────────────────────────────────┘│
 │                                                                                 │
 │  URL Handle                                                                     │
-│  urbancart.in/collections/                                                      │
+│  apostle.in/collections/                                                      │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐│
 │  │ summer-24                                                                   ││
 │  └─────────────────────────────────────────────────────────────────────────────┘│

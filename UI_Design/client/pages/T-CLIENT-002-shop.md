@@ -48,7 +48,7 @@ Product listing page with filtering, sorting, and browsing capabilities. Primary
 │  ────────────      │  │ Brand    │ │ Brand    │ │ Brand    │ │ Brand    │      │
 │                    │  │ Product  │ │ Product  │ │ Product  │ │ Product  │      │
 │  Brand             │  │ ₹2,499   │ │ ₹3,499   │ │ ₹1,999   │ │ ₹4,499   │      │
-│  ☐ UrbanCart (89)  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘      │
+│  ☐ APOSTLE (89)  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘      │
 │  ☐ StreetX (45)    │                                                            │
 │  ☐ NeonWave (32)   │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
 │                    │  │          │ │          │ │          │ │          │      │
@@ -284,7 +284,7 @@ interface ShopPageData {
 
 ## SEO Requirements
 - H1: Category name or "All Products"
-- Meta title: "Shop T-Shirts | UrbanCart"
+- Meta title: "Shop T-Shirts | APOSTLE"
 - Canonical: Base URL without filters
 - Pagination: rel="next/prev"
 - noindex filter combinations

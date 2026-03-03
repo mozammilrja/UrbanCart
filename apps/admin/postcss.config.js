@@ -1,1 +1,6 @@
-module.exports = require('@urbancart/config/postcss.config');
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};

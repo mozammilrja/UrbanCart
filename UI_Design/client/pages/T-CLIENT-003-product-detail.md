@@ -15,7 +15,7 @@ Comprehensive product information page with images, variants, details, and conve
 │                                                                                 │
 ├──────────────────────────────────────┬──────────────────────────────────────────┤
 │                                      │                                          │
-│  ┌────────────────────────────────┐  │  URBANCART                               │
+│  ┌────────────────────────────────┐  │  APOSTLE                               │
 │  │                                │  │                                          │
 │  │                                │  │  SUPREME OVERSIZED TEE                   │
 │  │                                │  │                                          │
@@ -158,7 +158,7 @@ Comprehensive product information page with images, variants, details, and conve
 │ │      ● ○ ○ ○            │ │ ← swipe indicators
 │ └─────────────────────────┘ │
 ├─────────────────────────────┤
-│ URBANCART                   │
+│ APOSTLE                   │
 │ Supreme Oversized Tee       │
 │ ★★★★☆ 4.2 (128 reviews)     │
 │                             │
@@ -348,7 +348,7 @@ interface ProductPageData {
 
 ## SEO Requirements
 - H1: Product name
-- Meta title: "Product Name | Brand | UrbanCart"
+- Meta title: "Product Name | Brand | APOSTLE"
 - Meta description: Product description (truncated)
 - Structured data: Product schema with
   - name, description, image

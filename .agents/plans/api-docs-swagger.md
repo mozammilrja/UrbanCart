@@ -1,7 +1,7 @@
 # API Documentation (Swagger UI)
 
 ## Feature Description
-Implement OpenAPI 3 documentation and Swagger UI for UrbanCart backend so engineers, frontend, admin, QA, and integrations can discover and test APIs consistently.
+Implement OpenAPI 3 documentation and Swagger UI for APOSTLE backend so engineers, frontend, admin, QA, and integrations can discover and test APIs consistently.
 
 ## Problem Statement
 Current plan references API docs but has no dedicated implementation track. Without Swagger UI, API contracts are harder to validate and frontend/backend integration slows down.

@@ -1,4 +1,4 @@
-import type { Order } from '@urbancart/types';
+import type { Order } from '@apostle/types';
 
 export const orders: Order[] = [
   {

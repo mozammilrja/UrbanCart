@@ -241,7 +241,7 @@ interface CollectionPageData {
 
 ## SEO Requirements
 - H1: Collection name
-- Meta title: "Collection Name | UrbanCart"
+- Meta title: "Collection Name | APOSTLE"
 - Meta description: Collection description
 - Structured data: CollectionPage schema
 - Open Graph for social sharing

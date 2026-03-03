@@ -1,6 +1,6 @@
-# UrbanCart Feature-Based Implementation Plans
+# APOSTLE Feature-Based Implementation Plans
 
-This directory contains granular, agent-focused implementation plans for UrbanCart.
+This directory contains granular, agent-focused implementation plans for APOSTLE.
 
 **Architecture Baseline:** Turborepo monorepo (`apps/*`, `packages/*`).
 

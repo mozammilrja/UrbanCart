@@ -6,17 +6,17 @@ Pay special attention to naming of existing utils, types, and models. Import fro
 
 ## Feature Description
 
-Build the complete React + Vite admin panel for UrbanCart. This includes admin authentication (protecting routes), a metrics dashboard with KPIs (revenue, orders, conversion), product management (CRUD with image upload), inventory management (stock levels, low-stock alerts), order management (status tracking, shipping), collection management, and basic analytics with charts. The admin panel will be a separate Vite SPA that uses the same backend API as the storefront.
+Build the complete React + Vite admin panel for APOSTLE. This includes admin authentication (protecting routes), a metrics dashboard with KPIs (revenue, orders, conversion), product management (CRUD with image upload), inventory management (stock levels, low-stock alerts), order management (status tracking, shipping), collection management, and basic analytics with charts. The admin panel will be a separate Vite SPA that uses the same backend API as the storefront.
 
 ## User Story
 
 As an admin operator,
 I want to manage products, inventory, orders, and view analytics
-So that I can run UrbanCart's operations efficiently and make data-driven decisions
+So that I can run APOSTLE's operations efficiently and make data-driven decisions
 
 ## Problem Statement
 
-UrbanCart backend has all APIs implemented for admin operations, but operators cannot access them. Without an admin panel, business operations cannot be managed - no product uploads, no order tracking, no inventory management. Operations will be blocked.
+APOSTLE backend has all APIs implemented for admin operations, but operators cannot access them. Without an admin panel, business operations cannot be managed - no product uploads, no order tracking, no inventory management. Operations will be blocked.
 
 ## Solution Statement
 
@@ -288,7 +288,7 @@ export function ImageUpload({ onUpload }) {
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'urbancart_products');
+    formData.append('upload_preset', 'apostle_products');
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -382,7 +382,7 @@ Update `tailwind.config.js` with template paths and configure `postcss.config.js
 ```
 VITE_API_URL=http://localhost:8000
 VITE_CLOUDINARY_CLOUD_NAME=your_cloud
-VITE_UPLOAD_PRESET=urbancart_products
+VITE_UPLOAD_PRESET=apostle_products
 ```
 
 **CREATE `.env.example`:**
@@ -692,7 +692,7 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-gray-900 text-white p-6 min-h-screen">
-      <h1 className="text-2xl font-bold mb-8">UrbanCart Admin</h1>
+      <h1 className="text-2xl font-bold mb-8">APOSTLE Admin</h1>
       <nav className="space-y-2">
         {navItems.map((item) => (
           <Link 
@@ -1317,7 +1317,7 @@ import { test, expect } from '@playwright/test';
 test('admin login flow', async ({ page }) => {
   await page.goto('/login');
   
-  await page.fill('input[type="email"]', 'admin@urbancart.dev');
+  await page.fill('input[type="email"]', 'admin@apostle.dev');
   await page.fill('input[type="password"]', 'AdminPassword123!');
   await page.click('button:has-text("Login")');
   
@@ -1328,7 +1328,7 @@ test('admin login flow', async ({ page }) => {
 test('create product flow', async ({ page }) => {
   // Login first
   await page.goto('/login');
-  await page.fill('input[type="email"]', 'admin@urbancart.dev');
+  await page.fill('input[type="email"]', 'admin@apostle.dev');
   await page.fill('input[type="password"]', 'AdminPassword123!');
   await page.click('button:has-text("Login")');
   

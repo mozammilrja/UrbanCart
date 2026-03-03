@@ -1,5 +1,5 @@
 # Product Requirements Document
-## UrbanCart - Next-Generation Indian Streetwear Platform
+## APOSTLE - Next-Generation Indian Streetwear Platform
 
 **Document Version:** 3.0  
 **Date:** February 28, 2026  
@@ -9,9 +9,9 @@
 
 # 1. Executive Summary
 
-UrbanCart is a digitally-native, culturally-grounded Indian streetwear platform positioned at the intersection of designer-led narrative identity, multi-brand cultural retail, and high-performance e-commerce architecture. The platform operates as a hybrid model: 70% primary brand revenue, 20% curated collaborations, and 10% community-driven commerce (memberships, events, exclusives).
+APOSTLE is a digitally-native, culturally-grounded Indian streetwear platform positioned at the intersection of designer-led narrative identity, multi-brand cultural retail, and high-performance e-commerce architecture. The platform operates as a hybrid model: 70% primary brand revenue, 20% curated collaborations, and 10% community-driven commerce (memberships, events, exclusives).
 
-The platform targets creative professionals aged 22-35 in Indian metro cities who seek fashion as identity expression rather than passive consumption. UrbanCart differentiates through philosophical brand depth (inspired by Almost Gods), community-driven energy (inspired by BLUORNG), and a sophisticated drop-based commerce engine with access tiers, scarcity mechanics, and physical-digital integration via flagship stores ("Chapters").
+The platform targets creative professionals aged 22-35 in Indian metro cities who seek fashion as identity expression rather than passive consumption. APOSTLE differentiates through philosophical brand depth (inspired by Almost Gods), community-driven energy (inspired by BLUORNG), and a sophisticated drop-based commerce engine with access tiers, scarcity mechanics, and physical-digital integration via flagship stores ("Chapters").
 
 **MVP Goal:** Launch a fully functional e-commerce platform with product catalog, user authentication, cart/checkout with Indian payment methods (Razorpay/UPI), order management, and an admin panel for content and order management. Built as a Turborepo monorepo for shared code and consistent development experience.
 
@@ -21,7 +21,7 @@ The platform targets creative professionals aged 22-35 in Indian metro cities wh
 
 # 2. Mission
 
-**Product Mission:** Establish UrbanCart as the definitive platform for premium Indian streetwear—where fashion meets identity, community meets commerce, and cultural relevance meets commercial success.
+**Product Mission:** Establish APOSTLE as the definitive platform for premium Indian streetwear—where fashion meets identity, community meets commerce, and cultural relevance meets commercial success.
 
 **Core Principles:**
 
@@ -292,10 +292,10 @@ The platform targets creative professionals aged 22-35 in Indian metro cities wh
 ## 5.5 Technical Stories
 
 **US-19:** As a developer, I want shared TypeScript types across all apps, so that API contracts are type-safe.
-- *Example:* `@urbancart/types` exports `Product`, `Order` types used by web, admin, and backend.
+- *Example:* `@apostle/types` exports `Product`, `Order` types used by web, admin, and backend.
 
 **US-20:** As a developer, I want a shared UI library, so that design is consistent across web and admin.
-- *Example:* `@urbancart/ui` exports Button, Card, Dialog components used by both frontends.
+- *Example:* `@apostle/ui` exports Button, Card, Dialog components used by both frontends.
 
 ---
 
@@ -305,7 +305,7 @@ The platform targets creative professionals aged 22-35 in Indian metro cities wh
 
 ### Architecture Overview
 
-UrbanCart follows a **modular frontend-first architecture** with a planned backend expansion. The system is designed for scalability, maintainability, and optimal developer experience.
+APOSTLE follows a **modular frontend-first architecture** with a planned backend expansion. The system is designed for scalability, maintainability, and optimal developer experience.
 
 **Current State:** Frontend storefront (Next.js 14) with static HTML templates for reference
 **Planned:** Full-stack with Express API backend and React admin panel
@@ -341,7 +341,7 @@ UrbanCart follows a **modular frontend-first architecture** with a planned backe
 └───────────────────────────────────┘ └───────────────────────────┘
                     │                           │
                     └───────────┬───────────────┘
-                                │ @urbancart/api-client
+                                │ @apostle/api-client
 ┌───────────────────────────────┴─────────────────────────────────┐
 │                    Backend API (Express)                        │
 │                    apps/backend                                 │
@@ -408,7 +408,7 @@ UrbanCart follows a **modular frontend-first architecture** with a planned backe
 ### Full Project Structure
 
 ```
-urbancart/
+apostle/
 ├── frontend/                                 # Next.js 14 Storefront
 │   ├── src/
 │   │   ├── api/                             # API Layer
@@ -710,7 +710,7 @@ The following structure is planned for Phase 2 development. Admin panel and back
 - Background jobs (email queues, inventory sync, report generation)
 
 ```
-urbancart/
+apostle/
 ├── ...existing structure...
 │
 ├── admin/                                   # React + Vite Admin (Planned)
@@ -844,8 +844,8 @@ urbancart/
 - **Feature-Based Structure:** Each feature is self-contained
 - **Server State:** TanStack Query for API data
 - **Client State:** Zustand for UI state
-- **Shared Components:** Import from `@urbancart/ui`
-- **Type Safety:** Import types from `@urbancart/types`
+- **Shared Components:** Import from `@apostle/ui`
+- **Type Safety:** Import types from `@apostle/types`
 
 ### TanStack Query Patterns (Frontend & Admin)
 
@@ -1113,7 +1113,7 @@ export const productsService = {
       },
       "images": [
         {
-          "url": "https://res.cloudinary.com/urbancart/products/abc123-front.webp",
+          "url": "https://res.cloudinary.com/apostle/products/abc123-front.webp",
           "alt": "Alpha Cross Tee Front",
           "position": 1
         }
@@ -1366,12 +1366,12 @@ export const productsService = {
 
 | Package | Purpose |
 |---------|---------|
-| `@urbancart/ui` | Shared shadcn-based components |
-| `@urbancart/types` | TypeScript type definitions |
-| `@urbancart/api-client` | Type-safe HTTP client |
-| `@urbancart/auth` | Authentication utilities |
-| `@urbancart/utils` | Common helpers (formatting, validation) |
-| `@urbancart/config` | ESLint, TypeScript, Tailwind presets |
+| `@apostle/ui` | Shared shadcn-based components |
+| `@apostle/types` | TypeScript type definitions |
+| `@apostle/api-client` | Type-safe HTTP client |
+| `@apostle/auth` | Authentication utilities |
+| `@apostle/utils` | Common helpers (formatting, validation) |
+| `@apostle/config` | ESLint, TypeScript, Tailwind presets |
 
 ## 8.5 Infrastructure & Services
 
@@ -1439,7 +1439,7 @@ PORT=8000
 API_URL=http://localhost:8000
 
 # MongoDB
-MONGODB_URI=mongodb://localhost:27017/urbancart
+MONGODB_URI=mongodb://localhost:27017/apostle
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -1462,13 +1462,13 @@ CLOUDINARY_API_SECRET=xxx
 
 # Email
 RESEND_API_KEY=xxx
-FROM_EMAIL=orders@urbancart.com
-SUPPORT_EMAIL=support@urbancart.com
+FROM_EMAIL=orders@apostle.com
+SUPPORT_EMAIL=support@apostle.com
 
 # GST
 GST_RATE=18
 COMPANY_GSTIN=27XXXXX1234X1ZX
-COMPANY_NAME=UrbanCart Private Limited
+COMPANY_NAME=APOSTLE Private Limited
 COMPANY_ADDRESS=123 MG Road, Mumbai, Maharashtra 400001
 
 # Sentry
@@ -1485,7 +1485,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api
 NEXT_PUBLIC_RAZORPAY_KEY=rzp_test_xxx
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 NEXT_PUBLIC_FB_PIXEL_ID=xxx
-NEXT_PUBLIC_SITE_URL=https://urbancart.com
+NEXT_PUBLIC_SITE_URL=https://apostle.com
 ```
 
 ### Admin (.env)
@@ -1714,7 +1714,7 @@ services:
       - ./apps/backend/src:/app/src
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=mongodb://root:password@mongodb:27017/urbancart?authSource=admin
+      - DATABASE_URL=mongodb://root:password@mongodb:27017/apostle?authSource=admin
       - REDIS_URL=redis://redis:6379
     depends_on:
       - mongodb
@@ -1860,7 +1860,7 @@ Sentry.init({
   profilesSampleRate: 0.1,
   integrations: [
     new Sentry.BrowserTracing({
-      tracePropagationTargets: ['localhost', /^https:\/\/api\.urbancart\.in/],
+      tracePropagationTargets: ['localhost', /^https:\/\/api\.apostle\.in/],
     }),
   ],
 });
@@ -2198,7 +2198,7 @@ ADMIN_URL=http://localhost:3001
 API_URL=http://localhost:8000
 
 # ─── Database ─────────────────────────────────────────────────────
-MONGODB_URI=mongodb://localhost:27017/urbancart
+MONGODB_URI=mongodb://localhost:27017/apostle
 REDIS_URL=redis://localhost:6379
 
 # ─── Authentication ───────────────────────────────────────────────
@@ -2212,13 +2212,13 @@ RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
 RAZORPAY_WEBHOOK_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
 
 # ─── Cloudinary ───────────────────────────────────────────────────
-CLOUDINARY_CLOUD_NAME=urbancart
+CLOUDINARY_CLOUD_NAME=apostle
 CLOUDINARY_API_KEY=xxxxxxxxxxxx
 CLOUDINARY_API_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
 
 # ─── Email (Resend) ───────────────────────────────────────────────
 RESEND_API_KEY=re_xxxxxxxxxxxx
-EMAIL_FROM=UrbanCart <hello@urbancart.in>
+EMAIL_FROM=APOSTLE <hello@apostle.in>
 
 # ─── Monitoring ───────────────────────────────────────────────────
 SENTRY_DSN=https://xxxxxx@sentry.io/xxxxxx
@@ -2667,7 +2667,7 @@ The MVP is successful when:
 
 ### Q4: Financial Services
 - 💳 Buy Now Pay Later (Simpl, LazyPay integration)
-- 💳 UrbanCart Credit (for members)
+- 💳 APOSTLE Credit (for members)
 - 💳 EMI options for high-value purchases
 - 💳 Wallet with cashback rewards
 - 💳 Gift cards platform
@@ -2707,7 +2707,7 @@ The MVP is successful when:
 - 🌐 Affiliate marketing platform
 - 🌐 Influencer partnership portal
 - 🌐 White-label platform licensing
-- 🌐 UrbanCart Academy (creator education)
+- 🌐 APOSTLE Academy (creator education)
 - 🌐 Sustainability certification program
 
 **Year 5 Revenue Target:** ₹150-200 Cr
@@ -3011,7 +3011,7 @@ pnpm typecheck
 pnpm --filter=backend seed
 
 # Generate types from API
-pnpm --filter=@urbancart/types generate
+pnpm --filter=@apostle/types generate
 ```
 
 ## 23.4 Package Dependencies

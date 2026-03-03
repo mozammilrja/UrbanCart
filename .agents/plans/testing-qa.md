@@ -7,7 +7,7 @@ Establish quality gates across backend, frontend, and critical user journeys usi
 Large multi-feature implementation without automated validation leads to regressions and deployment risk. Current planning requires explicit, enforceable QA steps.
 
 ## Solution Statement
-Create a layered testing strategy aligned with UrbanCart architecture: service/unit tests for logic, integration tests for APIs/stores, and E2E coverage for revenue-critical flows.
+Create a layered testing strategy aligned with APOSTLE architecture: service/unit tests for logic, integration tests for APIs/stores, and E2E coverage for revenue-critical flows.
 
 ---
 

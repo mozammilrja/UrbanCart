@@ -1,9 +1,15 @@
 {
-  "name": "@urbancart/config",
+  "name": "@apostle/config",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "main": "index.ts",
   "types": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./tailwind.config": "./tailwind.config.ts",
+    "./postcss.config": "./postcss.config.js"
+  },
   "files": ["tailwind.config.ts", "postcss.config.js", "index.ts"],
   "dependencies": {
     "tailwindcss-animate": "^1.0.7"

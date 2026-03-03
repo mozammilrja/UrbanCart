@@ -1,7 +1,7 @@
 # Monorepo Foundation (Turborepo)
 
 ## Feature Description
-Set up UrbanCart as a Turborepo monorepo with isolated apps and shared packages for UI, configs, and types.
+Set up APOSTLE as a Turborepo monorepo with isolated apps and shared packages for UI, configs, and types.
 
 ## Problem Statement
 Current plans refer to standalone `frontend`, `backend`, and `admin` paths. Without a monorepo foundation, cross-app consistency, shared libraries, and CI performance are fragmented.
@@ -24,7 +24,7 @@ Read first:
 ## Target Structure
 
 ```text
-UrbanCart/
+APOSTLE/
 ├── apps/
 │   ├── storefront/        # Next.js storefront
 │   ├── admin/             # Vite admin app

@@ -31,7 +31,7 @@ Saved items collection with organization, quick actions, and sharing capabilitie
 │  🚪 Sign Out           │  │                │ │                │ │                ││
 │                        │  │                │ │                │ │                ││
 │                        │  ├────────────────┤ ├────────────────┤ ├────────────────┤│
-│                        │  │ URBANCART      │ │ URBANCART      │ │ URBANCART      ││
+│                        │  │ APOSTLE      │ │ APOSTLE      │ │ APOSTLE      ││
 │                        │  │ Supreme Tee    │ │ Urban Hoodie   │ │ Basic Tee      ││
 │                        │  │                │ │                │ │                ││
 │                        │  │ ₹2,499         │ │ ₹3,499         │ │ ₹1,999         ││
@@ -50,7 +50,7 @@ Saved items collection with organization, quick actions, and sharing capabilitie
 │                        │  │                │ │                │                  │
 │                        │  │ ⚡SALE         │ │                │                  │
 │                        │  ├────────────────┤ ├────────────────┤                  │
-│                        │  │ URBANCART      │ │ URBANCART      │                  │
+│                        │  │ APOSTLE      │ │ APOSTLE      │                  │
 │                        │  │ Graphic Tee    │ │ Joggers        │                  │
 │                        │  │                │ │                │                  │
 │                        │  │ ₹1,499 ₹1,999  │ │ ₹2,999         │                  │
@@ -122,7 +122,7 @@ Saved items collection with organization, quick actions, and sharing capabilitie
 │    [PRODUCT IMAGE]         │
 │                            │
 ├────────────────────────────┤
-│ URBANCART                  │
+│ APOSTLE                  │
 │ Supreme Oversized Tee      │
 │                            │
 │ ₹2,499                     │
@@ -147,7 +147,7 @@ Saved items collection with organization, quick actions, and sharing capabilitie
 │    │  OUT OF STOCK │        │
 │    └──────────────┘        │
 ├────────────────────────────┤
-│ URBANCART                  │
+│ APOSTLE                  │
 │ Basic Tee                  │
 │                            │
 │ ₹1,999 (Currently unavailable)│
@@ -167,7 +167,7 @@ Saved items collection with organization, quick actions, and sharing capabilitie
 │    [PRODUCT IMAGE]         │
 │                            │
 ├────────────────────────────┤
-│ URBANCART                  │
+│ APOSTLE                  │
 │ Graphic Tee                │
 │                            │
 │ ₹1,499  ₹1,999             │
@@ -191,7 +191,7 @@ Saved items collection with organization, quick actions, and sharing capabilitie
 │    [PRODUCT IMAGE]         │
 │                            │
 ├────────────────────────────┤
-│ URBANCART                  │
+│ APOSTLE                  │
 │ Limited Edition Hoodie     │
 │                            │
 │ ₹4,999                     │
@@ -233,7 +233,7 @@ Saved items collection with organization, quick actions, and sharing capabilitie
 │                                                            │
 │  Copy Link                                                 │
 │  ┌────────────────────────────────────────────┐ [Copy]     │
-│  │ https://urbancart.in/wishlist/abc123       │            │
+│  │ https://apostle.in/wishlist/abc123       │            │
 │  └────────────────────────────────────────────┘            │
 │                                                            │
 │  Or share via                                              │

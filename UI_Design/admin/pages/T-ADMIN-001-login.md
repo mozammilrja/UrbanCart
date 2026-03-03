@@ -13,7 +13,7 @@ Secure admin authentication portal with enhanced security features.
 │                                                                                 │
 │                    ┌──────────────────────────────────────────┐                │
 │                    │                                          │                │
-│                    │           URBANCART                      │                │
+│                    │           APOSTLE                      │                │
 │                    │           ──────────                     │                │
 │                    │           ADMIN PORTAL                   │                │
 │                    │                                          │                │
@@ -38,7 +38,7 @@ Secure admin authentication portal with enhanced security features.
 │                    │                                          │                │
 │                    └──────────────────────────────────────────┘                │
 │                                                                                 │
-│                           © 2024 UrbanCart. All rights reserved.               │
+│                           © 2024 APOSTLE. All rights reserved.               │
 │                                                                                 │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -76,7 +76,7 @@ Secure admin authentication portal with enhanced security features.
 │  a password reset link.                  │
 │                                          │
 │  ┌────────────────────────────────────┐  │
-│  │ admin@urbancart.in                 │  │
+│  │ admin@apostle.in                 │  │
 │  └────────────────────────────────────┘  │
 │                                          │
 │  ┌────────────────────────────────────┐  │

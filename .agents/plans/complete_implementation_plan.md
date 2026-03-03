@@ -1,4 +1,4 @@
-# UrbanCart Complete Implementation Plan
+# APOSTLE Complete Implementation Plan
 
 **Document Version:** 1.0  
 **Last Updated:** February 28, 2026  
@@ -572,7 +572,7 @@ Indexes:
 ### Frontend (.env.local)
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_APP_NAME=UrbanCart
+NEXT_PUBLIC_APP_NAME=APOSTLE
 NEXT_PUBLIC_SENTRY_DSN=<sentry-dsn>
 NEXT_PUBLIC_POSTHOG_KEY=<posthog-key>
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<cloudinary>
@@ -587,7 +587,7 @@ LOG_LEVEL=info
 
 # Database
 MONGODB_URI=mongodb+srv://...
-MONGODB_DB_NAME=urbancart
+MONGODB_DB_NAME=apostle
 
 # Cache
 REDIS_URL=redis://...
@@ -600,7 +600,7 @@ JWT_REFRESH_EXPIRES=7d
 
 # Email
 RESEND_API_KEY=<key>
-EMAIL_FROM=noreply@urbancart.dev
+EMAIL_FROM=noreply@apostle.dev
 
 # Payment
 RAZORPAY_KEY_ID=<key>

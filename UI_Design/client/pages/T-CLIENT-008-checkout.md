@@ -8,7 +8,7 @@ Multi-step checkout flow for completing purchases with address, payment, and ord
 ### Desktop (1280px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│  URBANCART                                               🔒 Secure Checkout     │
+│  APOSTLE                                               🔒 Secure Checkout     │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                 │
 │     ① ─────────── ② ─────────── ③ ─────────── ④                               │
@@ -82,7 +82,7 @@ Multi-step checkout flow for completing purchases with address, payment, and ord
 │                                                         │                       │
 ├─────────────────────────────────────────────────────────┴───────────────────────┤
 │                                                                                 │
-│  Need help? 📞 1800-123-4567 (Toll Free) | support@urbancart.in                │
+│  Need help? 📞 1800-123-4567 (Toll Free) | support@apostle.in                │
 │                                                                                 │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```

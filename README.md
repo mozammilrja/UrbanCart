@@ -1,4 +1,4 @@
-# UrbanCart
+# APOSTLE
 
 **Next-Generation Indian Streetwear Platform**
 
@@ -50,8 +50,8 @@ A digitally-native, culturally-grounded e-commerce platform positioned at the in
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/UrbanCart.git
-cd UrbanCart
+git clone https://github.com/yourusername/APOSTLE.git
+cd APOSTLE
 
 # Install dependencies
 cd frontend
@@ -69,7 +69,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Project Structure
 
 ```
-UrbanCart/
+APOSTLE/
 ├── frontend/                    # Next.js 14 Storefront
 │   ├── src/
 │   │   ├── api/                # API layer (auth, services, core client)
@@ -112,7 +112,7 @@ pnpm test:e2e         # Run Playwright E2E tests
 ```bash
 # .env.local
 NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_APP_NAME=UrbanCart
+NEXT_PUBLIC_APP_NAME=APOSTLE
 NEXT_PUBLIC_SENTRY_DSN=           # Optional: Error tracking
 ```
 

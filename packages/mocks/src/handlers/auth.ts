@@ -19,7 +19,7 @@ export const authHandlers = [
     const customer = getCustomerByEmail(body.email);
     
     // Demo credentials check
-    if (body.email === 'demo@urbancart.com' && body.password === 'demo123') {
+    if (body.email === 'demo@apostle.com' && body.password === 'demo123') {
       const token = generateToken();
       tokens.set(token, {
         userId: 'cust_001',
@@ -33,7 +33,7 @@ export const authHandlers = [
             id: 'cust_001',
             firstName: 'Demo',
             lastName: 'User',
-            email: 'demo@urbancart.com',
+            email: 'demo@apostle.com',
             role: 'customer',
           },
           accessToken: token,
@@ -166,7 +166,7 @@ export const authHandlers = [
         id: session.userId,
         firstName: 'Demo',
         lastName: 'User',
-        email: 'demo@urbancart.com',
+        email: 'demo@apostle.com',
         role: 'customer',
       },
     });
@@ -201,7 +201,7 @@ export const authHandlers = [
     const body = await request.json() as { email: string; password: string };
     
     // Demo admin credentials
-    if (body.email === 'admin@urbancart.com' && body.password === 'admin123') {
+    if (body.email === 'admin@apostle.com' && body.password === 'admin123') {
       const token = generateToken();
       tokens.set(token, {
         userId: 'admin_001',
@@ -215,7 +215,7 @@ export const authHandlers = [
             id: 'admin_001',
             firstName: 'Admin',
             lastName: 'User',
-            email: 'admin@urbancart.com',
+            email: 'admin@apostle.com',
             role: 'admin',
           },
           accessToken: token,

@@ -12,7 +12,7 @@ import {
   Button,
   Label,
   Separator,
-} from '@urbancart/ui';
+} from '@apostle/ui';
 
 export default function SettingsPage() {
   return (
@@ -53,7 +53,7 @@ export default function SettingsPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" defaultValue="admin@urbancart.in" />
+                <Input id="email" type="email" defaultValue="admin@apostle.in" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
@@ -95,11 +95,11 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="storeName">Store Name</Label>
-                <Input id="storeName" defaultValue="UrbanCart" />
+                <Input id="storeName" defaultValue="APOSTLE" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="storeEmail">Store Email</Label>
-                <Input id="storeEmail" type="email" defaultValue="hello@urbancart.in" />
+                <Input id="storeEmail" type="email" defaultValue="hello@apostle.in" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="storePhone">Store Phone</Label>

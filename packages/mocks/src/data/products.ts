@@ -1,4 +1,4 @@
-import type { Product } from '@urbancart/types';
+import type { Product } from '@apostle/types';
 
 export const products: Product[] = [
   {
@@ -56,7 +56,7 @@ export const products: Product[] = [
       care: 'Machine wash cold, tumble dry low',
     },
     seo: {
-      title: 'Urban Oversized Tee | UrbanCart',
+      title: 'Urban Oversized Tee | APOSTLE',
       description: 'Shop the Urban Oversized Tee - Premium cotton streetwear essential with relaxed fit and dropped shoulders.',
       keywords: ['oversized tee', 'streetwear', 'premium cotton', 'urban fashion'],
     },
@@ -111,7 +111,7 @@ export const products: Product[] = [
       care: 'Machine wash cold, do not bleach',
     },
     seo: {
-      title: 'Street Drop Hoodie | UrbanCart',
+      title: 'Street Drop Hoodie | APOSTLE',
       description: 'Premium heavyweight fleece hoodie with kangaroo pocket. Essential streetwear layering piece.',
     },
     createdAt: '2023-10-15T00:00:00Z',

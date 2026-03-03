@@ -6,7 +6,7 @@ import {
   getOrdersByCustomerId,
   getOrdersByStatus,
 } from '../data/orders';
-import type { Order } from '@urbancart/types';
+import type { Order } from '@apostle/types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 

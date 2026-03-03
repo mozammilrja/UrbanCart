@@ -1,4 +1,4 @@
-# UrbanCart Implementation Checklist
+# APOSTLE Implementation Checklist
 
 **Document Version:** 1.0  
 **Last Updated:** February 28, 2026  

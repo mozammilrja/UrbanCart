@@ -28,7 +28,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@urbancart/ui';
+} from '@apostle/ui';
 import {
   Search,
   Filter,

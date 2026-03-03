@@ -79,7 +79,7 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'urbancart-auth',
+      name: 'apostle-auth',
       partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,

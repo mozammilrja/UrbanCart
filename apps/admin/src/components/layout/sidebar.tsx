@@ -15,7 +15,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { useState } from 'react';
-import { cn, Button, Avatar, AvatarFallback, AvatarImage, Separator } from '@urbancart/ui';
+import { cn, Button, Avatar, AvatarFallback, AvatarImage, Separator } from '@apostle/ui';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -38,7 +38,7 @@ export function Sidebar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
             <span className="text-sm font-bold text-primary-foreground">UC</span>
           </div>
-          <span className="font-semibold">UrbanCart</span>
+          <span className="font-semibold">APOSTLE</span>
         </Link>
         <Button
           variant="ghost"
@@ -69,7 +69,7 @@ export function Sidebar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
             <span className="text-sm font-bold text-primary-foreground">UC</span>
           </div>
-          <span className="font-semibold">UrbanCart Admin</span>
+          <span className="font-semibold">APOSTLE Admin</span>
         </div>
 
         {/* Navigation */}
@@ -104,7 +104,7 @@ export function Sidebar() {
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">Admin User</p>
-              <p className="text-xs text-muted-foreground truncate">admin@urbancart.in</p>
+              <p className="text-xs text-muted-foreground truncate">admin@apostle.in</p>
             </div>
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <LogOut className="h-4 w-4" />

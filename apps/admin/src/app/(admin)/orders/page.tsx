@@ -25,7 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@urbancart/ui';
+} from '@apostle/ui';
 import {
   Search,
   Filter,

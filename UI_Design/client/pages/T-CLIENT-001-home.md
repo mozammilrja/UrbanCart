@@ -12,7 +12,7 @@ Landing page showcasing brand identity, featured drops, collections, and driving
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                              HEADER (sticky)                                     │
 │ ┌─────────────────────────────────────────────────────────────────────────────┐ │
-│ │ URBANCART        Shop  Collections  Drops           🔍  ♡  🛒(3)  👤        │ │
+│ │ APOSTLE        Shop  Collections  Drops           🔍  ♡  🛒(3)  👤        │ │
 │ └─────────────────────────────────────────────────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                 │
@@ -103,7 +103,7 @@ Landing page showcasing brand identity, featured drops, collections, and driving
 │ └───────────────────┘ └───────────────────┘ └───────────────────┘              │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                          INSTAGRAM FEED                                          │
-│  @URBANCART                                            Follow Us →              │
+│  @APOSTLE                                            Follow Us →              │
 │ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
 │ │  [IMG]   │ │  [IMG]   │ │  [IMG]   │ │  [IMG]   │ │  [IMG]   │ │  [IMG]   │  │
 │ └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
@@ -122,7 +122,7 @@ Landing page showcasing brand identity, featured drops, collections, and driving
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                              FOOTER                                              │
 │ ┌─────────────────────────────────────────────────────────────────────────────┐ │
-│ │ URBANCART                                                                   │ │
+│ │ APOSTLE                                                                   │ │
 │ │                                                                             │ │
 │ │ Shop           Help             Company         Connect                     │ │
 │ │ ─────          ────             ───────         ───────                     │ │
@@ -132,7 +132,7 @@ Landing page showcasing brand identity, featured drops, collections, and driving
 │ │ Sale           Size Guide       Press           📱 WhatsApp                 │ │
 │ │                                                                             │ │
 │ │ ─────────────────────────────────────────────────────────────────────────── │ │
-│ │ © 2024 UrbanCart. All rights reserved.     Privacy  Terms  Cookies          │ │
+│ │ © 2024 APOSTLE. All rights reserved.     Privacy  Terms  Cookies          │ │
 │ └─────────────────────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -140,7 +140,7 @@ Landing page showcasing brand identity, featured drops, collections, and driving
 ### Mobile (< 768px)
 ```
 ┌─────────────────────────────┐
-│ ≡  URBANCART    🔍  🛒(3)   │
+│ ≡  APOSTLE    🔍  🛒(3)   │
 ├─────────────────────────────┤
 │                             │
 │    STREETWEAR               │
@@ -189,7 +189,7 @@ Landing page showcasing brand identity, featured drops, collections, and driving
 │ [Company ▼]                 │
 │ [Connect ▼]                 │
 │ ───────────────────────────│
-│ © 2024 UrbanCart            │
+│ © 2024 APOSTLE            │
 └─────────────────────────────┘
 ```
 
@@ -269,10 +269,10 @@ interface HomePageData {
 
 ## SEO Requirements
 - H1: Hero headline
-- Meta title: "UrbanCart | Premium Indian Streetwear"
+- Meta title: "APOSTLE | Premium Indian Streetwear"
 - Meta description: Brand + key offerings
 - Structured data: Organization, WebSite
-- Canonical: https://urbancart.in/
+- Canonical: https://apostle.in/
 
 ## Performance Considerations
 - Hero image: LCP priority, preload

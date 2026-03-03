@@ -5,7 +5,7 @@ import {
   getCustomerByEmail,
   getCustomersBySegment,
 } from '../data/customers';
-import type { Customer } from '@urbancart/types';
+import type { Customer } from '@apostle/types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 

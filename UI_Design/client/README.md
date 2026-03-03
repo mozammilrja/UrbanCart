@@ -1,6 +1,6 @@
 # Client Storefront UI Design
 
-This folder contains design artifacts for the UrbanCart customer-facing storefront.
+This folder contains design artifacts for the APOSTLE customer-facing storefront.
 
 ## Purpose
 

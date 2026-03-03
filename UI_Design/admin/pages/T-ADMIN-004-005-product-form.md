@@ -8,7 +8,7 @@ Comprehensive product creation and editing form with variants, pricing, inventor
 ### Desktop (1440px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Products / Add New Product                                │
@@ -149,14 +149,14 @@ Comprehensive product creation and editing form with variants, pricing, inventor
 │                                                                                 │
 │  Search engine preview                                                          │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐│
-│  │ Supreme Oversized Tee - UrbanCart                                           ││
-│  │ urbancart.in/products/supreme-oversized-tee                                 ││
+│  │ Supreme Oversized Tee - APOSTLE                                           ││
+│  │ apostle.in/products/supreme-oversized-tee                                 ││
 │  │ Premium quality oversized t-shirt crafted from 100% organic cotton...       ││
 │  └─────────────────────────────────────────────────────────────────────────────┘│
 │                                                                                 │
 │  Page Title                                                                     │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐│
-│  │ Supreme Oversized Tee - UrbanCart                                           ││
+│  │ Supreme Oversized Tee - APOSTLE                                           ││
 │  └─────────────────────────────────────────────────────────────────────────────┘│
 │  55 / 70 characters                                                             │
 │                                                                                 │
@@ -167,7 +167,7 @@ Comprehensive product creation and editing form with variants, pricing, inventor
 │  120 / 160 characters                                                           │
 │                                                                                 │
 │  URL Handle                                                                     │
-│  urbancart.in/products/                                                         │
+│  apostle.in/products/                                                         │
 │  ┌─────────────────────────────────────────────────────────────────────────────┐│
 │  │ supreme-oversized-tee                                                       ││
 │  └─────────────────────────────────────────────────────────────────────────────┘│

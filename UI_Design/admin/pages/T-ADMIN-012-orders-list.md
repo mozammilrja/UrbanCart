@@ -8,7 +8,7 @@ Order management with filtering, status updates, bulk actions, and quick order p
 ### Desktop (1440px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Orders                                                    │
@@ -58,7 +58,7 @@ Order management with filtering, status updates, bulk actions, and quick order p
 │                    │  └─────────────────────────────────────────────────────────┘│
 │                    │                                                            │
 ├────────────────────┴────────────────────────────────────────────────────────────┤
-│  © 2024 UrbanCart Admin                                                         │
+│  © 2024 APOSTLE Admin                                                         │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 

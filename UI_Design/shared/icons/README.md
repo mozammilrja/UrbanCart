@@ -2,7 +2,7 @@
 
 ## Overview
 
-UrbanCart uses a custom icon set designed for consistency across the platform. Icons follow the brand's bold, clean aesthetic.
+APOSTLE uses a custom icon set designed for consistency across the platform. Icons follow the brand's bold, clean aesthetic.
 
 ## Icon Style
 

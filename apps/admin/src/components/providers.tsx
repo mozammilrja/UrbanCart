@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { ToastProvider, ToastViewport } from '@urbancart/ui';
+import { ToastProvider, ToastViewport } from '@apostle/ui';
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(

@@ -8,7 +8,7 @@ Main admin dashboard with KPIs, analytics, recent activity, and quick actions.
 ### Desktop (1440px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Good morning, Admin!                    Mar 15, 2024      │
@@ -73,7 +73,7 @@ Main admin dashboard with KPIs, analytics, recent activity, and quick actions.
 │                    │  └────────────────────────────┘  └────────────────────────┘│
 │                    │                                                            │
 ├────────────────────┴────────────────────────────────────────────────────────────┤
-│  © 2024 UrbanCart Admin                                              v1.0.0     │
+│  © 2024 APOSTLE Admin                                              v1.0.0     │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 

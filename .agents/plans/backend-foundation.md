@@ -6,7 +6,7 @@ Pay special attention to naming of existing utils, types, and models. Import fro
 
 ## Feature Description
 
-Build the complete Express.js backend foundation for UrbanCart. This includes TypeScript configuration, Express app setup, MongoDB connection with Mongoose models, Redis caching layer, structured logging, middleware architecture, and error handling. The foundation will support all subsequent features (auth, products, cart, checkout, orders, admin).
+Build the complete Express.js backend foundation for APOSTLE. This includes TypeScript configuration, Express app setup, MongoDB connection with Mongoose models, Redis caching layer, structured logging, middleware architecture, and error handling. The foundation will support all subsequent features (auth, products, cart, checkout, orders, admin).
 
 ## User Story
 
@@ -16,7 +16,7 @@ So that I can rapidly implement features (auth, products, orders) with consisten
 
 ## Problem Statement
 
-UrbanCart currently has no backend infrastructure. Without a properly configured Express server, database models, and middleware architecture, feature implementation will be inconsistent and error-prone.
+APOSTLE currently has no backend infrastructure. Without a properly configured Express server, database models, and middleware architecture, feature implementation will be inconsistent and error-prone.
 
 ## Solution Statement
 
@@ -303,7 +303,7 @@ PORT=8000
 LOG_LEVEL=info
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/urbancart
+MONGODB_URI=mongodb://localhost:27017/apostle
 
 # Cache
 REDIS_URL=redis://localhost:6379

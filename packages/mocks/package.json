@@ -1,5 +1,5 @@
 {
-  "name": "@urbancart/mocks",
+  "name": "@apostle/mocks",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -10,7 +10,7 @@
     "./data": "./src/data/index.ts"
   },
   "dependencies": {
-    "@urbancart/types": "workspace:*"
+    "@apostle/types": "workspace:*"
   },
   "peerDependencies": {
     "msw": "^2.0.0"

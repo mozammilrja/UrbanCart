@@ -116,7 +116,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: 'urbancart-cart',
+      name: 'apostle-cart',
       partialize: (state) => ({ items: state.items }),
     }
   )

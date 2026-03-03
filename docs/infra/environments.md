@@ -1,7 +1,7 @@
 # Environments
 
 ## Purpose
-Define environment boundaries, ownership, and variable policy for UrbanCart.
+Define environment boundaries, ownership, and variable policy for APOSTLE.
 
 ## Environment Matrix
 
@@ -12,9 +12,9 @@ Define environment boundaries, ownership, and variable policy for UrbanCart.
 | production | main | real user data | live integrations | restricted ops/admin |
 
 ## URL Convention
-- Storefront: `https://<env>.store.urbancart` (or platform equivalent)
-- API: `https://<env>.api.urbancart`
-- Admin: `https://<env>.admin.urbancart`
+- Storefront: `https://<env>.store.apostle` (or platform equivalent)
+- API: `https://<env>.api.apostle`
+- Admin: `https://<env>.admin.apostle`
 
 ## Variable Ownership
 - Application variables: owned by app team

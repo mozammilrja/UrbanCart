@@ -1,4 +1,4 @@
-# UrbanCart System Design Document
+# APOSTLE System Design Document
 
 **Document Version:** 1.0  
 **Date:** February 28, 2026  
@@ -184,7 +184,7 @@
 ## 3.1 System Context
 
 ```
-URBANCART PLATFORM ARCHITECTURE:
+APOSTLE PLATFORM ARCHITECTURE:
 
 Frontend                Admin Panel            Integrations
 (Next.js 15)           (React + Vite)

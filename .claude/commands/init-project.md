@@ -1,4 +1,4 @@
-# Initialize UrbanCart Frontend
+# Initialize APOSTLE Frontend
 
 Set up the Next.js 14 e-commerce storefront from scratch.
 
@@ -126,7 +126,7 @@ Update `tsconfig.json` to add strict settings:
 Create `.env.local`:
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_APP_NAME=UrbanCart
+NEXT_PUBLIC_APP_NAME=APOSTLE
 NEXT_PUBLIC_SENTRY_DSN=
 NEXT_PUBLIC_POSTHOG_KEY=
 ```

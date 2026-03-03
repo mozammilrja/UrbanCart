@@ -1,6 +1,6 @@
 # Admin Panel UI Design
 
-This folder contains design artifacts for the UrbanCart admin dashboard.
+This folder contains design artifacts for the APOSTLE admin dashboard.
 
 ## Purpose
 

@@ -1,4 +1,4 @@
-# UrbanCart
+# APOSTLE
 
 A next-generation Indian streetwear e-commerce platform with premium brand identity, drop-based commerce, and community-driven features.
 
@@ -15,7 +15,7 @@ A next-generation Indian streetwear e-commerce platform with premium brand ident
 ## Project Structure
 
 ```
-UrbanCart/
+APOSTLE/
 ├── frontend/                    # Next.js 14 Storefront
 │   ├── src/
 │   │   ├── api/                # API layer
@@ -284,7 +284,7 @@ api/
 ```bash
 # .env.local
 NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_APP_NAME=UrbanCart
+NEXT_PUBLIC_APP_NAME=APOSTLE
 NEXT_PUBLIC_SENTRY_DSN=           # Error tracking
 NEXT_PUBLIC_POSTHOG_KEY=          # Analytics (optional)
 ```

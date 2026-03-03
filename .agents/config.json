@@ -1,7 +1,7 @@
 {
-  "project": "UrbanCart",
+  "project": "APOSTLE",
   "version": "1.0",
-  "description": "Agent configuration for UrbanCart development and operations",
+  "description": "Agent configuration for APOSTLE development and operations",
   "agents": {
     "browser": {
       "name": "Browser Agent",

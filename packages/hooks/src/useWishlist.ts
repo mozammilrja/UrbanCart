@@ -75,7 +75,7 @@ export const useWishlistStore = create<WishlistStore>()(
       },
     }),
     {
-      name: 'urbancart-wishlist',
+      name: 'apostle-wishlist',
     }
   )
 );

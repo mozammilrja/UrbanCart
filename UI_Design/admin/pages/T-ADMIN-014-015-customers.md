@@ -8,7 +8,7 @@ Customer database with profiles, order history, and segmentation for marketing a
 ### Desktop (1440px+)
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Customers                                                 │
@@ -57,7 +57,7 @@ Customer database with profiles, order history, and segmentation for marketing a
 │                    │  └─────────────────────────────────────────────────────────┘│
 │                    │                                                            │
 ├────────────────────┴────────────────────────────────────────────────────────────┤
-│  © 2024 UrbanCart Admin                                                         │
+│  © 2024 APOSTLE Admin                                                         │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -78,7 +78,7 @@ Customer database with profiles, order history, and segmentation for marketing a
 ### Desktop View
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ ☰ URBANCART ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
+│ ☰ APOSTLE ADMIN                              🔔 (3)  👤 Admin ▼   [Storefront]│
 ├────────────────────┬────────────────────────────────────────────────────────────┤
 │                    │                                                            │
 │  DASHBOARD         │  Customers / Priya Sharma                                  │

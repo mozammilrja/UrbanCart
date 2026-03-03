@@ -19,7 +19,7 @@ import {
   SelectValue,
   Label,
   Checkbox,
-} from '@urbancart/ui';
+} from '@apostle/ui';
 import { ArrowLeft, Plus, Upload, X, GripVertical } from 'lucide-react';
 
 const categories = [

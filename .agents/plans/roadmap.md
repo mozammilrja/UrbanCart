@@ -1,4 +1,4 @@
-# UrbanCart Development Roadmap
+# APOSTLE Development Roadmap
 
 **Phase:** MVP → Year 2 Expansion  
 **Timeline:** March 2026 - December 2027  

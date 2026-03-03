@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@urbancart/ui', '@urbancart/types', '@urbancart/config', '@urbancart/hooks', '@urbancart/mocks'],
+  transpilePackages: ['@apostle/ui', '@apostle/types', '@apostle/config', '@apostle/hooks', '@apostle/mocks'],
   images: {
     remotePatterns: [
       {

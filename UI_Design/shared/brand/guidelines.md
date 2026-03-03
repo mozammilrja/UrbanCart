@@ -1,8 +1,8 @@
-# UrbanCart Brand Guidelines
+# APOSTLE Brand Guidelines
 
 ## Brand Philosophy
 
-UrbanCart represents the pulse of Indian streetwear culture—bold, authentic, and unapologetically expressive. Our design language bridges traditional craftsmanship with contemporary urban aesthetics.
+APOSTLE represents the pulse of Indian streetwear culture—bold, authentic, and unapologetically expressive. Our design language bridges traditional craftsmanship with contemporary urban aesthetics.
 
 ## Logo
 

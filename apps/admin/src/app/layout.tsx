@@ -6,8 +6,8 @@ import { Providers } from '@/components/providers';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'UrbanCart Admin',
-  description: 'Admin dashboard for UrbanCart - Premium Indian Streetwear',
+  title: 'APOSTLE Admin',
+  description: 'Admin dashboard for APOSTLE - Premium Indian Streetwear',
 };
 
 export default function RootLayout({

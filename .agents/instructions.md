@@ -1,12 +1,12 @@
-# UrbanCart Agent Instructions
+# APOSTLE Agent Instructions
 
 **Version:** 1.1  
 **Last Updated:** February 28, 2026  
-**Purpose:** Define agent capabilities and workflows for UrbanCart development
+**Purpose:** Define agent capabilities and workflows for APOSTLE development
 
 ## Repository Architecture (Turborepo)
 
-UrbanCart uses a Turborepo monorepo layout:
+APOSTLE uses a Turborepo monorepo layout:
 
 ```text
 apps/
@@ -272,7 +272,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 const spec = swaggerJsdoc({
    definition: {
       openapi: '3.0.3',
-      info: { title: 'UrbanCart API', version: '1.0.0' },
+      info: { title: 'APOSTLE API', version: '1.0.0' },
    },
    apis: ['src/modules/**/*.ts'],
 });
@@ -284,8 +284,8 @@ app.get('/openapi.json', (_req, res) => res.json(spec));
 ### Git Configuration
 ```bash
 # Set user identity
-git config user.name "UrbanCart Bot"
-git config user.email "bot@urbancart.dev"
+git config user.name "APOSTLE Bot"
+git config user.email "bot@apostle.dev"
 
 # Set up commit template
 git config commit.template .gitmessage
