@@ -1,98 +1,38 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowRight, Truck, RotateCcw, Shield, Heart, Star, Sparkles } from 'lucide-react';
-import { Button, Badge } from '@urbancart/ui';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+import { Truck, RotateCcw, Shield, Sparkles } from 'lucide-react';
+import {
+  Section,
+  Container,
+  SectionHeader,
+  ProductGrid,
+  CollectionCard,
+  CollectionGrid,
+  FeatureCard,
+  InfiniteMarquee,
+  GrainOverlay,
+} from '@/components/ui';
+import {
+  FadeIn,
+  StaggerReveal,
+  Parallax,
+} from '@/components/motion';
+import { PageTransition } from '@/components/motion/page-transition';
+import { productService } from '@/services/product.service';
+import { collectionService } from '@/services/collection.service';
+import { toStorefrontProduct } from '@/types/storefront.types';
 
-const featuredProducts = [
-  {
-    id: '1',
-    name: 'Urban Oversized Tee',
-    brand: 'UrbanCart',
-    price: 1999,
-    originalPrice: 2499,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop',
-    badge: 'Bestseller',
-    rating: 4.8,
-    reviews: 124,
-  },
-  {
-    id: '2',
-    name: 'Street Drop Hoodie',
-    brand: 'UrbanCart',
-    price: 3499,
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop',
-    badge: 'New Drop',
-    rating: 4.9,
-    reviews: 89,
-  },
-  {
-    id: '3',
-    name: 'Classic Cargo Pants',
-    brand: 'UrbanCart',
-    price: 2999,
-    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&h=500&fit=crop',
-    rating: 4.7,
-    reviews: 56,
-  },
-  {
-    id: '4',
-    name: 'Limited Edition Cap',
-    brand: 'UrbanCart',
-    price: 999,
-    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=500&fit=crop',
-    badge: 'Limited',
-    rating: 4.6,
-    reviews: 34,
-  },
-];
+// Dynamic import for hero (client-side only)
+const HeroCanvas = dynamic(
+  () => import('@/components/three/hero-fallback'),
+  { ssr: false, loading: () => <HeroFallback /> }
+);
 
-const categories = [
-  {
-    name: 'Hoodies',
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop',
-    href: '/shop?category=hoodies',
-    count: 24,
-  },
-  {
-    name: 'T-Shirts',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=800&fit=crop',
-    href: '/shop?category=tshirts',
-    count: 48,
-  },
-  {
-    name: 'Jackets',
-    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop',
-    href: '/shop?category=jackets',
-    count: 18,
-  },
-  {
-    name: 'Accessories',
-    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=800&fit=crop',
-    href: '/shop?category=accessories',
-    count: 32,
-  },
-];
-
-const collections = [
-  {
-    name: 'Winter Collection \'26',
-    description: 'Bold layers for the cold',
-    image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1200&h=600&fit=crop&q=80',
-    href: '/collections/winter-2026',
-  },
-  {
-    name: 'Streetwear Essentials',
-    description: 'Core pieces you need',
-    image: 'https://images.unsplash.com/photo-1467043237213-65f2da53396f?w=800&h=600&fit=crop&q=80',
-    href: '/collections/essentials',
-  },
-  {
-    name: 'Limited Drops',
-    description: 'Exclusive limited edition pieces',
-    image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=600&fit=crop&q=80',
-    href: '/collections/limited',
-  },
-];
+function HeroFallback() {
+  return (
+    <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-900 to-black" />
+  );
+}
 
 const features = [
   { icon: Truck, title: 'Free Shipping', description: 'Orders above ₹999' },
@@ -101,263 +41,223 @@ const features = [
   { icon: Sparkles, title: 'Premium Quality', description: 'Crafted in India' },
 ];
 
-const announcements = [
-  'FREE SHIPPING ON ₹999+',
-  'NEW DROP EVERY FRIDAY',
-  'PREMIUM QUALITY GUARANTEED',
-  'USE CODE URBAN20 FOR 20% OFF',
-];
-
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(price);
-};
-
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch data using services (mock mode)
+  const [rawFeaturedProducts, collections] = await Promise.all([
+    productService.getFeatured(8),
+    collectionService.getFeatured(4),
+  ]);
+  
+  // Convert to storefront products (normalize images to string[])
+  const featuredProducts = rawFeaturedProducts.map(toStorefrontProduct);
+  
+  const announcements = [
+    'FREE SHIPPING ON ₹999+',
+    'NEW DROP EVERY FRIDAY',
+    'PREMIUM QUALITY GUARANTEED',
+    'USE CODE URBAN20 FOR 20% OFF',
+  ];
+  
   return (
-    <div className="bg-background">
-      {/* Hero Section - Bold Typography */}
-      <section className="relative min-h-[70vh] overflow-hidden bg-neutral-900 sm:min-h-[80vh]">
-        <Image
-          src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop&q=80"
-          alt="Urban streetwear boutique"
-          fill
-          sizes="100vw"
-          className="object-cover opacity-50"
-          priority
-        />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/50 via-neutral-900/20 to-neutral-900/80" />
+    <PageTransition>
+      <div className="bg-black">
+        {/* Film grain overlay */}
+        <GrainOverlay opacity={0.02} />
         
-        <div className="container relative flex h-full min-h-[70vh] flex-col items-center justify-center py-16 text-center sm:min-h-[80vh] sm:py-20">
-          <Badge className="mb-4 border-brand-accent/50 bg-brand-accent/10 px-3 py-1 text-brand-accent hover:bg-brand-accent/20 sm:mb-6">
-            <Sparkles className="mr-1.5 h-3 w-3" />
-            New Drop Available
-          </Badge>
-          
-          <h1 className="font-heading text-4xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl">
-            STREETWEAR
-            <br />
-            <span className="text-brand-accent">REDEFINED</span>
-          </h1>
-          
-          <p className="mx-auto mt-4 max-w-lg text-sm text-neutral-300 sm:mt-6 sm:max-w-2xl sm:text-base lg:text-lg">
-            Premium Indian streetwear for the culture-forward generation.
-            <span className="hidden sm:inline"> Exclusive drops. Limited editions. Unapologetic style.</span>
-          </p>
-          
-          <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:gap-4">
-            <Link href="/shop">
-              <Button size="lg" className="h-12 min-w-[160px] bg-brand-accent font-semibold text-white hover:bg-brand-accent-dark sm:h-14 sm:min-w-[200px] sm:text-lg">
-                Shop the Drop
-                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-              </Button>
-            </Link>
-            <Link href="/collections">
-              <Button size="lg" variant="outline" className="h-12 min-w-[160px] border-white/30 bg-transparent text-white hover:bg-white/10 sm:h-14 sm:min-w-[200px] sm:text-lg">
-                Explore Collections
-              </Button>
-            </Link>
+        {/* Hero Section - Three.js Cinematic */}
+        <section className="relative min-h-screen overflow-hidden">
+          {/* Three.js Canvas */}
+          <div className="absolute inset-0">
+            <Suspense fallback={<HeroFallback />}>
+              <HeroCanvas />
+            </Suspense>
           </div>
-        </div>
-      </section>
-
-      {/* Announcement Marquee */}
-      <section className="overflow-hidden border-y border-neutral-800 bg-neutral-900 py-2.5 sm:py-3">
-        <div className="flex animate-marquee whitespace-nowrap">
-          {[...announcements, ...announcements, ...announcements].map((text, i) => (
-            <span key={i} className="mx-4 text-xs font-medium tracking-wide text-white sm:mx-8 sm:text-sm">
-              {text}
-              <span className="mx-4 text-brand-accent sm:mx-8">•</span>
-            </span>
-          ))}
-
-        </div>
-      </section>
-
-      {/* Brand Values / Features */}
-      <section className="border-b border-neutral-200 bg-white">
-        <div className="container py-6 sm:py-8 lg:py-10">
-          <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8">
-            {features.map((feature) => (
-              <div key={feature.title} className="flex items-center gap-3 sm:gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-neutral-900 text-white sm:h-12 sm:w-12 lg:h-14 lg:w-14 lg:rounded-2xl">
-                  <feature.icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
-                </div>
-                <div>
-                  <h3 className="text-xs font-semibold text-neutral-900 sm:text-sm">{feature.title}</h3>
-                  <p className="text-[10px] text-neutral-500 sm:text-xs lg:text-sm">{feature.description}</p>
-                </div>
+          
+          {/* Gradient overlay */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black" />
+          
+          {/* Hero Content */}
+          <div className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center">
+            <FadeIn delay={0.5}>
+              <span className="text-xs uppercase tracking-[0.4em] text-white/50">
+                Premium Indian Streetwear
+              </span>
+            </FadeIn>
+            
+            <FadeIn delay={0.8}>
+              <h1 className="font-display text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl lg:text-9xl">
+                URBAN
+                <span className="block text-white/40">CART</span>
+              </h1>
+            </FadeIn>
+            
+            <FadeIn delay={1.4}>
+              <p className="mx-auto mt-8 max-w-md text-base text-white/60 sm:text-lg">
+                Where street culture meets premium craftsmanship.
+                Exclusive drops. Limited editions.
+              </p>
+            </FadeIn>
+            
+            <FadeIn delay={1.8}>
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:gap-6">
+                <a
+                  href="/shop"
+                  className="group inline-flex h-14 items-center justify-center gap-3 bg-white px-8 text-sm font-medium uppercase tracking-wider text-black transition-all hover:bg-white/90"
+                >
+                  Shop Collection
+                  <svg
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+                <a
+                  href="/collections"
+                  className="inline-flex h-14 items-center justify-center border border-white/30 bg-transparent px-8 text-sm font-medium uppercase tracking-wider text-white transition-all hover:border-white hover:bg-white/5"
+                >
+                  Explore Drops
+                </a>
               </div>
-            ))}
+            </FadeIn>
+            
+            {/* Scroll indicator */}
+            <FadeIn delay={2.2} className="absolute bottom-10 left-1/2 -translate-x-1/2">
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[10px] uppercase tracking-widest text-white/40">Scroll</span>
+                <div className="h-12 w-px bg-gradient-to-b from-white/40 to-transparent" />
+              </div>
+            </FadeIn>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Featured Products */}
-      <section className="py-12 sm:py-16 lg:py-24">
-        <div className="container">
-          <div className="flex items-end justify-between">
-            <div>
-              <span className="text-sm font-semibold uppercase tracking-widest text-brand-accent">Latest Drop</span>
-              <h2 className="mt-2 font-heading text-3xl font-bold text-neutral-900 sm:text-4xl">Featured Products</h2>
+        {/* Announcement Marquee */}
+        <section className="border-y border-white/10 bg-black py-4">
+          <InfiniteMarquee speed={40}>
+            <div className="flex items-center gap-16 px-8">
+              {announcements.map((text, i) => (
+                <span key={i} className="flex items-center gap-16 text-xs font-medium uppercase tracking-widest text-white/60">
+                  {text}
+                  <span className="text-white/20">◆</span>
+                </span>
+              ))}
             </div>
-            <Link href="/shop" className="group hidden items-center gap-2 text-sm font-semibold text-neutral-900 hover:text-brand-accent sm:flex">
-              View All
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-          
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8">
-            {featuredProducts.map((product) => (
-              <Link key={product.id} href={`/product/${product.id}`} className="group">
-                <div className="overflow-hidden rounded-xl bg-white transition-shadow duration-300 hover:shadow-elevation-3 lg:rounded-2xl">
-                  <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+          </InfiniteMarquee>
+        </section>
+
+        {/* Brand Values */}
+        <Section className="border-b border-white/10">
+          <Container>
+            <StaggerReveal>
+              <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+                {features.map((feature) => (
+                  <FeatureCard
+                    key={feature.title}
+                    icon={<feature.icon className="h-5 w-5" />}
+                    title={feature.title}
+                    description={feature.description}
+                  />
+                ))}
+              </div>
+            </StaggerReveal>
+          </Container>
+        </Section>
+
+        {/* Featured Products */}
+        <Section>
+          <Container>
+            <SectionHeader
+              eyebrow="Latest Drop"
+              title="Featured Products"
+              description="Premium streetwear pieces, crafted with precision for the culture"
+              ctaText="View All"
+              ctaHref="/shop"
+            />
+            
+            <div className="mt-16">
+              <StaggerReveal stagger={0.1}>
+                <ProductGrid 
+                  products={featuredProducts} 
+                  columns={4}
+                />
+              </StaggerReveal>
+            </div>
+          </Container>
+        </Section>
+
+        {/* Featured Collection Banner */}
+        {collections[0] && (
+          <Section className="py-0">
+            <Parallax speed={0.3}>
+              <CollectionCard
+                collection={collections[0]}
+                variant="large"
+              />
+            </Parallax>
+          </Section>
+        )}
+
+        {/* More Collections */}
+        <Section>
+          <Container>
+            <SectionHeader
+              eyebrow="Curated"
+              title="Shop Collections"
+              description="Explore our carefully curated selection of premium streetwear"
+            />
+            
+            <div className="mt-16">
+              <StaggerReveal stagger={0.15}>
+                <CollectionGrid
+                  collections={collections.slice(1, 4)}
+                  columns={3}
+                />
+              </StaggerReveal>
+            </div>
+          </Container>
+        </Section>
+
+        {/* Newsletter Section */}
+        <Section className="border-t border-white/10 bg-neutral-950">
+          <Container size="narrow">
+            <FadeIn>
+              <div className="text-center">
+                <span className="text-xs uppercase tracking-[0.3em] text-white/50">
+                  Stay Connected
+                </span>
+                <h2 className="mt-4 text-3xl font-light tracking-tight text-white md:text-4xl">
+                  Join the Movement
+                </h2>
+                <p className="mx-auto mt-4 max-w-md text-base text-white/60">
+                  Subscribe for early access to drops, exclusive offers, and 10% off your first order.
+                </p>
+                
+                <form className="mx-auto mt-8 max-w-md">
+                  <div className="flex gap-0">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="h-14 flex-1 border border-white/20 bg-transparent px-4 text-sm text-white placeholder:text-white/40 focus:border-white focus:outline-none focus:ring-0"
                     />
-                    {product.badge && (
-                      <Badge className="absolute left-2 top-2 bg-neutral-900 px-2 py-0.5 text-[10px] font-semibold text-white hover:bg-neutral-800 sm:left-3 sm:top-3 sm:px-2.5 sm:py-1 sm:text-xs">
-                        {product.badge}
-                      </Badge>
-                    )}
-                    <button className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-neutral-500 opacity-0 shadow-md transition-all duration-300 hover:text-red-500 group-hover:opacity-100 sm:right-3 sm:top-3 sm:h-10 sm:w-10">
-                      <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <button
+                      type="submit"
+                      className="h-14 shrink-0 bg-white px-6 text-sm font-medium uppercase tracking-wider text-black transition-colors hover:bg-white/90"
+                    >
+                      Subscribe
                     </button>
                   </div>
-                  <div className="p-3 sm:p-4">
-                    <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 sm:text-xs">{product.brand}</p>
-                    <h3 className="mt-1 line-clamp-1 text-sm font-medium text-neutral-900 transition-colors group-hover:text-brand-accent sm:text-base">{product.name}</h3>
-                    <div className="mt-1.5 flex items-center gap-1 sm:mt-2">
-                      <Star className="h-3 w-3 fill-amber-400 text-amber-400 sm:h-3.5 sm:w-3.5" />
-                      <span className="text-xs font-medium text-neutral-700 sm:text-sm">{product.rating}</span>
-                      <span className="text-xs text-neutral-400 sm:text-sm">({product.reviews})</span>
-                    </div>
-                    <div className="mt-2 flex items-baseline gap-2 sm:mt-3">
-                      <span className="text-base font-bold text-neutral-900 sm:text-lg">{formatPrice(product.price)}</span>
-                      {product.originalPrice && (
-                        <span className="text-xs text-neutral-400 line-through sm:text-sm">
-                          {formatPrice(product.originalPrice)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-          
-          <div className="mt-8 text-center sm:hidden">
-            <Link href="/shop">
-              <Button variant="outline" className="border-neutral-900 font-semibold text-neutral-900">
-                View All Products
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Shop by Category */}
-      <section className="bg-neutral-100 py-12 sm:py-16 lg:py-20">
-        <div className="container">
-          <div className="text-center">
-            <span className="text-sm font-semibold uppercase tracking-widest text-brand-accent">Categories</span>
-            <h2 className="mt-2 font-heading text-3xl font-bold text-neutral-900 sm:text-4xl">Shop by Style</h2>
-          </div>
-          
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-4 lg:grid-cols-4 lg:gap-6">
-            {categories.map((category) => (
-              <Link key={category.name} href={category.href} className="group relative">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-xl sm:rounded-2xl">
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
-                    <h3 className="text-lg font-bold text-white sm:text-xl lg:text-2xl">{category.name}</h3>
-                    <p className="mt-0.5 text-xs text-white/70 sm:text-sm">{category.count} Products</p>
-                    <span className="mt-2 inline-flex items-center text-xs font-medium text-white group-hover:underline sm:mt-3 sm:text-sm">
-                      Shop Now
-                      <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1 sm:ml-2 sm:h-4 sm:w-4" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Collection Banner */}
-      <section className="py-8 sm:py-10 lg:py-12">
-        <div className="container">
-          <Link href={collections[0].href} className="group block">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-neutral-200 sm:aspect-[21/9] sm:rounded-2xl lg:rounded-3xl">
-              <Image
-                src={collections[0].image}
-                alt={collections[0].name}
-                fill
-                sizes="100vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-              <div className="absolute inset-0 flex items-center">
-                <div className="px-4 sm:px-8 lg:px-12">
-                  <Badge className="bg-brand-accent/20 text-brand-accent">Featured Collection</Badge>
-                  <h2 className="mt-3 font-heading text-2xl font-bold text-white sm:mt-4 sm:text-4xl lg:text-5xl">{collections[0].name}</h2>
-                  <p className="mt-2 max-w-md text-sm text-white/80 sm:text-base lg:text-lg">{collections[0].description}</p>
-                  <Button className="mt-4 bg-white text-neutral-900 hover:bg-neutral-100 sm:mt-6" size="lg">
-                    Explore Collection
-                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  </Button>
-                </div>
+                  <p className="mt-4 text-xs text-white/40">
+                    By subscribing, you agree to our Privacy Policy
+                  </p>
+                </form>
               </div>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      {/* Two Column Collections */}
-      <section className="pb-8 sm:pb-10 lg:pb-12">
-        <div className="container">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-            {collections.slice(1, 3).map((collection) => (
-              <Link key={collection.name} href={collection.href} className="group">
-                <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-neutral-200 sm:rounded-2xl">
-                  <Image
-                    src={collection.image}
-                    alt={collection.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white sm:p-6">
-                    <h3 className="text-lg font-bold sm:text-xl lg:text-2xl">{collection.name}</h3>
-                    <p className="mt-1 text-xs text-white/80 sm:text-sm">{collection.description}</p>
-                    <span className="mt-2 inline-flex items-center text-xs font-medium group-hover:underline sm:mt-3 sm:text-sm">
-                      Shop Collection
-                      <ArrowRight className="ml-2 h-3.5 w-3.5 transition-transform group-hover:translate-x-1 sm:h-4 sm:w-4" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
+            </FadeIn>
+          </Container>
+        </Section>
+      </div>
+    </PageTransition>
   );
 }

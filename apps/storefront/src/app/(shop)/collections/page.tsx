@@ -1,129 +1,146 @@
-'use client';
+import {
+  Section,
+  Container,
+  SectionHeader,
+  CollectionGrid,
+  GrainOverlay,
+} from '@/components/ui';
+import { FadeIn, StaggerReveal } from '@/components/motion';
+import { PageTransition } from '@/components/motion/page-transition';
+import { collectionService } from '@/services/collection.service';
 
-import Image from 'next/image';
-import Link from 'next/link';
+export const metadata = {
+  title: 'Collections | UrbanCart',
+  description: 'Explore our curated collections of premium streetwear. From limited drops to seasonal essentials.',
+};
 
-const collections = [
-  {
-    id: 'menswear',
-    name: 'Menswear',
-    description: 'All Clothing Menswear',
-    image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&h=1000&fit=crop',
-    productCount: 134,
-  },
-  {
-    id: 'streetwear-essentials',
-    name: 'Streetwear Essentials',
-    description: 'Core pieces that define the urban aesthetic',
-    image: 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&h=1000&fit=crop',
-    productCount: 24,
-  },
-  {
-    id: 'limited-drops',
-    name: 'Limited Drops',
-    description: 'Exclusive releases, limited quantities',
-    image: 'https://images.unsplash.com/photo-1558171013-128e4c5a8c3c?w=800&h=1000&fit=crop',
-    productCount: 8,
-  },
-  {
-    id: 'summer-2024',
-    name: 'Summer 2024',
-    description: 'Lightweight styles for the season',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1000&fit=crop',
-    productCount: 18,
-  },
-  {
-    id: 'monochrome',
-    name: 'Monochrome',
-    description: 'Classic black and white statement pieces',
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&h=1000&fit=crop',
-    productCount: 12,
-  },
-  {
-    id: 'urban-accessories',
-    name: 'Urban Accessories',
-    description: 'Complete your look with premium accessories',
-    image: 'https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=800&h=1000&fit=crop',
-    productCount: 15,
-  },
-];
-
-export default function CollectionsPage() {
+export default async function CollectionsPage() {
+  const collections = await collectionService.getAll();
+  
+  // Use first collection with most products as featured
+  const sortedByProducts = [...collections].sort((a, b) => b.productCount - a.productCount);
+  const featuredCollection = sortedByProducts[0];
+  const regularCollections = collections.filter(c => c.id !== featuredCollection?.id);
+  
   return (
-    <div className="min-h-screen bg-neutral-950">
-      {/* Page Header */}
-      <div className="border-b border-neutral-800">
-        <div className="container py-8 sm:py-12">
-          <h1 className="text-center text-2xl font-light tracking-wide text-white sm:text-3xl md:text-4xl">
-            Our <span className="font-medium">Collections</span>
-          </h1>
-          <p className="mt-4 text-center text-sm text-neutral-400 sm:text-base">
-            Curated selections of our finest streetwear
-          </p>
-        </div>
-      </div>
-
-      {/* Featured Collection */}
-      <div className="border-b border-neutral-800">
-        <Link href={`/collections/${collections[0].id}`} className="group block">
-          <div className="relative aspect-[21/9] overflow-hidden">
-            <Image
-              src={collections[0].image}
-              alt={collections[0].name}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-300">
-                Featured Collection
-              </span>
-              <h2 className="mt-4 text-3xl font-light tracking-wide text-white sm:text-4xl md:text-5xl lg:text-6xl">
-                {collections[0].name}
-              </h2>
-              <p className="mt-4 max-w-md text-neutral-300">
-                {collections[0].description}
-              </p>
-              <div className="mt-6">
-                <span className="inline-flex items-center border border-white/30 px-6 py-2 text-sm font-medium uppercase tracking-wider text-white transition-colors group-hover:bg-white group-hover:text-neutral-900">
-                  View Collection
-                </span>
+    <PageTransition>
+      <div className="min-h-screen bg-black">
+        <GrainOverlay opacity={0.03} />
+        
+        {/* Page Header */}
+        <Section className="pt-32 pb-16">
+          <Container>
+            <FadeIn>
+              <div className="text-center">
+                <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                  Curated Selections
+                </p>
+                <h1 className="mt-4 text-4xl font-extralight tracking-tight text-white md:text-6xl lg:text-7xl">
+                  Our <span className="font-medium">Collections</span>
+                </h1>
+                <p className="mx-auto mt-6 max-w-xl text-lg text-white/60">
+                  Discover our carefully curated collections, each telling a unique story of urban style and cultural expression.
+                </p>
               </div>
-            </div>
-          </div>
-        </Link>
-      </div>
+            </FadeIn>
+          </Container>
+        </Section>
 
-      {/* Collections Grid */}
-      <div className="container py-12 sm:py-16">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
-          {collections.slice(1).map((collection) => (
-            <Link
-              key={collection.id}
-              href={`/collections/${collection.id}`}
-              className="group block"
-            >
-              <div className="relative aspect-[3/4] overflow-hidden bg-neutral-900">
-                <Image
-                  src={collection.image}
-                  alt={collection.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+        {/* Featured Collection Hero */}
+        {featuredCollection && (
+          <Section className="py-0">
+            <FadeIn delay={0.2}>
+              <div className="relative aspect-[21/9] overflow-hidden bg-neutral-900">
+                <div 
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ 
+                    backgroundImage: featuredCollection.image 
+                      ? `url(${featuredCollection.image})` 
+                      : 'linear-gradient(to right, #1a1a1a, #2a2a2a)'
+                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <h3 className="text-xl font-medium text-white">
-                    {collection.name}
-                  </h3>
-                  <p className="mt-2 text-sm text-neutral-400">
-                    {collection.productCount} Products
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                
+                <div className="absolute inset-0 flex flex-col justify-center p-8 md:p-16 lg:p-24">
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/50">
+                    Featured Collection
+                  </p>
+                  <h2 className="mt-4 text-4xl font-light tracking-tight text-white md:text-6xl lg:text-7xl">
+                    {featuredCollection.name}
+                  </h2>
+                  <p className="mt-4 max-w-lg text-lg text-white/70">
+                    {featuredCollection.description}
+                  </p>
+                  <div className="mt-8">
+                    <a
+                      href={`/collections/${featuredCollection.slug}`}
+                      className="group inline-flex items-center gap-3 border border-white bg-transparent px-8 py-4 text-sm font-medium uppercase tracking-widest text-white transition-colors hover:bg-white hover:text-black"
+                    >
+                      Explore Now
+                      <svg
+                        className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </a>
+                  </div>
+                  
+                  <p className="mt-8 text-sm text-white/40">
+                    {featuredCollection.productCount} Products
                   </p>
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
+            </FadeIn>
+          </Section>
+        )}
+
+        {/* All Collections Grid */}
+        <Section>
+          <Container>
+            <SectionHeader
+              eyebrow="Browse"
+              title="All Collections"
+              description="From limited drops to seasonal essentials"
+            />
+            
+            <div className="mt-16">
+              <StaggerReveal stagger={0.1}>
+                <CollectionGrid collections={regularCollections} columns={3} />
+              </StaggerReveal>
+            </div>
+          </Container>
+        </Section>
+
+        {/* Stats Section */}
+        <Section className="border-t border-white/10">
+          <Container>
+            <FadeIn>
+              <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+                <div className="text-center">
+                  <p className="text-4xl font-light text-white md:text-5xl">{collections.length}</p>
+                  <p className="mt-2 text-sm uppercase tracking-widest text-white/40">Collections</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-4xl font-light text-white md:text-5xl">300+</p>
+                  <p className="mt-2 text-sm uppercase tracking-widest text-white/40">Products</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-4xl font-light text-white md:text-5xl">15</p>
+                  <p className="mt-2 text-sm uppercase tracking-widest text-white/40">New This Week</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-4xl font-light text-white md:text-5xl">∞</p>
+                  <p className="mt-2 text-sm uppercase tracking-widest text-white/40">Possibilities</p>
+                </div>
+              </div>
+            </FadeIn>
+          </Container>
+        </Section>
       </div>
-    </div>
+    </PageTransition>
   );
 }

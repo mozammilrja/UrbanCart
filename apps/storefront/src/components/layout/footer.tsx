@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
-import { Input, Button, Separator } from '@urbancart/ui';
+import { Instagram, Twitter, Youtube } from 'lucide-react';
 
 const footerLinks = {
   shop: [
@@ -19,7 +18,7 @@ const footerLinks = {
     { name: 'Contact Us', href: '/contact' },
     { name: 'FAQs', href: '/faq' },
     { name: 'Shipping Info', href: '/shipping' },
-    { name: 'Returns & Exchanges', href: '/returns' },
+    { name: 'Returns', href: '/returns' },
     { name: 'Size Guide', href: '/size-guide' },
   ],
   company: [
@@ -33,68 +32,33 @@ const footerLinks = {
 const socialLinks = [
   { name: 'Instagram', icon: Instagram, href: 'https://instagram.com' },
   { name: 'Twitter', icon: Twitter, href: 'https://twitter.com' },
-  { name: 'Facebook', icon: Facebook, href: 'https://facebook.com' },
   { name: 'YouTube', icon: Youtube, href: 'https://youtube.com' },
 ];
 
 export function Footer() {
   return (
-    <footer className="border-t border-neutral-200 bg-white">
-      {/* Newsletter section */}
-      <div className="bg-neutral-900">
-        <div className="container py-10 sm:py-12 lg:py-14">
-          <div className="mx-auto max-w-2xl text-center">
-            <h3 className="font-heading text-xl font-bold text-white sm:text-2xl lg:text-3xl">
-              Join the <span className="text-brand-accent">Urban Movement</span>
-            </h3>
-            <p className="mt-2 text-sm text-neutral-400 sm:mt-3 sm:text-base">
-              Subscribe for early access to drops, exclusive offers, and 10% off your first order.
-            </p>
-            <form className="mx-auto mt-6 sm:mt-8">
-              <div className="flex max-w-lg flex-col gap-3 sm:flex-row sm:gap-0">
-                <div className="relative flex-1">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="h-12 w-full border-0 bg-neutral-800 px-4 text-white placeholder:text-neutral-500 focus:ring-2 focus:ring-brand-accent sm:rounded-r-none"
-                  />
-                </div>
-                <Button 
-                  type="submit"
-                  className="h-12 shrink-0 bg-brand-accent px-8 font-semibold text-white hover:bg-brand-accent-dark sm:rounded-l-none"
-                >
-                  Subscribe
-                </Button>
-              </div>
-            </form>
-            <p className="mt-4 text-xs text-neutral-500">
-              By subscribing, you agree to our Privacy Policy and consent to receive updates.
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <footer className="border-t border-white/5 bg-black">
       {/* Main footer */}
-      <div className="container py-10 sm:py-12 lg:py-16">
-        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-6 lg:gap-12">
+      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
+        <div className="grid gap-12 lg:grid-cols-6 lg:gap-8">
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="font-heading text-2xl font-bold tracking-tight text-neutral-900">
+            <Link href="/" className="font-display text-2xl font-light tracking-[0.2em] text-white">
               URBANCART
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-600">
+            <p className="mt-6 max-w-xs text-sm leading-relaxed text-white/50">
               Premium Indian streetwear for the urban trendsetter. Authentic, exclusive, unapologetically bold.
             </p>
-            <div className="mt-6 flex gap-4">
+            <div className="mt-8 flex gap-4">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-colors hover:bg-neutral-900 hover:text-white"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white/50 transition-colors hover:border-white/30 hover:text-white"
                 >
-                  <social.icon className="h-5 w-5" />
+                  <social.icon className="h-4 w-4" />
                   <span className="sr-only">{social.name}</span>
                 </a>
               ))}
@@ -103,13 +67,13 @@ export function Footer() {
 
           {/* Links columns */}
           <div>
-            <h4 className="font-semibold text-neutral-900">Shop</h4>
-            <ul className="mt-4 space-y-3">
+            <h4 className="text-xs font-medium uppercase tracking-widest text-white/30">Shop</h4>
+            <ul className="mt-6 space-y-4">
               {footerLinks.shop.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition-colors hover:text-brand-accent"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.name}
                   </Link>
@@ -119,13 +83,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-neutral-900">Collections</h4>
-            <ul className="mt-4 space-y-3">
+            <h4 className="text-xs font-medium uppercase tracking-widest text-white/30">Collections</h4>
+            <ul className="mt-6 space-y-4">
               {footerLinks.collections.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition-colors hover:text-brand-accent"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.name}
                   </Link>
@@ -135,13 +99,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-neutral-900">Support</h4>
-            <ul className="mt-4 space-y-3">
+            <h4 className="text-xs font-medium uppercase tracking-widest text-white/30">Support</h4>
+            <ul className="mt-6 space-y-4">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition-colors hover:text-brand-accent"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.name}
                   </Link>
@@ -151,13 +115,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-neutral-900">Company</h4>
-            <ul className="mt-4 space-y-3">
+            <h4 className="text-xs font-medium uppercase tracking-widest text-white/30">Company</h4>
+            <ul className="mt-6 space-y-4">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition-colors hover:text-brand-accent"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.name}
                   </Link>
@@ -169,23 +133,18 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-neutral-200">
-        <div className="container py-6">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-sm text-neutral-500">
-              © {new Date().getFullYear()} UrbanCart. All rights reserved.
-            </p>
-            <div className="flex gap-6 text-sm">
-              <Link href="/privacy" className="text-neutral-500 hover:text-neutral-900">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-neutral-500 hover:text-neutral-900">
-                Terms of Service
-              </Link>
-              <Link href="/cookies" className="text-neutral-500 hover:text-neutral-900">
-                Cookies
-              </Link>
-            </div>
+      <div className="border-t border-white/5">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row lg:px-8">
+          <p className="text-xs text-white/40">
+            © {new Date().getFullYear()} UrbanCart. All rights reserved.
+          </p>
+          <div className="flex gap-8 text-xs">
+            <Link href="/privacy" className="text-white/40 hover:text-white">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-white/40 hover:text-white">
+              Terms of Service
+            </Link>
           </div>
         </div>
       </div>

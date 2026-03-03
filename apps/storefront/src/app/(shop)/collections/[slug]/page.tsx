@@ -1,256 +1,242 @@
 'use client';
 
-import { use, useState } from 'react';
-import Image from 'next/image';
+import { useState, useEffect, Suspense, useCallback } from 'react';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { cn } from '@urbancart/ui';
+import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
+import {
+  Section,
+  Container,
+  ProductGrid,
+  GrainOverlay,
+} from '@/components/ui';
+import { FadeIn, StaggerReveal } from '@/components/motion';
+import { PageTransition } from '@/components/motion/page-transition';
+import { productService, type ProductFilters } from '@/services/product.service';
+import { collectionService } from '@/services/collection.service';
+import { toStorefrontProduct, type StorefrontProduct } from '@/types/storefront.types';
+import type { Collection } from '@urbancart/types';
 
-const collectionData: Record<string, { name: string; description: string }> = {
-  'streetwear-essentials': {
-    name: 'Streetwear Essentials',
-    description: 'Core pieces that define the urban aesthetic. Build your wardrobe with these must-have streetwear staples.',
-  },
-  'limited-drops': {
-    name: 'Limited Drops',
-    description: 'Exclusive releases with limited quantities. Once they are gone, they are gone forever.',
-  },
-  'summer-2024': {
-    name: 'Summer 2024',
-    description: 'Lightweight and breathable styles perfect for the warm season ahead.',
-  },
-  'monochrome': {
-    name: 'Monochrome',
-    description: 'Classic black and white statement pieces for the minimalist.',
-  },
-  'urban-accessories': {
-    name: 'Urban Accessories',
-    description: 'Complete your look with our premium accessories collection.',
-  },
-};
-
-const products = [
-  {
-    id: '1',
-    name: 'Urban Oversized Tee',
-    variant: 'Black',
-    price: 1999,
-    originalPrice: 2499,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=600&h=750&fit=crop',
-    colors: ['Black', 'White', 'Grey'],
-    category: 'Tees',
-    isNew: true,
-  },
-  {
-    id: '2',
-    name: 'Street Drop Hoodie',
-    variant: 'Navy',
-    price: 3499,
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&h=750&fit=crop',
-    colors: ['Navy', 'Black'],
-    category: 'Hoodies',
-  },
-  {
-    id: '3',
-    name: 'Classic Cargo Pants',
-    variant: 'Olive',
-    price: 2999,
-    image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&h=750&fit=crop',
-    colors: ['Olive', 'Black', 'Beige'],
-    category: 'Pants',
-  },
-  {
-    id: '4',
-    name: 'Limited Edition Cap',
-    variant: 'Black',
-    price: 999,
-    originalPrice: 1299,
-    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1534215754734-18e55d13e346?w=600&h=750&fit=crop',
-    colors: ['Black', 'White'],
-    category: 'Accessories',
-    isNew: true,
-  },
-  {
-    id: '5',
-    name: 'Premium Sneakers',
-    variant: 'White',
-    price: 5999,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=600&h=750&fit=crop',
-    colors: ['White', 'Black'],
-    category: 'Footwear',
-  },
-  {
-    id: '6',
-    name: 'Graphic Tee',
-    variant: 'Black',
-    price: 1799,
-    image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=750&fit=crop',
-    colors: ['Black', 'White'],
-    category: 'Tees',
-  },
-  {
-    id: '7',
-    name: 'Relaxed Fit Shirt',
-    variant: 'White',
-    price: 3299,
-    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600&h=750&fit=crop',
-    colors: ['White', 'Blue'],
-    category: 'Shirts',
-  },
-  {
-    id: '8',
-    name: 'Knit Sweater',
-    variant: 'Cream',
-    price: 3999,
-    image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=750&fit=crop',
-    hoverImage: 'https://images.unsplash.com/photo-1580331451062-99ff652288d7?w=600&h=750&fit=crop',
-    colors: ['Cream', 'Black'],
-    category: 'Sweaters',
-  },
+const sortOptions = [
+  { value: 'featured', label: 'Featured' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
 ];
 
-const formatPrice = (price: number) => {
-  return `Rs. ${price.toLocaleString('en-IN')}`;
-};
-
-export default function CollectionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
-  const [sortBy, setSortBy] = useState('featured');
-  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
+function CollectionContent() {
+  const params = useParams<{ slug: string }>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   
-  const collection = collectionData[slug] || {
-    name: slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    description: 'Explore our curated collection',
-  };
+  const [collection, setCollection] = useState<Collection | null>(null);
+  const [products, setProducts] = useState<StorefrontProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalProducts, setTotalProducts] = useState(0);
+  
+  const sort = (searchParams.get('sort') as ProductFilters['sort']) || 'featured';
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  
+  const updateURL = useCallback((key: string, value: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    if (key !== 'page') {
+      params.delete('page');
+    }
+    router.push(`/collections/${params.get('slug') || ''}?${params.toString()}`);
+  }, [router, searchParams]);
+  
+  useEffect(() => {
+    async function loadCollection() {
+      setIsLoading(true);
+      try {
+        const col = await collectionService.getBySlug(params.slug);
+        if (!col) {
+          return;
+        }
+        setCollection(col);
+        
+        const response = await productService.getByCollection(params.slug, {
+          sort,
+          page,
+          limit: 12,
+        });
+        
+        setProducts(response.data.map(toStorefrontProduct));
+        setTotalProducts(response.pagination.total);
+      } catch (error) {
+        console.error('Failed to load collection:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    loadCollection();
+  }, [params.slug, sort, page]);
+  
+  if (!isLoading && !collection) {
+    notFound();
+  }
+  
+  if (isLoading || !collection) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-neutral-950">
-      {/* Collection Header */}
-      <div className="border-b border-neutral-800">
-        <div className="container py-8 sm:py-12">
-          <h1 className="text-center text-2xl font-light tracking-wide text-white sm:text-3xl md:text-4xl">
-            Collection: <span className="font-medium">{collection.name}</span>
-          </h1>
-          <p className="mt-4 text-center text-sm text-neutral-400 sm:text-base">
-            {collection.description}
-          </p>
-        </div>
-      </div>
-
-      {/* Filter Bar */}
-      <div className="border-b border-neutral-800">
-        <div className="container flex items-center justify-between py-4">
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-neutral-400">
-              Items: <span className="text-white">{products.length}</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 text-sm text-white transition-colors hover:text-neutral-300">
-              <SlidersHorizontal className="h-4 w-4" />
-              Filter
-            </button>
-            <div className="relative">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none bg-transparent pr-6 text-sm text-white outline-none"
-              >
-                <option value="featured" className="bg-neutral-900">Sort By</option>
-                <option value="newest" className="bg-neutral-900">Newest</option>
-                <option value="price-low" className="bg-neutral-900">Price: Low to High</option>
-                <option value="price-high" className="bg-neutral-900">Price: High to Low</option>
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-white" />
+    <PageTransition>
+      <div className="min-h-screen bg-black">
+        <GrainOverlay opacity={0.03} />
+        
+        {/* Collection Hero */}
+        <Section className="relative pt-28 pb-24 overflow-hidden">
+          {/* Background Image */}
+          {collection.image && (
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-30"
+              style={{ backgroundImage: `url(${collection.image})` }}
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black" />
+          
+          <Container className="relative">
+            <FadeIn>
+              {/* Breadcrumb */}
+              <nav className="mb-8 flex items-center gap-2 text-sm">
+                <Link href="/" className="text-white/40 hover:text-white/60">Home</Link>
+                <span className="text-white/20">/</span>
+                <Link href="/collections" className="text-white/40 hover:text-white/60">Collections</Link>
+                <span className="text-white/20">/</span>
+                <span className="text-white/60">{collection.name}</span>
+              </nav>
+              
+              <div className="text-center">
+                <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                  Collection
+                </p>
+                <h1 className="mt-4 text-4xl font-extralight tracking-tight text-white md:text-6xl lg:text-7xl">
+                  {collection.name}
+                </h1>
+                {collection.description && (
+                  <p className="mx-auto mt-6 max-w-2xl text-lg text-white/60">
+                    {collection.description}
+                  </p>
+                )}
+                <p className="mt-4 text-sm text-white/40">
+                  {totalProducts} Products
+                </p>
+              </div>
+            </FadeIn>
+          </Container>
+        </Section>
+        
+        {/* Filters Bar */}
+        <Section className="py-4 border-y border-white/10">
+          <Container>
+            <div className="flex items-center justify-between gap-4">
+              <div className="text-sm text-white/50">
+                Showing {products.length} of {totalProducts} products
+              </div>
+              
+              {/* Sort dropdown */}
+              <div className="relative">
+                <select
+                  value={sort}
+                  onChange={(e) => {
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.set('sort', e.target.value);
+                    params.delete('page');
+                    router.push(`/collections/${collection.slug}?${params.toString()}`);
+                  }}
+                  className="appearance-none bg-transparent pr-8 text-sm text-white/70 focus:outline-none"
+                >
+                  {sortOptions.map((option) => (
+                    <option key={option.value} value={option.value} className="bg-black">
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Products Grid */}
-      <div className="container py-8">
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:gap-8">
-          {products.map((product) => (
-            <Link
-              key={product.id}
-              href={`/product/${product.id}`}
-              className="group block"
-              onMouseEnter={() => setHoveredProduct(product.id)}
-              onMouseLeave={() => setHoveredProduct(null)}
-            >
-              {/* Product Image */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-neutral-900">
-                <Image
-                  src={hoveredProduct === product.id ? product.hoverImage : product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover transition-all duration-500 ease-out"
-                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+          </Container>
+        </Section>
+        
+        {/* Products Grid */}
+        <Section>
+          <Container>
+            {products.length === 0 ? (
+              <FadeIn>
+                <div className="flex flex-col items-center justify-center py-24 text-center">
+                  <p className="text-xl text-white/60">No products in this collection</p>
+                  <p className="mt-2 text-sm text-white/40">
+                    Check back later or browse other collections
+                  </p>
+                  <Link
+                    href="/collections"
+                    className="mt-6 border border-white px-6 py-2 text-sm font-medium uppercase tracking-wider text-white transition-colors hover:bg-white hover:text-black"
+                  >
+                    Browse Collections
+                  </Link>
+                </div>
+              </FadeIn>
+            ) : (
+              <StaggerReveal stagger={0.05}>
+                <ProductGrid 
+                  products={products} 
+                  columns={4}
+                  variant="default"
                 />
-
-                {/* Badge */}
-                {product.isNew && (
-                  <span className="absolute left-3 top-3 bg-white px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-neutral-900">
-                    New
-                  </span>
-                )}
-
-                {/* Quick shop overlay */}
-                <div className="absolute inset-x-0 bottom-0 translate-y-full bg-white/95 p-3 text-center transition-transform duration-300 group-hover:translate-y-0">
-                  <span className="text-xs font-medium uppercase tracking-wider text-neutral-900">
-                    Quick Shop
-                  </span>
-                </div>
+              </StaggerReveal>
+            )}
+            
+            {/* Pagination */}
+            {totalProducts > 12 && (
+              <div className="mt-16 flex justify-center gap-2">
+                {Array.from({ length: Math.ceil(totalProducts / 12) }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      const newParams = new URLSearchParams(searchParams.toString());
+                      newParams.set('page', (i + 1).toString());
+                      router.push(`/collections/${collection.slug}?${newParams.toString()}`);
+                    }}
+                    className={cn(
+                      'flex h-10 w-10 items-center justify-center text-sm transition-colors',
+                      page === i + 1
+                        ? 'bg-white text-black'
+                        : 'border border-white/20 text-white/70 hover:border-white/40'
+                    )}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
-
-              {/* Product Info */}
-              <div className="mt-4 space-y-1">
-                <h3 className="text-sm font-medium text-white transition-colors group-hover:text-neutral-300">
-                  {product.name}
-                  {product.variant && (
-                    <span className="font-normal text-neutral-400"> - {product.variant}</span>
-                  )}
-                </h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-neutral-400">{formatPrice(product.price)}</span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-neutral-600 line-through">
-                      {formatPrice(product.originalPrice)}
-                    </span>
-                  )}
-                </div>
-
-                {/* Color swatches */}
-                {product.colors.length > 1 && (
-                  <div className="flex gap-2 pt-1">
-                    {product.colors.map((color, idx) => (
-                      <span
-                        key={idx}
-                        className="text-xs text-neutral-500 hover:text-neutral-300"
-                      >
-                        {color}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Load More Button */}
-        <div className="mt-12 text-center">
-          <button className="inline-flex items-center gap-2 border border-neutral-700 bg-transparent px-8 py-3 text-sm font-medium uppercase tracking-wider text-white transition-colors hover:border-white hover:bg-white hover:text-neutral-900">
-            Load More
-          </button>
-        </div>
+            )}
+          </Container>
+        </Section>
       </div>
-    </div>
+    </PageTransition>
+  );
+}
+
+export default function CollectionDetailPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white border-t-transparent" />
+      </div>
+    }>
+      <CollectionContent />
+    </Suspense>
   );
 }

@@ -1,70 +1,108 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { cn } from '@urbancart/ui';
+import { useAuthStore, useWishlistStore, type User } from '@urbancart/hooks';
 import {
-  Button,
-  Input,
-  Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Separator,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@urbancart/ui';
-import {
-  User,
+  User as UserIcon,
   Package,
   Heart,
   MapPin,
-  CreditCard,
+  Settings,
   LogOut,
-  Edit,
   ChevronRight,
+  ShoppingBag,
+  Truck,
+  Clock,
+  ArrowRight,
 } from 'lucide-react';
-import Image from 'next/image';
+import {
+  Section,
+  Container,
+  GrainOverlay,
+} from '@/components/ui';
+import { FadeIn, StaggerReveal } from '@/components/motion';
+import { PageTransition } from '@/components/motion/page-transition';
+import { MagneticButton } from '@/components/motion/magnetic-button';
 
-const orders = [
+// Mock user data
+const mockUser: User = {
+  id: 'user-1',
+  firstName: 'Rahul',
+  lastName: 'Sharma',
+  email: 'rahul@example.com',
+  phone: '+91 98765 43210',
+  role: 'customer',
+};
+
+// Mock orders
+const mockOrders = [
   {
     id: 'ORD-2024-001',
     date: '2024-01-15',
     status: 'Delivered',
     total: 7497,
     items: [
-      { name: 'Urban Oversized Tee', quantity: 2, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=80&h=100&fit=crop' },
-      { name: 'Street Drop Hoodie', quantity: 1, image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=80&h=100&fit=crop' },
+      {
+        id: 'item-1',
+        name: 'Urban Oversized Tee',
+        quantity: 2,
+        size: 'M',
+        color: 'Black',
+        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=250&fit=crop',
+      },
+      {
+        id: 'item-2',
+        name: 'Street Drop Hoodie',
+        quantity: 1,
+        size: 'L',
+        color: 'Navy',
+        image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&h=250&fit=crop',
+      },
     ],
   },
   {
     id: 'ORD-2024-002',
     date: '2024-01-10',
-    status: 'Shipped',
+    status: 'In Transit',
     total: 2999,
     items: [
-      { name: 'Classic Cargo Pants', quantity: 1, image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=80&h=100&fit=crop' },
+      {
+        id: 'item-3',
+        name: 'Classic Cargo Pants',
+        quantity: 1,
+        size: '32',
+        color: 'Olive',
+        image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=200&h=250&fit=crop',
+      },
     ],
   },
 ];
 
-const wishlistItems = [
+// Mock wishlist preview
+const mockWishlistPreview = [
   {
-    id: '1',
+    id: 'wish-1',
+    productId: 'prod-1',
     name: 'Limited Edition Cap',
     price: 999,
-    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=200&h=250&fit=crop',
+    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=300&h=400&fit=crop',
   },
   {
-    id: '2',
+    id: 'wish-2',
+    productId: 'prod-2',
     name: 'Premium Sneakers',
     price: 5999,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=250&fit=crop',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=400&fit=crop',
+  },
+  {
+    id: 'wish-3',
+    productId: 'prod-3',
+    name: 'Graphic Print Tee',
+    price: 1499,
+    image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&h=400&fit=crop',
   },
 ];
 
@@ -76,287 +114,339 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
-const statusColors: Record<string, 'success' | 'warning' | 'secondary'> = {
-  Delivered: 'success',
-  Shipped: 'warning',
-  Processing: 'secondary',
+const formatDate = (dateStr: string) => {
+  return new Date(dateStr).toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 };
 
+const statusConfig: Record<string, { color: string; icon: typeof Package }> = {
+  'Delivered': { color: 'text-emerald-400', icon: Package },
+  'In Transit': { color: 'text-amber-400', icon: Truck },
+  'Processing': { color: 'text-blue-400', icon: Clock },
+};
+
+interface NavItem {
+  icon: typeof UserIcon;
+  label: string;
+  href: string;
+  badge?: number;
+}
+
 export default function AccountPage() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const { user: authUser, logout, isAuthenticated } = useAuthStore();
+  const wishlistItems = useWishlistStore((state) => state.items);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // Use auth user if available, otherwise mock user
+  const user = authUser || mockUser;
+  const wishlistCount = isHydrated ? wishlistItems.length : 0;
+  const displayWishlist = wishlistCount > 0 ? wishlistItems.slice(0, 3).map(item => ({
+    id: item.id,
+    productId: item.productId,
+    name: item.name,
+    price: item.price,
+    image: item.image,
+  })) : mockWishlistPreview;
+
+  const navItems: NavItem[] = [
+    { icon: Package, label: 'Orders', href: '/orders' },
+    { icon: Heart, label: 'Wishlist', href: '/wishlist', badge: wishlistCount || 5 },
+    { icon: MapPin, label: 'Addresses', href: '/addresses' },
+    { icon: UserIcon, label: 'Profile', href: '/profile' },
+    { icon: Settings, label: 'Settings', href: '/settings' },
+  ];
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = '/login';
+  };
+
+  // Calculate stats
+  const totalOrders = mockOrders.length;
+  const inTransit = mockOrders.filter(o => o.status === 'In Transit').length;
 
   return (
-    <div className="container py-8">
-      {/* Breadcrumb */}
-      <nav className="mb-6 text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-foreground">Home</Link>
-        <span className="mx-2">/</span>
-        <span className="text-foreground">My Account</span>
-      </nav>
-
-      <div className="grid gap-8 lg:grid-cols-4">
-        {/* Sidebar */}
-        <aside className="lg:col-span-1">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex flex-col items-center text-center">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" />
-                  <AvatarFallback>RS</AvatarFallback>
-                </Avatar>
-                <h2 className="mt-4 text-lg font-semibold">Rahul Sharma</h2>
-                <p className="text-sm text-muted-foreground">rahul@email.com</p>
-                <Badge className="mt-2" variant="secondary">VIP Member</Badge>
-              </div>
-              <Separator className="my-6" />
-              <nav className="space-y-1">
-                {[
-                  { icon: User, label: 'Overview', value: 'overview' },
-                  { icon: Package, label: 'Orders', value: 'orders' },
-                  { icon: Heart, label: 'Wishlist', value: 'wishlist' },
-                  { icon: MapPin, label: 'Addresses', value: 'addresses' },
-                  { icon: CreditCard, label: 'Payment Methods', value: 'payment' },
-                ].map((item) => (
-                  <button
-                    key={item.value}
-                    onClick={() => setActiveTab(item.value)}
-                    className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${
-                      activeTab === item.value
-                        ? 'bg-primary text-primary-foreground'
-                        : 'hover:bg-muted'
-                    }`}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.label}
-                  </button>
-                ))}
-                <Separator className="my-2" />
-                <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10">
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </button>
+    <PageTransition>
+      <div className="min-h-screen bg-black">
+        <GrainOverlay opacity={0.03} />
+        
+        {/* Page Header */}
+        <Section className="pt-32 pb-8">
+          <Container>
+            <FadeIn>
+              {/* Breadcrumb */}
+              <nav className="mb-8 text-sm">
+                <Link href="/" className="text-white/40 transition-colors hover:text-white">
+                  Home
+                </Link>
+                <span className="mx-3 text-white/20">/</span>
+                <span className="text-white">My Account</span>
               </nav>
-            </CardContent>
-          </Card>
-        </aside>
+              
+              {/* Welcome Header */}
+              <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                    Welcome back
+                  </p>
+                  <h1 className="mt-2 text-3xl font-extralight tracking-tight text-white md:text-4xl lg:text-5xl">
+                    Hi, <span className="font-medium">{user.firstName}</span>
+                  </h1>
+                  <p className="mt-2 text-white/50">
+                    {user.email}
+                  </p>
+                </div>
+                
+                <MagneticButton>
+                  <button
+                    onClick={handleLogout}
+                    className="group flex items-center gap-3 border border-white/20 px-6 py-3 text-sm uppercase tracking-widest text-white/60 transition-all hover:border-white/40 hover:text-white"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </button>
+                </MagneticButton>
+              </div>
+            </FadeIn>
+          </Container>
+        </Section>
 
-        {/* Main content */}
-        <div className="lg:col-span-3">
-          {activeTab === 'overview' && (
-            <div className="space-y-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Account Information</CardTitle>
-                  <Button variant="ghost" size="sm">
-                    <Edit className="mr-2 h-4 w-4" />
-                    Edit
-                  </Button>
-                </CardHeader>
-                <CardContent className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Name</p>
-                    <p className="font-medium">Rahul Sharma</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="font-medium">rahul@email.com</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Phone</p>
-                    <p className="font-medium">+91 98765 43210</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Member Since</p>
-                    <p className="font-medium">June 2023</p>
-                  </div>
-                </CardContent>
-              </Card>
+        {/* Quick Stats */}
+        <Section className="py-8">
+          <Container>
+            <FadeIn delay={0.1}>
+              <div className="grid grid-cols-3 gap-4 md:gap-8">
+                <Link
+                  href="/orders"
+                  className="group border border-white/10 bg-white/5 p-6 text-center transition-all hover:border-white/20 hover:bg-white/10"
+                >
+                  <p className="text-3xl font-light text-white md:text-4xl">{totalOrders}</p>
+                  <p className="mt-2 text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60">
+                    Orders
+                  </p>
+                </Link>
+                <Link
+                  href="/orders?status=transit"
+                  className="group border border-white/10 bg-white/5 p-6 text-center transition-all hover:border-white/20 hover:bg-white/10"
+                >
+                  <p className="text-3xl font-light text-amber-400 md:text-4xl">{inTransit}</p>
+                  <p className="mt-2 text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60">
+                    In Transit
+                  </p>
+                </Link>
+                <Link
+                  href="/wishlist"
+                  className="group border border-white/10 bg-white/5 p-6 text-center transition-all hover:border-white/20 hover:bg-white/10"
+                >
+                  <p className="text-3xl font-light text-white md:text-4xl">{wishlistCount || 5}</p>
+                  <p className="mt-2 text-xs uppercase tracking-widest text-white/40 group-hover:text-white/60">
+                    Wishlist
+                  </p>
+                </Link>
+              </div>
+            </FadeIn>
+          </Container>
+        </Section>
 
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Recent Orders</CardTitle>
-                  <Button variant="ghost" size="sm" onClick={() => setActiveTab('orders')}>
-                    View All
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  {orders.slice(0, 2).map((order) => (
-                    <div key={order.id} className="flex items-center justify-between border-b py-4 last:border-0 last:pb-0">
-                      <div className="flex items-center gap-4">
-                        <div className="flex -space-x-2">
-                          {order.items.slice(0, 2).map((item, index) => (
-                            <div key={index} className="relative h-12 w-10 overflow-hidden rounded border bg-muted">
-                              <Image src={item.image} alt={item.name} fill className="object-cover" />
-                            </div>
-                          ))}
-                        </div>
-                        <div>
-                          <p className="font-medium">{order.id}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {order.items.length} items · {formatPrice(order.total)}
-                          </p>
-                        </div>
-                      </div>
-                      <Badge variant={statusColors[order.status]}>{order.status}</Badge>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {activeTab === 'orders' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Order History</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {orders.map((order) => (
-                  <div key={order.id} className="rounded-lg border p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold">{order.id}</p>
-                        <p className="text-sm text-muted-foreground">Placed on {order.date}</p>
-                      </div>
-                      <Badge variant={statusColors[order.status]}>{order.status}</Badge>
-                    </div>
-                    <Separator className="my-4" />
-                    <div className="space-y-3">
-                      {order.items.map((item, index) => (
-                        <div key={index} className="flex items-center gap-4">
-                          <div className="relative h-16 w-12 overflow-hidden rounded bg-muted">
-                            <Image src={item.image} alt={item.name} fill className="object-cover" />
+        {/* Main Content */}
+        <Section className="py-8">
+          <Container>
+            <div className="grid gap-8 lg:grid-cols-3">
+              {/* Sidebar Navigation */}
+              <div className="lg:col-span-1">
+                <FadeIn delay={0.2}>
+                  <div className="border border-white/10 bg-white/5 p-6">
+                    <h3 className="mb-6 text-xs uppercase tracking-[0.2em] text-white/40">
+                      Quick Links
+                    </h3>
+                    <nav className="space-y-1">
+                      {navItems.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="group flex items-center justify-between py-3 text-white/70 transition-colors hover:text-white"
+                        >
+                          <div className="flex items-center gap-4">
+                            <item.icon className="h-4 w-4" />
+                            <span className="text-sm">{item.label}</span>
                           </div>
-                          <div>
-                            <p className="font-medium">{item.name}</p>
-                            <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                          <div className="flex items-center gap-2">
+                            {item.badge && (
+                              <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/60">
+                                {item.badge}
+                              </span>
+                            )}
+                            <ChevronRight className="h-4 w-4 text-white/30 transition-transform group-hover:translate-x-1 group-hover:text-white/60" />
                           </div>
-                        </div>
+                        </Link>
                       ))}
+                    </nav>
+                  </div>
+                </FadeIn>
+              </div>
+
+              {/* Main Content Area */}
+              <div className="space-y-8 lg:col-span-2">
+                {/* Recent Orders */}
+                <FadeIn delay={0.3}>
+                  <div className="border border-white/10 bg-white/5">
+                    <div className="flex items-center justify-between border-b border-white/10 p-6">
+                      <h3 className="text-lg font-light text-white">Recent Orders</h3>
+                      <Link
+                        href="/orders"
+                        className="flex items-center gap-2 text-xs uppercase tracking-widest text-white/40 transition-colors hover:text-white"
+                      >
+                        View All
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
                     </div>
-                    <Separator className="my-4" />
-                    <div className="flex items-center justify-between">
-                      <p className="font-semibold">Total: {formatPrice(order.total)}</p>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Track Order</Button>
-                        <Button variant="outline" size="sm">View Details</Button>
-                      </div>
+                    
+                    <div className="divide-y divide-white/10">
+                      {mockOrders.map((order) => {
+                        const status = statusConfig[order.status] || statusConfig['Processing'];
+                        return (
+                          <div key={order.id} className="p-6">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <p className="text-sm font-medium text-white">{order.id}</p>
+                                <p className="mt-1 text-xs text-white/40">{formatDate(order.date)}</p>
+                              </div>
+                              <div className={cn('flex items-center gap-2', status.color)}>
+                                <status.icon className="h-3 w-3" />
+                                <span className="text-xs uppercase tracking-widest">{order.status}</span>
+                              </div>
+                            </div>
+                            
+                            <div className="mt-4 flex items-center gap-4">
+                              {order.items.slice(0, 2).map((item) => (
+                                <div key={item.id} className="relative h-16 w-12 overflow-hidden bg-neutral-900">
+                                  <Image
+                                    src={item.image}
+                                    alt={item.name}
+                                    fill
+                                    className="object-cover"
+                                    sizes="48px"
+                                  />
+                                </div>
+                              ))}
+                              {order.items.length > 2 && (
+                                <span className="text-xs text-white/40">
+                                  +{order.items.length - 2} more
+                                </span>
+                              )}
+                              <div className="ml-auto">
+                                <p className="text-right text-sm text-white">
+                                  {formatPrice(order.total)}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="mt-4 flex gap-4">
+                              <Link
+                                href={`/orders/${order.id}`}
+                                className="text-xs uppercase tracking-widest text-white/50 transition-colors hover:text-white"
+                              >
+                                View Details
+                              </Link>
+                              {order.status === 'In Transit' && (
+                                <Link
+                                  href={`/orders/${order.id}/track`}
+                                  className="text-xs uppercase tracking-widest text-white/50 transition-colors hover:text-white"
+                                >
+                                  Track Order
+                                </Link>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
+                </FadeIn>
 
-          {activeTab === 'wishlist' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>My Wishlist</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {wishlistItems.map((item) => (
-                    <div key={item.id} className="flex gap-4 rounded-lg border p-4">
-                      <div className="relative h-24 w-20 overflow-hidden rounded bg-muted">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" />
-                      </div>
-                      <div className="flex flex-1 flex-col justify-between">
-                        <div>
-                          <Link href={`/product/${item.id}`} className="font-medium hover:text-accent">
-                            {item.name}
+                {/* Wishlist Preview */}
+                <FadeIn delay={0.4}>
+                  <div className="border border-white/10 bg-white/5">
+                    <div className="flex items-center justify-between border-b border-white/10 p-6">
+                      <h3 className="text-lg font-light text-white">Wishlist</h3>
+                      <Link
+                        href="/wishlist"
+                        className="flex items-center gap-2 text-xs uppercase tracking-widest text-white/40 transition-colors hover:text-white"
+                      >
+                        View All
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-4 p-6">
+                      <StaggerReveal stagger={0.05}>
+                        {displayWishlist.map((item) => (
+                          <Link
+                            key={item.id}
+                            href={`/product/${item.productId}`}
+                            className="group"
+                          >
+                            <div className="relative aspect-[3/4] overflow-hidden bg-neutral-900">
+                              <Image
+                                src={item.image}
+                                alt={item.name}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                sizes="(max-width: 768px) 33vw, 200px"
+                              />
+                              <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/20" />
+                            </div>
+                            <p className="mt-2 truncate text-sm text-white/70 group-hover:text-white">
+                              {item.name}
+                            </p>
+                            <p className="text-sm text-white/50">
+                              {formatPrice(item.price)}
+                            </p>
                           </Link>
-                          <p className="mt-1 font-semibold">{formatPrice(item.price)}</p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm">Add to Cart</Button>
-                          <Button size="sm" variant="outline">Remove</Button>
-                        </div>
-                      </div>
+                        ))}
+                      </StaggerReveal>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                  </div>
+                </FadeIn>
 
-          {activeTab === 'addresses' && (
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Saved Addresses</CardTitle>
-                <Button size="sm">Add New Address</Button>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-lg border p-4">
-                    <div className="mb-2 flex items-center justify-between">
-                      <Badge>Default</Badge>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                {/* Need Help Section */}
+                <FadeIn delay={0.5}>
+                  <div className="grid gap-4 border border-white/10 bg-white/5 p-6 md:grid-cols-2">
+                    <div className="text-center md:text-left">
+                      <ShoppingBag className="mx-auto mb-4 h-8 w-8 text-white/30 md:mx-0" />
+                      <h4 className="text-sm font-medium text-white">Need Help?</h4>
+                      <p className="mt-1 text-xs text-white/50">
+                        Our support team is here to help you
+                      </p>
                     </div>
-                    <p className="font-medium">Home</p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Rahul Sharma<br />
-                      123 Fashion Street<br />
-                      Mumbai, Maharashtra 400001<br />
-                      +91 98765 43210
-                    </p>
-                  </div>
-                  <div className="rounded-lg border p-4">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span></span>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                    <div className="flex items-center justify-center gap-4 md:justify-end">
+                      <Link
+                        href="/contact"
+                        className="border border-white/20 px-6 py-2 text-xs uppercase tracking-widest text-white/60 transition-colors hover:border-white/40 hover:text-white"
+                      >
+                        Contact Us
+                      </Link>
+                      <Link
+                        href="/faq"
+                        className="border border-white/20 px-6 py-2 text-xs uppercase tracking-widest text-white/60 transition-colors hover:border-white/40 hover:text-white"
+                      >
+                        FAQs
+                      </Link>
                     </div>
-                    <p className="font-medium">Office</p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Rahul Sharma<br />
-                      456 Business Park<br />
-                      Mumbai, Maharashtra 400051<br />
-                      +91 98765 43210
-                    </p>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeTab === 'payment' && (
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Payment Methods</CardTitle>
-                <Button size="sm">Add New Card</Button>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="flex items-center gap-4">
-                      <CreditCard className="h-8 w-8" />
-                      <div>
-                        <p className="font-medium">•••• •••• •••• 4242</p>
-                        <p className="text-sm text-muted-foreground">Expires 12/25</p>
-                      </div>
-                    </div>
-                    <Badge>Default</Badge>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="flex items-center gap-4">
-                      <CreditCard className="h-8 w-8" />
-                      <div>
-                        <p className="font-medium">•••• •••• •••• 1234</p>
-                        <p className="text-sm text-muted-foreground">Expires 06/24</p>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="sm">Remove</Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+                </FadeIn>
+              </div>
+            </div>
+          </Container>
+        </Section>
       </div>
-    </div>
+    </PageTransition>
   );
 }
