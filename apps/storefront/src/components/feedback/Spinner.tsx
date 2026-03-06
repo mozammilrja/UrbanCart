@@ -1,0 +1,48 @@
+/**
+ * Spinner Component
+ * Loading indicator
+ */
+
+import { cn } from '@/lib/utils';
+
+interface SpinnerProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}
+
+const sizeClasses = {
+  sm: 'h-4 w-4 border-2',
+  md: 'h-6 w-6 border-2',
+  lg: 'h-8 w-8 border-3',
+  xl: 'h-12 w-12 border-4',
+};
+
+export function Spinner({ size = 'md', className }: SpinnerProps) {
+  return (
+    <div
+      className={cn(
+        'animate-spin rounded-full border-neutral-200 border-t-neutral-900',
+        sizeClasses[size],
+        className
+      )}
+      role="status"
+      aria-label="Loading"
+    >
+      <span className="sr-only">Loading...</span>
+    </div>
+  );
+}
+
+// Full page loading spinner
+export function PageSpinner() {
+  return (
+    <div className="flex min-h-[400px] items-center justify-center">
+      <Spinner size="lg" />
+    </div>
+  );
+}
+
+// Button loading spinner
+export function ButtonSpinner({ className }: { className?: string }) {
+  return <Spinner size="sm" className={cn('mr-2', className)} />;
+}

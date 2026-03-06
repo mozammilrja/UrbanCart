@@ -97,6 +97,10 @@
     opacity: 0;
   }
 
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out forwards;
+  }
+
   /* GPU-accelerated keyframes using transform and opacity only */
   @keyframes fadeIn {
     from {
@@ -129,6 +133,15 @@
     }
   }
 
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%) translateZ(0);
+    }
+    to {
+      transform: translateX(0) translateZ(0);
+    }
+  }
+
   /* Skeleton loading animation */
   .skeleton {
     @apply animate-pulse bg-gray-200;
@@ -144,4 +157,15 @@
       transform: none;
     }
   }
+
+  /* Staggered animation delays using CSS nth-child */
+  .stagger-animation > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-animation > *:nth-child(2) { animation-delay: 100ms; }
+  .stagger-animation > *:nth-child(3) { animation-delay: 200ms; }
+  .stagger-animation > *:nth-child(4) { animation-delay: 300ms; }
+  .stagger-animation > *:nth-child(5) { animation-delay: 400ms; }
+  .stagger-animation > *:nth-child(6) { animation-delay: 500ms; }
+  .stagger-animation > *:nth-child(7) { animation-delay: 600ms; }
+  .stagger-animation > *:nth-child(8) { animation-delay: 700ms; }
+  .stagger-animation > *:nth-child(9) { animation-delay: 800ms; }
 }

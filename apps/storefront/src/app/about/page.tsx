@@ -15,6 +15,7 @@ export default function AboutPage() {
           src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&q=80"
           alt="About APOSTLE"
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />

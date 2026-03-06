@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useRef } from 'react';
-import { motion, useMotionValue, useTransform, useAnimationFrame } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
 
 const footerLinks = {
   connect: [
@@ -31,17 +30,6 @@ const footerLinks = {
 };
 
 export function Footer() {
-  const [isDragging, setIsDragging] = useState(false);
-  const rotationY = useMotionValue(0);
-  const constraintsRef = useRef(null);
-  
-  // Auto-rotate when not dragging
-  useAnimationFrame((time) => {
-    if (!isDragging) {
-      rotationY.set((time / 20) % 360);
-    }
-  });
-
   return (
     <footer className="bg-[#f5f5f5]">
       {/* Main Footer */}
@@ -102,52 +90,23 @@ export function Footer() {
           </div>
 
           {/* Brand Logo and Bag */}
-          <div className="flex items-center gap-6 lg:gap-10" ref={constraintsRef}>
+          <div className="flex items-center gap-6 lg:gap-10">
             {/* Script Logo */}
             <span className="text-5xl md:text-6xl lg:text-7xl font-serif italic text-[#333]" style={{ fontFamily: 'Georgia, Times, serif' }}>
               Apostle
             </span>
             
-            {/* Shopping Bag - 360 rotation with drag */}
-            <motion.div 
-              className="relative w-32 h-44 md:w-36 md:h-48 lg:w-40 lg:h-52 cursor-grab active:cursor-grabbing"
-              style={{ 
-                rotateY: rotationY,
-                transformStyle: 'preserve-3d',
-                perspective: 1000
-              }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0}
-              onDragStart={() => setIsDragging(true)}
-              onDrag={(_, info) => {
-                rotationY.set(rotationY.get() + info.delta.x);
-              }}
-              onDragEnd={() => setIsDragging(false)}
-              whileDrag={{ scale: 1.05 }}
-            >
-              {/* Front face */}
+            {/* Shopping Bag - Static version */}
+            <div className="relative w-32 h-44 md:w-36 md:h-48 lg:w-40 lg:h-52">
               <div 
                 className="absolute inset-0 bg-white rounded-sm shadow-sm flex items-center justify-center border border-gray-200"
-                style={{ backfaceVisibility: 'hidden' }}
               >
                 {/* Bag handle */}
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-6 border-2 border-gray-300 rounded-t-full bg-transparent" />
                 {/* Brand text on bag */}
                 <span className="text-sm md:text-base lg:text-lg font-bold tracking-widest text-[#333]">APOSTLE</span>
               </div>
-              
-              {/* Back face */}
-              <div 
-                className="absolute inset-0 bg-white rounded-sm shadow-sm flex items-center justify-center border border-gray-200"
-                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-              >
-                {/* Bag handle */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-6 border-2 border-gray-300 rounded-t-full bg-transparent" />
-                {/* Brand text on bag */}
-                <span className="text-sm md:text-base lg:text-lg font-bold tracking-widest text-[#333]">APOSTLE</span>
-              </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -156,7 +115,7 @@ export function Footer() {
       <div className="w-full px-8 sm:px-12 lg:px-20 xl:px-28 pb-6">
         <div className="flex justify-end">
           <p className="text-xs text-[#999] tracking-wider uppercase">
-            © {new Date().getFullYear()} APOSTLE RETAIL PRIVATE LIMITED, ALL RIGHTS RESERVED
+            © 2026 APOSTLE RETAIL PRIVATE LIMITED, ALL RIGHTS RESERVED
           </p>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Plus } from 'lucide-react';
 import type { Product } from '@/types';
@@ -30,14 +30,10 @@ export function ProductCard({ product, className, priority = false }: ProductCar
   const hasMultipleImages = images.length > 1;
 
   return (
-    <motion.div
+    <div
       className={cn('group relative', className)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {/* Image Container with Embla Carousel */}
       <div className="relative overflow-hidden bg-[#f5f5f5]">
@@ -126,6 +122,6 @@ export function ProductCard({ product, className, priority = false }: ProductCar
           </span>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

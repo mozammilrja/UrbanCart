@@ -22,15 +22,14 @@ function StoreLocationsSectionComponent({
         <h2 id="stores-title" className="sr-only">Our Store Locations</h2>
         
         <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 stagger-animation"
           role="list"
           aria-label="Store locations"
         >
-          {stores.map((store, index) => (
+          {stores.map((store) => (
             <article
               key={store._id}
               className="group bg-white overflow-hidden shadow-sm rounded-lg animate-fade-in-up"
-              style={{ animationDelay: `${index * 100}ms` }}
               role="listitem"
             >
               {/* Store Images */}
