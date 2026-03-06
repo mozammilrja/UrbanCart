@@ -1,10 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { memo } from 'react';
+import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 import type { Product } from '@/types';
-import { staggerContainer, staggerItem } from '@/styles/theme';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from '@/components/ui/carousel';
 
 interface LatestDropSectionProps {
   title?: string;
@@ -13,52 +19,78 @@ interface LatestDropSectionProps {
   viewAllText?: string;
 }
 
-export function LatestDropSection({
+function LatestDropSectionComponent({
   title = 'Latest drop',
   products,
   viewAllHref = '/collections/new',
   viewAllText = 'Discover more',
 }: LatestDropSectionProps) {
   return (
-    <section className="py-12 md:py-16 lg:py-20 bg-[#f7f7f7]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center justify-between mb-6 md:mb-8"
-        >
-          <h2 className="text-base md:text-lg font-normal text-[#111]">
+    <section 
+      className="py-6 md:py-10 bg-white"
+      aria-labelledby="latest-drop-title"
+    >
+      <div className="w-full px-4 sm:px-6 lg:px-10">
+        {/* Header - Using CSS animation instead of Framer Motion */}
+        <div className="flex items-center justify-between mb-6 md:mb-8 animate-fade-in-up">
+          <h2 
+            id="latest-drop-title"
+            className="text-base md:text-lg font-normal text-[#111]"
+          >
             {title}
           </h2>
           <Link
             href={viewAllHref}
-            className="inline-flex items-center px-4 py-2 text-sm font-normal text-[#111] border border-[#e0e0e0] rounded-full hover:border-[#111] transition-colors"
+            className="inline-flex items-center px-4 py-2 text-sm font-normal text-[#111] border border-[#e0e0e0] rounded-full hover:border-[#111] transition-colors focus:outline-none focus:ring-2 focus:ring-black"
           >
             {viewAllText}
           </Link>
-        </motion.div>
+        </div>
 
-        {/* Product Grid - 4 columns on desktop */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
-        >
-          {products.slice(0, 4).map((product, index) => (
-            <motion.div
-              key={product._id}
-              variants={staggerItem}
-            >
-              <ProductCard product={product} priority={index < 4} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Horizontal Scrolling Product Carousel */}
+        <div className="relative touch-pan-y">
+          <Carousel
+            opts={{
+              align: 'start',
+              loop: true,
+              dragFree: false,
+              skipSnaps: false,
+              containScroll: 'trimSnaps',
+              watchDrag: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4 md:-ml-5 cursor-grab active:cursor-grabbing">
+              {products.map((product, index) => (
+                <CarouselItem
+                  key={product._id}
+                  className="pl-4 md:pl-5 basis-[75%] sm:basis-[45%] md:basis-[32%] lg:basis-[24%] xl:basis-[20%]"
+                >
+                  <OptimizedProductCard 
+                    product={product} 
+                    priority={index < 4}
+                    index={index}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            {/* Navigation Buttons */}
+            <CarouselPrevious 
+              variant="light" 
+              className="hidden sm:flex left-2 md:left-4 w-10 h-10 md:w-12 md:h-12" 
+              aria-label="Previous products"
+            />
+            <CarouselNext 
+              variant="light" 
+              className="hidden sm:flex right-2 md:right-4 w-10 h-10 md:w-12 md:h-12" 
+              aria-label="Next products"
+            />
+          </Carousel>
+        </div>
       </div>
     </section>
   );
 }
+
+export const LatestDropSection = memo(LatestDropSectionComponent);

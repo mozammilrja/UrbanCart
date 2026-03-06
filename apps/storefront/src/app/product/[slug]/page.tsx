@@ -9,14 +9,13 @@ import { Heart, Minus, Plus, Check, ChevronRight } from 'lucide-react';
 import { products, getProductBySlug } from '@/data/mock';
 import { formatPriceCompact, cn } from '@/lib/utils';
 import { ProductGridSection } from '@/components/sections';
-import { use } from 'react';
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export default function ProductPage({ params }: Props) {
-  const { slug } = use(params);
+  const { slug } = params;
   const product = getProductBySlug(slug);
 
   if (!product) {

@@ -1,13 +1,39 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import { Navbar, Footer } from '@/components/layout';
 
+// Optimize Inter with specific weights and subsets
 const inter = Inter({ 
   subsets: ['latin'], 
   variable: '--font-sans',
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
 });
+
+// Load local brand font with next/font for optimal loading
+const rustyAttack = localFont({
+  src: [
+    {
+      path: '../../public/fonts/rusty-attack.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-brand',
+  display: 'swap',
+  preload: true,
+  fallback: ['Helvetica', 'Arial', 'sans-serif'],
+});
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#111111',
+};
 
 export const metadata: Metadata = {
   title: {
@@ -42,8 +68,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased bg-[#f7f7f7] text-[#111]`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${rustyAttack.variable}`}>
+      <head>
+        {/* Preconnect to external image domains for faster LCP */}
+        <link rel="preconnect" href="https://bluorng.com" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://bluorng.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+      </head>
+      <body className="font-sans antialiased bg-[#f7f7f7] text-[#111]">
         <Navbar />
         <main>{children}</main>
         <Footer />

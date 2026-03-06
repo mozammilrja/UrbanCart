@@ -23,11 +23,7 @@ export default function StoresPage() {
       </div>
 
       {/* Store Locations */}
-      <StoreLocationsSection
-        title=""
-        subtitle=""
-        stores={storeLocations}
-      />
+      <StoreLocationsSection stores={storeLocations} />
     </div>
   );
 }

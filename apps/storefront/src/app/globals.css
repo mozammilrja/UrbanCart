@@ -2,17 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Fonts */
-@font-face {
-  font-family: 'Rusty Attack';
-  src: url('/fonts/rusty-attack.otf') format('opentype'),
-       url('/fonts/rusty-attack.woff2') format('woff2'),
-       url('/fonts/rusty-attack.woff') format('woff'),
-       url('/fonts/rusty-attack.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* Note: Custom fonts are now loaded via next/font in layout.tsx for optimal performance */
 
 @layer base {
   :root {
@@ -90,5 +80,68 @@
   /* Smooth image hover */
   .image-hover {
     @apply transition-transform duration-500 ease-out group-hover:scale-105;
+  }
+
+  /* Performance-optimized animations (GPU-accelerated) */
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out 0.3s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-scale {
+    animation: fadeInScale 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  /* GPU-accelerated keyframes using transform and opacity only */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px) translateZ(0);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) translateZ(0);
+    }
+  }
+
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.8) translateZ(0);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateZ(0);
+    }
+  }
+
+  /* Skeleton loading animation */
+  .skeleton {
+    @apply animate-pulse bg-gray-200;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-fade-in-up,
+    .animate-fade-in-scale {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
   }
 }

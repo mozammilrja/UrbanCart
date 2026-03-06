@@ -1,11 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { memo } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 import type { Product } from '@/types';
-import { staggerContainer, staggerItem } from '@/styles/theme';
 
 interface ProductGridSectionProps {
   title?: string;
@@ -17,7 +16,7 @@ interface ProductGridSectionProps {
   bgColor?: 'white' | 'gray';
 }
 
-export function ProductGridSection({
+function ProductGridSectionComponent({
   title,
   subtitle,
   products,
@@ -31,30 +30,30 @@ export function ProductGridSection({
     4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
   };
 
+  const sectionId = title ? `products-${title.toLowerCase().replace(/\s+/g, '-')}` : 'products-grid';
+
   return (
     <section
-      className={`py-20 md:py-24 lg:py-32 ${
+      className={`py-8 md:py-10 lg:py-12 ${
         bgColor === 'gray' ? 'bg-[#f7f7f7]' : 'bg-white'
       }`}
+      aria-labelledby={title ? `${sectionId}-title` : undefined}
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-8 lg:px-16 xl:px-24">
         {/* Header */}
         {(title || viewAllHref) && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 md:mb-14"
-          >
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 md:mb-14 animate-fade-in-up">
             <div>
               {title && (
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-light tracking-tight text-[#111]">
+                <h2 
+                  id={`${sectionId}-title`}
+                  className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-[#111]"
+                >
                   {title}
                 </h2>
               )}
               {subtitle && (
-                <p className="text-sm md:text-base text-[#777] tracking-wide mt-2">
+                <p className="text-xs md:text-sm text-[#777] tracking-wide mt-1">
                   {subtitle}
                 </p>
               )}
@@ -62,30 +61,34 @@ export function ProductGridSection({
             {viewAllHref && (
               <Link
                 href={viewAllHref}
-                className="inline-flex items-center gap-2 text-sm tracking-wide text-[#111] hover:text-[#777] transition-colors group"
+                className="inline-flex items-center gap-2 text-sm tracking-wide text-[#111] hover:text-[#777] transition-colors group focus:outline-none focus:underline"
               >
                 {viewAllText}
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Link>
             )}
-          </motion.div>
+          </div>
         )}
 
         {/* Products Grid */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className={`grid ${gridCols[columns]} gap-4 md:gap-6`}
+        <div
+          className={`grid ${gridCols[columns]} gap-x-3 gap-y-8 md:gap-x-4 md:gap-y-12`}
+          role="list"
+          aria-label={title ? `${title} products` : 'Products'}
         >
-          {products.map((product) => (
-            <motion.div key={product._id} variants={staggerItem}>
-              <ProductCard product={product} />
-            </motion.div>
+          {products.map((product, index) => (
+            <div key={product._id} role="listitem">
+              <OptimizedProductCard 
+                product={product} 
+                priority={false}
+                index={index}
+              />
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
+
+export const ProductGridSection = memo(ProductGridSectionComponent);

@@ -38,10 +38,15 @@ export interface StoreLocation {
   city: string;
   name: string;
   address: string;
-  image: string;
+  images: string[];
   mapUrl: string;
   phone?: string;
+  email?: string;
   hours?: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 // Cart Types

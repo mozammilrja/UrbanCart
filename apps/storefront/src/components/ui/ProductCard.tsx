@@ -4,9 +4,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import { Heart, Plus } from 'lucide-react';
 import type { Product } from '@/types';
-import { cn, formatPriceCompact } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselDots,
+} from '@/components/ui/carousel';
 
 interface ProductCardProps {
   product: Product;
@@ -15,10 +23,11 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, className, priority = false }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const hasSecondImage = product.images.length > 1;
+  const images = product.images.slice(0, 5);
+  const hasMultipleImages = images.length > 1;
 
   return (
     <motion.div
@@ -30,50 +39,61 @@ export function ProductCard({ product, className, priority = false }: ProductCar
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      {/* Image Container */}
-      <Link href={`/product/${product.slug}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden bg-[#f0f0f0] rounded-2xl">
-          {/* Primary Image */}
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className={cn(
-              'object-cover transition-all duration-500 ease-out',
-              isHovered && hasSecondImage ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
-            )}
-            priority={priority}
-          />
-          
-          {/* Secondary Image (hover) */}
-          {hasSecondImage && (
-            <Image
-              src={product.images[1]}
-              alt={`${product.name} alternate view`}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className={cn(
-                'object-cover transition-all duration-500 ease-out',
-                isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-              )}
-            />
+      {/* Image Container with Embla Carousel */}
+      <div className="relative overflow-hidden bg-[#f5f5f5]">
+        <Carousel
+          opts={{
+            loop: true,
+            dragFree: false,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="ml-0">
+            {images.map((image, index) => (
+              <CarouselItem key={index} className="pl-0">
+                <Link href={`/product/${product.slug}`} className="block relative aspect-square">
+                  <Image
+                    src={image}
+                    alt={`${product.name} - Image ${index + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover"
+                    priority={priority && index === 0}
+                  />
+                </Link>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {/* Navigation Arrows (show on hover) */}
+          {hasMultipleImages && isHovered && (
+            <>
+              <CarouselPrevious />
+              <CarouselNext />
+            </>
           )}
 
-          {/* Badge */}
-          {product.badge && (
-            <span className="absolute top-3 left-3 bg-black text-white text-[10px] font-medium tracking-widest uppercase px-2.5 py-1 rounded-full">
-              {product.badge}
-            </span>
+          {/* Pagination Dots (show on hover) */}
+          {hasMultipleImages && isHovered && (
+            <CarouselDots className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10" />
           )}
+        </Carousel>
 
-          {/* Wishlist Button - Dark rounded square like BLUORNG */}
+        {/* Badge */}
+        {product.badge && (
+          <span className="absolute top-3 left-3 bg-black text-white text-[10px] font-medium tracking-widest uppercase px-2.5 py-1 z-10">
+            {product.badge}
+          </span>
+        )}
+
+        {/* Wishlist Button (show on hover) */}
+        {isHovered && (
           <button
             onClick={(e) => {
               e.preventDefault();
               setIsWishlisted(!isWishlisted);
             }}
-            className="absolute top-3 right-3 bg-[#333] hover:bg-[#444] p-2 rounded-lg transition-colors"
+            className="absolute top-3 right-3 bg-[#333] hover:bg-[#444] p-2 transition-colors z-10"
             aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           >
             <Heart
@@ -84,44 +104,27 @@ export function ProductCard({ product, className, priority = false }: ProductCar
               strokeWidth={1.5}
             />
           </button>
-        </div>
-      </Link>
-
-      {/* Product Info */}
-      <div className="mt-4 space-y-1">
-        <Link href={`/product/${product.slug}`}>
-          <h3 className="text-sm font-normal text-[#111] tracking-wide hover:text-[#777] transition-colors line-clamp-1">
-            {product.name}
-          </h3>
-        </Link>
-        
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-[#111]">
-            {formatPriceCompact(product.price)}
-          </span>
-          {product.comparePrice && (
-            <span className="text-sm text-[#999] line-through">
-              {formatPriceCompact(product.comparePrice)}
-            </span>
-          )}
-        </div>
-
-        {/* Color Options */}
-        {product.colors.length > 1 && (
-          <div className="flex gap-1.5 pt-1">
-            {product.colors.slice(0, 4).map((color) => (
-              <div
-                key={color.name}
-                className="w-3 h-3 rounded-full border border-[#e5e5e5]"
-                style={{ backgroundColor: color.hex }}
-                title={color.name}
-              />
-            ))}
-            {product.colors.length > 4 && (
-              <span className="text-xs text-[#999]">+{product.colors.length - 4}</span>
-            )}
-          </div>
         )}
+      </div>
+
+      {/* Product Info - + button on left */}
+      <div className="mt-4 flex items-start gap-3">
+        <button
+          className="p-1 hover:opacity-60 transition-opacity flex-shrink-0"
+          aria-label="Quick add to cart"
+        >
+          <Plus className="w-5 h-5 text-[#333]" strokeWidth={1.5} />
+        </button>
+        <div className="flex-1 min-w-0">
+          <Link href={`/product/${product.slug}`}>
+            <h3 className="text-sm font-normal text-[#111] hover:opacity-60 transition-opacity line-clamp-1">
+              {product.name}
+            </h3>
+          </Link>
+          <span className="text-sm text-[#666] mt-0.5 block">
+            RS. {product.price.toLocaleString()}
+          </span>
+        </div>
       </div>
     </motion.div>
   );

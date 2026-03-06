@@ -1,156 +1,163 @@
+'use client';
+
 import Link from 'next/link';
-import { Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { motion, useMotionValue, useTransform, useAnimationFrame } from 'framer-motion';
 
 const footerLinks = {
-  shop: [
-    { label: 'All Products', href: '/collections' },
-    { label: 'Caps', href: '/caps' },
-    { label: 'Hoodies', href: '/hoodies' },
-    { label: 'T-Shirts', href: '/collections/t-shirts' },
-    { label: 'New Arrivals', href: '/collections/new' },
+  connect: [
+    { label: 'Call', href: '/contact' },
+    { label: 'Text (WhatsApp)', href: 'https://wa.me/919876543210' },
+    { label: 'Instagram', href: 'https://instagram.com/apostle' },
+    { label: 'YouTube', href: 'https://youtube.com/apostle' },
+    { label: 'LinkedIn', href: 'https://linkedin.com/company/apostle' },
   ],
   support: [
-    { label: 'Track Order', href: '/track-order' },
-    { label: 'Shipping & Delivery', href: '/shipping' },
-    { label: 'Returns & Exchange', href: '/returns' },
-    { label: 'Size Guide', href: '/size-guide' },
-    { label: 'Contact Us', href: '/contact' },
+    { label: 'Make a return/Exchange', href: '/returns' },
+    { label: 'Refund/Exchange policy', href: '/refund-policy' },
+    { label: 'Track your order', href: '/track-order' },
+    { label: 'Shipping policy', href: '/shipping' },
+    { label: "FAQ's", href: '/faq' },
+    { label: 'Terms', href: '/terms' },
   ],
   company: [
-    { label: 'About Us', href: '/about' },
-    { label: 'Our Stores', href: '/stores' },
+    { label: 'Our story', href: '/about' },
+    { label: 'Walk-in Stores', href: '/stores' },
+    { label: 'Collaborations', href: '/collaborations' },
     { label: 'Careers', href: '/careers' },
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Media', href: '/media' },
+    { label: 'Blogs', href: '/blog' },
   ],
 };
 
-const socialLinks = [
-  { icon: Instagram, href: 'https://instagram.com/apostle', label: 'Instagram' },
-  { icon: Twitter, href: 'https://twitter.com/apostle', label: 'Twitter' },
-  { icon: Facebook, href: 'https://facebook.com/apostle', label: 'Facebook' },
-  { icon: Youtube, href: 'https://youtube.com/apostle', label: 'YouTube' },
-];
-
 export function Footer() {
+  const [isDragging, setIsDragging] = useState(false);
+  const rotationY = useMotionValue(0);
+  const constraintsRef = useRef(null);
+  
+  // Auto-rotate when not dragging
+  useAnimationFrame((time) => {
+    if (!isDragging) {
+      rotationY.set((time / 20) % 360);
+    }
+  });
+
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-[#f5f5f5]">
       {/* Main Footer */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
-          {/* Brand Column */}
-          <div className="lg:col-span-2 space-y-6">
-            <Link href="/" className="inline-block text-2xl font-semibold tracking-[0.2em]">
-              APOSTLE
-            </Link>
-            <p className="text-sm text-[#999] leading-relaxed max-w-xs">
-              Premium Indian streetwear crafted for those who dare to stand out. 
-              Quality materials, timeless designs.
-            </p>
-            
-            {/* Social Links */}
-            <div className="flex gap-4 pt-2">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 border border-[#333] hover:border-white hover:bg-white hover:text-black transition-all duration-200"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-4 h-4" />
-                </a>
-              ))}
+      <div className="w-full px-8 sm:px-12 lg:px-20 xl:px-28 py-10 md:py-12">
+        <div className="flex flex-col lg:flex-row justify-between gap-10">
+          {/* Links Columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:gap-20 xl:gap-32 flex-1">
+            {/* Connect with us */}
+            <div>
+              <h4 className="text-lg md:text-xl font-semibold text-[#111] mb-6">Connect with us</h4>
+              <ul className="space-y-3">
+                {footerLinks.connect.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-base md:text-lg text-[#666] hover:text-[#111] transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Order Support */}
+            <div>
+              <h4 className="text-lg md:text-xl font-semibold text-[#111] mb-6">Order Support</h4>
+              <ul className="space-y-3">
+                {footerLinks.support.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-base md:text-lg text-[#666] hover:text-[#111] transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* We are APOSTLE */}
+            <div>
+              <h4 className="text-lg md:text-xl font-semibold text-[#111] mb-6">We are APOSTLE</h4>
+              <ul className="space-y-3">
+                {footerLinks.company.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-base md:text-lg text-[#666] hover:text-[#111] transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          {/* Shop Links */}
-          <div>
-            <h4 className="text-xs font-medium tracking-widest uppercase mb-6">Shop</h4>
-            <ul className="space-y-3">
-              {footerLinks.shop.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-[#999] hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support Links */}
-          <div>
-            <h4 className="text-xs font-medium tracking-widest uppercase mb-6">Support</h4>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-[#999] hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h4 className="text-xs font-medium tracking-widest uppercase mb-6">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-[#999] hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Newsletter */}
-        <div className="mt-16 pt-12 border-t border-[#222]">
-          <div className="max-w-md">
-            <h4 className="text-xs font-medium tracking-widest uppercase mb-4">Newsletter</h4>
-            <p className="text-sm text-[#999] mb-4">
-              Subscribe for exclusive drops and early access.
-            </p>
-            <form className="flex gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 bg-transparent border border-[#333] px-4 py-3 text-sm focus:border-white focus:outline-none transition-colors placeholder:text-[#666]"
-              />
-              <button
-                type="submit"
-                className="bg-white text-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-[#ededed] transition-colors"
+          {/* Brand Logo and Bag */}
+          <div className="flex items-center gap-6 lg:gap-10" ref={constraintsRef}>
+            {/* Script Logo */}
+            <span className="text-5xl md:text-6xl lg:text-7xl font-serif italic text-[#333]" style={{ fontFamily: 'Georgia, Times, serif' }}>
+              Apostle
+            </span>
+            
+            {/* Shopping Bag - 360 rotation with drag */}
+            <motion.div 
+              className="relative w-32 h-44 md:w-36 md:h-48 lg:w-40 lg:h-52 cursor-grab active:cursor-grabbing"
+              style={{ 
+                rotateY: rotationY,
+                transformStyle: 'preserve-3d',
+                perspective: 1000
+              }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0}
+              onDragStart={() => setIsDragging(true)}
+              onDrag={(_, info) => {
+                rotationY.set(rotationY.get() + info.delta.x);
+              }}
+              onDragEnd={() => setIsDragging(false)}
+              whileDrag={{ scale: 1.05 }}
+            >
+              {/* Front face */}
+              <div 
+                className="absolute inset-0 bg-white rounded-sm shadow-sm flex items-center justify-center border border-gray-200"
+                style={{ backfaceVisibility: 'hidden' }}
               >
-                Subscribe
-              </button>
-            </form>
+                {/* Bag handle */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-6 border-2 border-gray-300 rounded-t-full bg-transparent" />
+                {/* Brand text on bag */}
+                <span className="text-sm md:text-base lg:text-lg font-bold tracking-widest text-[#333]">APOSTLE</span>
+              </div>
+              
+              {/* Back face */}
+              <div 
+                className="absolute inset-0 bg-white rounded-sm shadow-sm flex items-center justify-center border border-gray-200"
+                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+              >
+                {/* Bag handle */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-6 border-2 border-gray-300 rounded-t-full bg-transparent" />
+                {/* Brand text on bag */}
+                <span className="text-sm md:text-base lg:text-lg font-bold tracking-widest text-[#333]">APOSTLE</span>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-[#222]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#666]">
-            <p>&copy; {new Date().getFullYear()} APOSTLE. All rights reserved.</p>
-            <div className="flex items-center gap-6">
-              <span>Made in India 🇮🇳</span>
-              <span>INR ₹</span>
-            </div>
-          </div>
+      <div className="w-full px-8 sm:px-12 lg:px-20 xl:px-28 pb-6">
+        <div className="flex justify-end">
+          <p className="text-xs text-[#999] tracking-wider uppercase">
+            © {new Date().getFullYear()} APOSTLE RETAIL PRIVATE LIMITED, ALL RIGHTS RESERVED
+          </p>
         </div>
       </div>
     </footer>

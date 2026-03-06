@@ -71,7 +71,7 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-base font-normal text-[#111] hover:text-[#777] transition-colors"
+                    className="text-base font-normal text-[#111] hover:opacity-60 transition-opacity"
                   >
                     {link.label}
                   </Link>
@@ -91,59 +91,62 @@ export function Navbar() {
             {/* Center: Logo */}
             <Link 
               href="/" 
-              className="absolute left-1/2 -translate-x-1/2 text-[45px] tracking-[0.2em] text-[#111] leading-none"
-              style={{ fontFamily: "'Rusty Attack', sans-serif" }}
+              className="absolute left-1/2 -translate-x-1/2 text-[45px] tracking-[0.2em] text-[#111] leading-none font-brand focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+              aria-label="APOSTLE - Home"
             >
               APOSTLE
             </Link>
 
             {/* Right: Icons */}
-            <div className="flex items-center justify-end gap-4 md:gap-5 flex-1 text-[#111]">
+            <div className="flex items-center justify-end gap-4 md:gap-5 flex-1 text-[#111]" role="navigation" aria-label="Quick actions">
               {/* Store Locator */}
               <Link
                 href="/stores"
-                className="hidden md:flex hover:text-[#777] transition-colors"
-                aria-label="Store locations"
+                className="hidden md:flex hover:text-[#777] transition-colors focus:outline-none focus:ring-2 focus:ring-black rounded"
+                aria-label="Find our stores"
               >
-                <MapPin className="w-6 h-6" strokeWidth={1.5} />
+                <MapPin className="w-6 h-6" strokeWidth={1.5} aria-hidden="true" />
               </Link>
               
               {/* Search */}
               <Link
                 href="/search"
-                className="hover:text-[#777] transition-colors"
-                aria-label="Search"
+                className="hover:text-[#777] transition-colors focus:outline-none focus:ring-2 focus:ring-black rounded"
+                aria-label="Search products"
               >
-                <Search className="w-6 h-6" strokeWidth={1.5} />
+                <Search className="w-6 h-6" strokeWidth={1.5} aria-hidden="true" />
               </Link>
               
               {/* Account */}
               <Link
                 href="/account"
-                className="hidden sm:flex hover:text-[#777] transition-colors"
-                aria-label="Account"
+                className="hidden sm:flex hover:text-[#777] transition-colors focus:outline-none focus:ring-2 focus:ring-black rounded"
+                aria-label="My account"
               >
-                <User className="w-6 h-6" strokeWidth={1.5} />
+                <User className="w-6 h-6" strokeWidth={1.5} aria-hidden="true" />
               </Link>
               
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                className="hidden sm:flex hover:text-[#777] transition-colors"
-                aria-label="Wishlist"
+                className="hidden sm:flex hover:text-[#777] transition-colors focus:outline-none focus:ring-2 focus:ring-black rounded"
+                aria-label="My wishlist"
               >
-                <Heart className="w-6 h-6" strokeWidth={1.5} />
+                <Heart className="w-6 h-6" strokeWidth={1.5} aria-hidden="true" />
               </Link>
               
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative hover:text-[#777] transition-colors"
-                aria-label="Cart"
+                className="relative hover:text-[#777] transition-colors focus:outline-none focus:ring-2 focus:ring-black rounded"
+                aria-label={`Shopping cart${cartCount > 0 ? `, ${cartCount} items` : ''}`}
               >
-                <ShoppingBag className="w-6 h-6" strokeWidth={1.5} />
+                <ShoppingBag className="w-6 h-6" strokeWidth={1.5} aria-hidden="true" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 w-4 h-4 text-[10px] font-medium flex items-center justify-center rounded-full bg-black text-white">
+                  <span 
+                    className="absolute -top-2 -right-2 w-4 h-4 text-[10px] font-medium flex items-center justify-center rounded-full bg-black text-white"
+                    aria-hidden="true"
+                  >
                     {cartCount}
                   </span>
                 )}
@@ -152,10 +155,12 @@ export function Navbar() {
               {/* Hamburger Menu */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="hidden lg:flex hover:text-[#777] transition-colors"
-                aria-label="Menu"
+                className="hidden lg:flex hover:text-[#777] transition-colors focus:outline-none focus:ring-2 focus:ring-black rounded"
+                aria-label="Open navigation menu"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
               >
-                <Menu className="w-6 h-6" strokeWidth={1.5} />
+                <Menu className="w-6 h-6" strokeWidth={1.5} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -187,13 +192,13 @@ export function Navbar() {
               <div className="flex flex-col h-full">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4">
-                  <span className="text-lg tracking-[0.15em]" style={{ fontFamily: "'Rusty Attack', sans-serif" }}>APOSTLE</span>
+                  <span className="text-lg tracking-[0.15em] font-brand">APOSTLE</span>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 hover:bg-[#f5f5f5] rounded-full transition-colors"
-                    aria-label="Close menu"
+                    className="p-2 hover:bg-[#f5f5f5] rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-black"
+                    aria-label="Close navigation menu"
                   >
-                    <X className="w-5 h-5" strokeWidth={1.5} />
+                    <X className="w-5 h-5" strokeWidth={1.5} aria-hidden="true" />
                   </button>
                 </div>
 

@@ -92,7 +92,7 @@ export const staggerItem = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] },
+    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const },
   },
 };
 
@@ -100,6 +100,6 @@ export const scaleOnHover = {
   rest: { scale: 1 },
   hover: { 
     scale: 1.03,
-    transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }
+    transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] as const }
   },
 };
