@@ -6,14 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
+  return `RS. ${price.toLocaleString('en-IN')}`;
 }
 
 export function formatPriceCompact(price: number): string {
-  return `₹${price.toLocaleString('en-IN')}`;
+  return `RS. ${price.toLocaleString('en-IN')}`;
 }

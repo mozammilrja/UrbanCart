@@ -30,6 +30,11 @@ export const metadata: Metadata = {
   },
   description:
     "Premium Indian streetwear crafted for those who dare to stand out.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 }
 
 export default function RootLayout({

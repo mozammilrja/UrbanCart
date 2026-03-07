@@ -17,7 +17,7 @@ export function HeroSpline({
   showHint = true,
 }: HeroSplineProps) {
   return (
-    <div className="absolute inset-0 z-10">
+    <div className="absolute inset-0 z-10 pointer-events-none">
       <Suspense
         fallback={
           <div className="w-full h-full flex items-center justify-center">

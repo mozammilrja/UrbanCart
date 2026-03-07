@@ -185,14 +185,14 @@ export function HeroOrb({ imageSrc, iconSrc, size = 180 }: HeroOrbProps) {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 flex items-center justify-center"
+      className="absolute inset-0 flex items-center justify-center pointer-events-none"
       style={{ zIndex: 10 }}
       role="presentation"
       aria-hidden="true"
     >
       <div
         ref={orbRef}
-        className="rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing select-none touch-none overflow-hidden will-change-transform"
+        className="rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing select-none touch-none overflow-hidden will-change-transform pointer-events-auto"
         style={{
           width: size,
           height: size,

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search as SearchIcon, X, TrendingUp, Clock, Sparkles, Filter, SlidersHorizontal, ArrowRight, ChevronRight } from 'lucide-react';
+import { Search as SearchIcon, X, TrendingUp, Clock, Sparkles, SlidersHorizontal, ArrowRight, ChevronRight, Grid3X3, LayoutGrid, ChevronDown, Check } from 'lucide-react';
 import { ProductCard } from '@/components/ui/ProductCard';
-import { products, collections } from '@/data/mock';
+import { products } from '@/data/mock';
+import { cn } from '@/lib/utils';
 
 const trendingSearches = ['Oversized Hoodies', 'Graphic Tees', 'Caps', 'Streetwear', 'Limited Edition', 'Black'];
 
@@ -24,12 +25,25 @@ const categories = [
   { name: 'Accessories', value: 'accessories' },
 ];
 
+type SortOption = 'default' | 'name-asc' | 'name-desc' | 'price-low' | 'price-high';
+
+const sortOptions: { value: SortOption; label: string }[] = [
+  { value: 'default', label: 'Default' },
+  { value: 'name-asc', label: 'Name A-Z' },
+  { value: 'name-desc', label: 'Name Z-A' },
+  { value: 'price-low', label: 'Price: Low to High' },
+  { value: 'price-high', label: 'Price: High to Low' },
+];
+
 export default function SearchPage() {
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>(['Oversized fit', 'Black hoodies', 'Summer drops']);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>('default');
+  const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
     let results = products;
@@ -64,6 +78,22 @@ export default function SearchPage() {
       .map(c => c.name);
     return Array.from(new Set([...categoryMatches, ...productNames])).slice(0, 6);
   }, [query]);
+
+  const sortedProducts = useMemo(() => {
+    const sorted = [...filteredProducts];
+    switch (sortBy) {
+      case 'name-asc':
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case 'name-desc':
+        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      case 'price-low':
+        return sorted.sort((a, b) => a.price - b.price);
+      case 'price-high':
+        return sorted.sort((a, b) => b.price - a.price);
+      default:
+        return sorted;
+    }
+  }, [filteredProducts, sortBy]);
 
   const handleSearch = (term: string) => {
     setQuery(term);
@@ -170,14 +200,110 @@ export default function SearchPage() {
 
             <div className="flex items-center justify-between mb-6">
               <p className="text-[#666]">
-                <span className="font-semibold text-black">{filteredProducts.length}</span> result{filteredProducts.length !== 1 ? 's' : ''}
+                <span className="font-semibold text-black">{sortedProducts.length}</span> result{sortedProducts.length !== 1 ? 's' : ''}
                 {query && <span className="text-[#999]"> for &quot;{query}&quot;</span>}
               </p>
+
+              <div className="flex items-center gap-3">
+                {/* Filter & Sort Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#e5e5e5] rounded-full hover:border-[#111] transition-colors"
+                  >
+                    <SlidersHorizontal className="w-4 h-4" />
+                    <span className="font-medium text-sm">Filter & Sort</span>
+                    <ChevronDown className={cn(
+                      "w-4 h-4 transition-transform",
+                      isFilterOpen && "rotate-180"
+                    )} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isFilterOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setIsFilterOpen(false)}
+                      />
+                      <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-[#e5e5e5] z-50 overflow-hidden">
+                        <div className="p-4 border-b border-[#e5e5e5]">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-semibold text-sm">Sort By</h3>
+                            <button 
+                              onClick={() => setIsFilterOpen(false)}
+                              className="p-1 hover:bg-[#f5f5f5] rounded-full"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="p-2">
+                          {sortOptions.map((option) => (
+                            <button
+                              key={option.value}
+                              onClick={() => {
+                                setSortBy(option.value);
+                                setIsFilterOpen(false);
+                              }}
+                              className={cn(
+                                "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors",
+                                sortBy === option.value
+                                  ? "bg-[#111] text-white"
+                                  : "hover:bg-[#f5f5f5]"
+                              )}
+                            >
+                              <span>{option.label}</span>
+                              {sortBy === option.value && <Check className="w-4 h-4" />}
+                            </button>
+                          ))}
+                        </div>
+                        <div className="p-3 border-t border-[#e5e5e5] bg-[#fafafa]">
+                          <p className="text-xs text-[#777]">{sortedProducts.length} products</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* View Toggle */}
+                <div className="flex items-center bg-[#f5f5f5] rounded-full p-1">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={cn(
+                      "p-2 rounded-full transition-all",
+                      viewMode === 'grid' 
+                        ? "bg-[#111] text-white" 
+                        : "text-[#666] hover:text-[#111]"
+                    )}
+                    aria-label="Grid view"
+                  >
+                    <Grid3X3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('compact')}
+                    className={cn(
+                      "p-2 rounded-full transition-all",
+                      viewMode === 'compact' 
+                        ? "bg-[#111] text-white" 
+                        : "text-[#666] hover:text-[#111]"
+                    )}
+                    aria-label="Compact view"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {filteredProducts.map((product) => (
+            {sortedProducts.length > 0 ? (
+              <div className={cn(
+                "grid gap-4 md:gap-6",
+                viewMode === 'compact' 
+                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6" 
+                  : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+              )}>
+                {sortedProducts.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
               </div>

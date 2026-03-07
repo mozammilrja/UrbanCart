@@ -3,9 +3,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, memo, useCallback } from 'react';
-import { Heart, Plus } from 'lucide-react';
+import { Heart, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Product } from '@/types';
 import { cn } from '@/lib/utils';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  useCarousel,
+} from '@/components/ui/carousel';
 
 interface OptimizedProductCardProps {
   product: Product;
@@ -16,9 +22,74 @@ interface OptimizedProductCardProps {
   index?: number;
 }
 
+// Custom navigation component for product card carousel
+function ProductCardNav() {
+  const { scrollPrev, scrollNext, canScrollPrev, canScrollNext, selectedIndex, scrollSnaps, scrollTo } = useCarousel();
+  
+  return (
+    <>
+      {/* Left Arrow */}
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          scrollPrev();
+        }}
+        disabled={!canScrollPrev}
+        className={cn(
+          "absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
+          "opacity-0 group-hover:opacity-100",
+          !canScrollPrev && "!opacity-0 pointer-events-none"
+        )}
+      >
+        <ChevronLeft className="w-4 h-4 text-[#333]" />
+      </button>
+      
+      {/* Right Arrow */}
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          scrollNext();
+        }}
+        disabled={!canScrollNext}
+        className={cn(
+          "absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
+          "opacity-0 group-hover:opacity-100",
+          !canScrollNext && "!opacity-0 pointer-events-none"
+        )}
+      >
+        <ChevronRight className="w-4 h-4 text-[#333]" />
+      </button>
+      
+      {/* Dots */}
+      {scrollSnaps.length > 1 && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {scrollSnaps.map((_, index) => (
+            <button
+              key={index}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                scrollTo(index);
+              }}
+              className={cn(
+                "h-1.5 rounded-full transition-all duration-200",
+                index === selectedIndex
+                  ? "w-4 bg-white"
+                  : "w-1.5 bg-white/60 hover:bg-white/80"
+              )}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 /**
  * Performance-optimized ProductCard component.
- * Uses CSS hover states instead of heavy carousel for each card.
+ * Uses image carousel with prev/next navigation on hover.
  * Memoized to prevent unnecessary re-renders.
  */
 function ProductCardComponent({ 
@@ -28,20 +99,14 @@ function ProductCardComponent({
   index = 0
 }: OptimizedProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
-  const primaryImage = product.images[0];
-  const hoverImage = product.images[1] || primaryImage;
-  const hasHoverImage = product.images.length > 1;
+  const images = product.images.length > 0 ? product.images.slice(0, 5) : ['/placeholder-product.jpg'];
+  const hasMultipleImages = images.length > 1;
 
   const handleWishlistClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsWishlisted(prev => !prev);
-  }, []);
-
-  const handleImageError = useCallback(() => {
-    setImageError(true);
   }, []);
 
   return (
@@ -56,40 +121,40 @@ function ProductCardComponent({
         animationFillMode: 'forwards'
       }}
     >
-      {/* Image Container - Simple hover image swap */}
-      <div className="relative overflow-hidden bg-[#f5f5f5] aspect-square">
-        <Link 
-          href={`/product/${product.slug}`} 
-          className="block relative w-full h-full focus:outline-none focus:ring-2 focus:ring-black focus:ring-inset"
-          aria-label={`View ${product.name} - RS. ${product.price.toLocaleString()}`}
+      {/* Image Container with Carousel */}
+      <div className="relative overflow-hidden bg-[#f5f5f5]">
+        <Carousel
+          opts={{
+            loop: true,
+            dragFree: false,
+          }}
+          className="w-full"
         >
-          {/* Primary Image */}
-          <Image
-            src={imageError ? '/placeholder-product.jpg' : primaryImage}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 75vw, (max-width: 1024px) 45vw, 25vw"
-            className={cn(
-              'object-cover transition-opacity duration-300',
-              hasHoverImage ? 'group-hover:opacity-0' : ''
-            )}
-            priority={priority}
-            loading={priority ? 'eager' : 'lazy'}
-            onError={handleImageError}
-          />
-          
-          {/* Hover Image - Only rendered if different from primary */}
-          {hasHoverImage && !imageError && (
-            <Image
-              src={hoverImage}
-              alt={`${product.name} - alternate view`}
-              fill
-              sizes="(max-width: 640px) 75vw, (max-width: 1024px) 45vw, 25vw"
-              className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              loading="lazy"
-            />
-          )}
-        </Link>
+          <CarouselContent className="ml-0">
+            {images.map((image, imgIndex) => (
+              <CarouselItem key={imgIndex} className="pl-0">
+                <Link 
+                  href={`/product/${product.slug}`} 
+                  className="block relative aspect-[3/4] w-full focus:outline-none focus:ring-2 focus:ring-black focus:ring-inset"
+                  aria-label={`View ${product.name} - RS. ${product.price.toLocaleString()}`}
+                >
+                  <Image
+                    src={image}
+                    alt={`${product.name} - Image ${imgIndex + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 75vw, (max-width: 1024px) 45vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    priority={priority && imgIndex === 0}
+                    loading={priority && imgIndex === 0 ? 'eager' : 'lazy'}
+                  />
+                </Link>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {/* Navigation (arrows + dots) */}
+          {hasMultipleImages && <ProductCardNav />}
+        </Carousel>
 
         {/* Badge */}
         {product.badge && (
@@ -102,13 +167,13 @@ function ProductCardComponent({
           </span>
         )}
 
-        {/* Wishlist Button - Always accessible, visually hidden until hover on desktop */}
+        {/* Wishlist Button */}
         <button
           onClick={handleWishlistClick}
           className={cn(
-            'absolute top-3 right-3 bg-[#333] hover:bg-[#444] p-2 transition-all z-10',
+            'absolute top-3 right-3 bg-white/90 hover:bg-white p-2 rounded-full shadow-sm transition-all z-20',
             'opacity-0 group-hover:opacity-100 focus:opacity-100',
-            'focus:outline-none focus:ring-2 focus:ring-white'
+            'focus:outline-none focus:ring-2 focus:ring-black'
           )}
           aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
           aria-pressed={isWishlisted}
@@ -116,7 +181,7 @@ function ProductCardComponent({
           <Heart
             className={cn(
               'w-4 h-4 transition-colors duration-200',
-              isWishlisted ? 'fill-white stroke-white' : 'stroke-white fill-transparent'
+              isWishlisted ? 'fill-red-500 stroke-red-500' : 'stroke-[#333] fill-transparent'
             )}
             strokeWidth={1.5}
             aria-hidden="true"
@@ -129,6 +194,7 @@ function ProductCardComponent({
         <button
           className="p-1 hover:opacity-60 transition-opacity flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-black rounded"
           aria-label={`Quick add ${product.name} to cart`}
+          onClick={(e) => e.stopPropagation()}
         >
           <Plus className="w-5 h-5 text-[#333]" strokeWidth={1.5} aria-hidden="true" />
         </button>

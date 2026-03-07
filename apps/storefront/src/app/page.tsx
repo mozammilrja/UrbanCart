@@ -113,6 +113,7 @@ export default function HomePage() {
             columns={4}
             viewAllHref="/collections"
             viewAllText="View All Products"
+            showFilters={false}
           />
         </Suspense>
       </LazySection>

@@ -727,6 +727,30 @@ export const collections: Collection[] = [
     description: 'Heavyweight comfort meets street style.',
     productCount: 6,
   },
+  {
+    _id: '5',
+    name: 'New Arrivals',
+    slug: 'new',
+    bannerImage: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1600&q=80',
+    description: 'Fresh drops and latest releases. Be the first to cop.',
+    productCount: 10,
+  },
+  {
+    _id: '6',
+    name: 'Limited Edition',
+    slug: 'limited',
+    bannerImage: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=80',
+    description: 'Exclusive pieces. Once they\'re gone, they\'re gone.',
+    productCount: 4,
+  },
+  {
+    _id: '7',
+    name: 'T-Shirts',
+    slug: 't-shirts',
+    bannerImage: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1600&q=80',
+    description: 'Premium cotton tees with bold graphics and clean cuts.',
+    productCount: 24,
+  },
 ];
 
 // Mock Store Locations
@@ -848,4 +872,20 @@ export const getLatestProducts = (count: number = 8): Product[] => {
 
 export const getCapsProducts = (): Product[] => {
   return products.filter((p) => p.categorySlug === 'caps');
+};
+
+export const getTShirtsProducts = (): Product[] => {
+  return products.filter((p) => p.categorySlug === 't-shirts');
+};
+
+export const getHoodiesProducts = (): Product[] => {
+  return products.filter((p) => p.categorySlug === 'hoodies');
+};
+
+export const getOuterwearProducts = (): Product[] => {
+  return products.filter((p) => p.categorySlug === 'outerwear');
+};
+
+export const getBottomsProducts = (): Product[] => {
+  return products.filter((p) => p.categorySlug === 'bottoms');
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -109,10 +109,10 @@ export default function AccountPage() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#111] to-[#333] text-white rounded-xl p-4 min-w-[180px] shadow-lg border border-white/10">
-                  <p className="text-xs uppercase tracking-wider text-white/70">Loyalty Points</p>
-                  <p className="text-3xl font-bold mt-1">{user.loyaltyPoints.toLocaleString()}</p>
-                  <p className="text-xs mt-2 text-white/70">{user.tier} Status</p>
+                <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] text-white rounded-xl p-5 min-w-[200px] shadow-xl">
+                  <p className="text-xs uppercase tracking-wider text-white/80 font-medium">Loyalty Points</p>
+                  <p className="text-4xl font-bold mt-2 text-white">{user.loyaltyPoints.toLocaleString()}</p>
+                  <p className="text-sm mt-3 text-amber-400 font-medium">{user.tier} Status</p>
                 </div>
               </div>
             </div>
@@ -137,39 +137,40 @@ export default function AccountPage() {
                 <div className="divide-y divide-[#e5e5e5]">
                   {recentOrders.map((order) => {
                     const product = products[order.productIndex];
+                    const imageUrl = product?.images?.[0];
                     return (
-                      <Link
-                        key={order.id}
-                        href={"/account/orders/" + order.id}
-                        className="flex items-center gap-4 p-6 hover:bg-[#fafafa] transition-colors group"
-                      >
-                        <div className="relative w-16 h-16 md:w-20 md:h-20 bg-[#f5f5f5] rounded-lg overflow-hidden flex-shrink-0">
-                          {product?.images?.[0] ? (
-                            <Image
-                              src={product.images[0]}
-                              alt={product.name}
-                              fill
-                              className="object-cover"
-                              sizes="80px"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#111] to-[#333]">
-                              <Package className="w-8 h-8 text-white/80" />
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium truncate">{order.id}</p>
-                            <span className={"px-2 py-0.5 text-xs font-medium rounded-full " + getStatusColor(order.status)}>
-                              {order.status}
-                            </span>
+                    <Link
+                      key={order.id}
+                      href={"/account/orders/" + order.id}
+                      className="flex items-center gap-4 p-6 hover:bg-[#fafafa] transition-colors group"
+                    >
+                      <div className="w-16 h-16 md:w-20 md:h-20 bg-[#f5f5f5] rounded-lg overflow-hidden flex-shrink-0 relative">
+                        {imageUrl ? (
+                          <Image 
+                            src={imageUrl} 
+                            alt={product?.name || 'Order item'} 
+                            width={80} 
+                            height={80} 
+                            className="w-full h-full object-cover" 
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Package className="w-8 h-8 text-[#ccc]" />
                           </div>
-                          <p className="text-sm text-[#777] mt-1">{order.items} item{order.items > 1 ? 's' : ''} • {order.date}</p>
-                          <p className="text-sm font-medium mt-1">₹{order.total.toLocaleString()}</p>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium truncate">{order.id}</p>
+                          <span className={"px-2 py-0.5 text-xs font-medium rounded-full " + getStatusColor(order.status)}>
+                            {order.status}
+                          </span>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-[#ccc] group-hover:text-[#111] transition-colors flex-shrink-0" />
-                      </Link>
+                        <p className="text-sm text-[#777] mt-1">{order.items} item{order.items > 1 ? 's' : ''} • {order.date}</p>
+                        <p className="text-sm font-medium mt-1">₹{order.total.toLocaleString()}</p>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-[#ccc] group-hover:text-[#111] transition-colors flex-shrink-0" />
+                    </Link>
                     );
                   })}
                 </div>

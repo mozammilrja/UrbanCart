@@ -118,7 +118,7 @@ function HeroSectionComponent({
         {/* Floating Orb with mouse-follow + 3D tilt - Lazy loaded */}
         {showOrb && (
           <Suspense fallback={null}>
-            <div className="absolute inset-0 animate-fade-in">
+            <div className="absolute inset-0 animate-fade-in pointer-events-none">
               <HeroOrb imageSrc={orbImageSrc} iconSrc={orbIconSrc} size={140} />
             </div>
           </Suspense>
@@ -127,7 +127,7 @@ function HeroSectionComponent({
         {/* Spline 3D Interactive Viewer (optional) - Only loaded when explicitly enabled */}
         {showSpline && splineUrl && (
           <Suspense fallback={null}>
-            <div className="absolute inset-0 animate-fade-in">
+            <div className="absolute inset-0 animate-fade-in pointer-events-none">
               <HeroSpline sceneUrl={splineUrl} showHint={true} />
             </div>
           </Suspense>
