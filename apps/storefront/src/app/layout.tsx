@@ -43,9 +43,9 @@ export default function RootLayout({
       className={`${inter.variable} ${rustyAttack.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans antialiased bg-[#f7f7f7] text-[#111]">
+      <body className="font-sans antialiased bg-[#f7f7f7] text-[#111] min-h-screen flex flex-col">
         <Navbar />
-        <main>{children}</main>
+        <main className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>
