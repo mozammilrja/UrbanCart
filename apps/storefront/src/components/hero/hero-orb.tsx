@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 import { InertiaPlugin } from 'gsap/InertiaPlugin';
@@ -231,7 +232,16 @@ export function HeroOrb({ imageSrc, iconSrc, size = 180 }: HeroOrbProps) {
         {!imageSrc && (
           <div className="absolute inset-2 z-10 pointer-events-none">
             {iconSrc ? (
-              <img src={iconSrc} alt="" className="w-full h-full object-contain" aria-hidden="true" />
+              <div className="relative w-full h-full">
+                <Image 
+                  src={iconSrc} 
+                  alt="" 
+                  fill
+                  className="object-contain" 
+                  sizes="(max-width: 768px) 100px, 140px"
+                  aria-hidden="true" 
+                />
+              </div>
             ) : (
               defaultIcon
             )}

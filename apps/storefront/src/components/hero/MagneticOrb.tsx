@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
+import Image from 'next/image';
 
 interface MagneticOrbProps {
   size?: number;
@@ -77,7 +78,19 @@ export function MagneticOrb({ size = 90, icon, className = '' }: MagneticOrbProp
         </svg>
       );
     }
-    if (typeof icon === 'string') return <img src={icon} alt="Brand icon" className="w-2/5 h-2/5 object-contain"/>;
+    if (typeof icon === 'string') {
+      return (
+        <div className="relative w-2/5 h-2/5">
+          <Image 
+            src={icon} 
+            alt="Brand icon" 
+            fill
+            className="object-contain" 
+            sizes="(max-width: 768px) 36px, 56px"
+          />
+        </div>
+      );
+    }
     return icon;
   };
 

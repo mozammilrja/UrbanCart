@@ -57,7 +57,7 @@ function HeroSectionComponent({
 }: HeroSectionProps) {
   return (
     <section 
-      className="hero-section relative w-full h-screen min-h-[600px]"
+      className="hero-section relative w-full h-[100svh] min-h-[500px] sm:min-h-[550px] md:min-h-[600px]"
       aria-label="Hero banner"
     >
       <div className="hero-section-main relative w-full h-full">

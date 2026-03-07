@@ -25,7 +25,7 @@ function ProductCardNav() {
   
   return (
     <>
-      {/* Left Arrow */}
+      {/* Left Arrow - 44px touch target for accessibility */}
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -33,16 +33,17 @@ function ProductCardNav() {
           scrollPrev();
         }}
         disabled={!canScrollPrev}
+        aria-label="Previous image"
         className={cn(
-          "absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
-          "opacity-0 group-hover:opacity-100",
+          "absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
+          "opacity-0 group-hover:opacity-100 focus:opacity-100",
           !canScrollPrev && "!opacity-0 pointer-events-none"
         )}
       >
-        <ChevronLeft className="w-4 h-4 text-[#333]" />
+        <ChevronLeft className="w-5 h-5 text-[#333]" />
       </button>
       
-      {/* Right Arrow */}
+      {/* Right Arrow - 44px touch target for accessibility */}
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -50,18 +51,23 @@ function ProductCardNav() {
           scrollNext();
         }}
         disabled={!canScrollNext}
+        aria-label="Next image"
         className={cn(
-          "absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
-          "opacity-0 group-hover:opacity-100",
+          "absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
+          "opacity-0 group-hover:opacity-100 focus:opacity-100",
           !canScrollNext && "!opacity-0 pointer-events-none"
         )}
       >
-        <ChevronRight className="w-4 h-4 text-[#333]" />
+        <ChevronRight className="w-5 h-5 text-[#333]" />
       </button>
       
-      {/* Dots */}
+      {/* Dots - Larger touch targets */}
       {scrollSnaps.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div 
+          className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 sm:gap-2.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200"
+          role="tablist"
+          aria-label="Image gallery navigation"
+        >
           {scrollSnaps.map((_, index) => (
             <button
               key={index}
@@ -70,11 +76,14 @@ function ProductCardNav() {
                 e.stopPropagation();
                 scrollTo(index);
               }}
+              role="tab"
+              aria-selected={index === selectedIndex}
+              aria-label={`Go to image ${index + 1}`}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-200",
+                "h-2 sm:h-2.5 rounded-full transition-all duration-200 min-w-[8px]",
                 index === selectedIndex
-                  ? "w-4 bg-white"
-                  : "w-1.5 bg-white/60 hover:bg-white/80"
+                  ? "w-5 sm:w-6 bg-white"
+                  : "w-2 sm:w-2.5 bg-white/60 hover:bg-white/80"
               )}
             />
           ))}

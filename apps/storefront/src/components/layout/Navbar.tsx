@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const ICON_SIZE = 30;
+const ICON_SIZE = 25;
 
 const leftNavLinks = [
   { label: 'New Drop', href: '/collections/new' },
@@ -60,8 +60,21 @@ export function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    
+    // ESC key handler for accessibility
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    
+    if (isMobileMenuOpen) {
+      window.addEventListener('keydown', handleEscKey);
+    }
+    
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleEscKey);
     };
   }, [isMobileMenuOpen]);
 
@@ -95,7 +108,7 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      "text-xl font-normal hover:opacity-60 transition-all",
+                      "text-xs font-normal hover:opacity-60 transition-all",
                       isScrolled ? "text-[#111]" : "text-white"
                     )}
                   >
@@ -113,13 +126,14 @@ export function Navbar() {
               </button>
             </div>
 
-            {/* Logo */}
+            {/* Logo - Responsive sizing for all devices */}
             <Link
               href="/"
               className={cn(
-                "absolute left-1/2 -translate-x-1/2 text-[45px] tracking-[0.2em] leading-none font-brand transition-colors",
+                "absolute left-1/2 -translate-x-1/2 text-[24px] sm:text-[28px] md:text-[32px] lg:text-[40px] tracking-[0.15em] sm:tracking-[0.2em] leading-none font-brand transition-colors",
                 isScrolled ? "text-[#111]" : "text-white"
               )}
+              aria-label="APOSTLE - Go to homepage"
             >
               APOSTLE
             </Link>
@@ -131,35 +145,40 @@ export function Navbar() {
             )}>
               <Link
                 href="/stores"
-                className="hidden md:flex hover:opacity-70 transition-opacity p-1"
+                className="hidden md:flex hover:opacity-70 transition-opacity p-2"
+                aria-label="Find a store near you"
               >
                 <MapPin width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
               </Link>
 
               <Link
                 href="/search"
-                className="hover:opacity-70 transition-opacity p-1"
+                className="hover:opacity-70 transition-opacity p-2"
+                aria-label="Search products"
               >
                 <Search width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
               </Link>
 
               <Link
                 href="/account"
-                className="hidden sm:flex hover:opacity-70 transition-opacity p-1"
+                className="hidden sm:flex hover:opacity-70 transition-opacity p-2"
+                aria-label="My account"
               >
                 <User width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
               </Link>
 
               <Link
                 href="/wishlist"
-                className="hidden sm:flex hover:opacity-70 transition-opacity p-1"
+                className="hidden sm:flex hover:opacity-70 transition-opacity p-2"
+                aria-label="View wishlist"
               >
                 <Heart width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
               </Link>
 
               <Link
                 href="/cart"
-                className="relative hover:opacity-70 transition-opacity p-1"
+                className="relative hover:opacity-70 transition-opacity p-2"
+                aria-label="Shopping cart"
               >
                 <ShoppingBag width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
 
@@ -175,7 +194,8 @@ export function Navbar() {
 
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="hidden lg:flex hover:opacity-70 transition-opacity p-1"
+                className="hidden lg:flex hover:opacity-70 transition-opacity p-2"
+                aria-label="Open navigation menu"
               >
                 <Menu width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
               </button>
@@ -193,15 +213,16 @@ export function Navbar() {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] transition-opacity"
           />
 
-          {/* Slide Panel */}
-          <div className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white z-[70] shadow-2xl overflow-hidden">
+          {/* Slide Panel - Responsive width for all devices */}
+          <div className="fixed top-0 right-0 bottom-0 w-[85vw] max-w-[320px] sm:max-w-sm bg-white z-[70] shadow-2xl overflow-hidden animate-slide-in-right">
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-5 border-b border-[#e5e5e5]">
-                <span className="text-2xl tracking-[0.15em] font-brand">APOSTLE</span>
+              <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-[#e5e5e5]">
+                <span className="text-xl sm:text-2xl tracking-[0.15em] font-brand">APOSTLE</span>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2.5 hover:bg-[#f5f5f5] rounded-full transition-colors"
+                  className="p-3 hover:bg-[#f5f5f5] rounded-full transition-colors"
+                  aria-label="Close menu"
                 >
                   <X width={22} height={22} strokeWidth={1.5} />
                 </button>
@@ -287,14 +308,14 @@ export function Navbar() {
                 </Link>
 
                 {/* Social & Contact */}
-                <div className="flex items-center justify-center gap-6 mt-5">
-                  <a href="https://instagram.com/apostle" className="p-2 text-[#999] hover:text-[#111] transition-colors">
+                <div className="flex items-center justify-center gap-4 sm:gap-6 mt-5">
+                  <a href="https://instagram.com/apostle" className="p-3 text-[#999] hover:text-[#111] transition-colors" aria-label="Follow us on Instagram">
                     <Instagram className="w-5 h-5" />
                   </a>
-                  <a href="tel:+919876543210" className="p-2 text-[#999] hover:text-[#111] transition-colors">
+                  <a href="tel:+919876543210" className="p-3 text-[#999] hover:text-[#111] transition-colors" aria-label="Call us">
                     <Phone className="w-5 h-5" />
                   </a>
-                  <a href="mailto:hello@apostle.in" className="p-2 text-[#999] hover:text-[#111] transition-colors">
+                  <a href="mailto:hello@apostle.in" className="p-3 text-[#999] hover:text-[#111] transition-colors" aria-label="Email us">
                     <Mail className="w-5 h-5" />
                   </a>
                 </div>

@@ -123,20 +123,22 @@ export function ProductGridSection({
                   )} />
                 </button>
 
-                {/* Dropdown Menu */}
+                {/* Dropdown Menu - Responsive width */}
                 {isFilterOpen && (
                   <>
                     <div 
                       className="fixed inset-0 z-40" 
                       onClick={() => setIsFilterOpen(false)}
+                      aria-hidden="true"
                     />
-                    <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-[#e5e5e5] z-50 overflow-hidden">
+                    <div className="absolute top-full left-0 mt-2 w-[calc(100vw-32px)] max-w-[256px] sm:w-64 bg-white rounded-2xl shadow-xl border border-[#e5e5e5] z-50 overflow-hidden">
                       <div className="p-4 border-b border-[#e5e5e5]">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-sm">Sort By</h3>
                           <button 
                             onClick={() => setIsFilterOpen(false)}
-                            className="p-1 hover:bg-[#f5f5f5] rounded-full"
+                            className="p-2 hover:bg-[#f5f5f5] rounded-full"
+                            aria-label="Close filter menu"
                           >
                             <X className="w-4 h-4" />
                           </button>

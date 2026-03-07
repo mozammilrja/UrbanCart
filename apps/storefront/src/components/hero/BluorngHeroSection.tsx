@@ -199,7 +199,18 @@ export function BluorngHeroSection({
     }
     
     if (typeof orbIcon === 'string') {
-      return <img src={orbIcon} alt="Brand icon" className="w-2/5 h-2/5 object-contain" draggable={false}/>;
+      return (
+        <div className="relative w-2/5 h-2/5">
+          <Image 
+            src={orbIcon} 
+            alt="Brand icon" 
+            fill
+            className="object-contain" 
+            sizes="(max-width: 768px) 40px, 60px"
+            draggable={false}
+          />
+        </div>
+      );
     }
     
     return orbIcon;
