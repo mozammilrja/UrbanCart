@@ -251,6 +251,7 @@ export default function CustomersPage() {
 
       {/* Customers table */}
       <Card>
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -261,10 +262,10 @@ export default function CustomersPage() {
                 />
               </TableHead>
               <TableHead>Customer</TableHead>
-              <TableHead>Phone</TableHead>
+              <TableHead className="hidden md:table-cell">Phone</TableHead>
               <TableHead>Orders</TableHead>
               <TableHead>Total Spent</TableHead>
-              <TableHead>Segment</TableHead>
+              <TableHead className="hidden md:table-cell">Segment</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
@@ -290,10 +291,10 @@ export default function CustomersPage() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{customer.phone}</TableCell>
+                <TableCell className="hidden md:table-cell text-muted-foreground">{customer.phone}</TableCell>
                 <TableCell>{customer.orders}</TableCell>
                 <TableCell className="font-medium">{formatPrice(customer.totalSpent)}</TableCell>
-                <TableCell>
+                <TableCell className="hidden md:table-cell">
                   <Badge variant={segmentColors[customer.segment]}>
                     {customer.segment.toUpperCase()}
                   </Badge>
@@ -332,6 +333,7 @@ export default function CustomersPage() {
             ))}
           </TableBody>
         </Table>
+        </div>
       </Card>
 
       {/* Pagination */}

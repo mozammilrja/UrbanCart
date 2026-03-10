@@ -11,7 +11,10 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev:backend": "turbo dev --filter=@apostle/backend",
+    "db:seed": "pnpm --filter @apostle/backend db:seed",
+    "dev:full": "turbo dev --filter=@apostle/backend --filter=storefront"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

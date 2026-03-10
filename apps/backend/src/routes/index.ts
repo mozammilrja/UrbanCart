@@ -1,0 +1,12 @@
+export { default as authRoutes } from './auth.routes.js';
+export { default as productsRoutes } from './products.routes.js';
+export { default as cartRoutes } from './cart.routes.js';
+export { default as ordersRoutes } from './orders.routes.js';
+export { default as categoriesRoutes } from './categories.routes.js';
+export { default as collectionsRoutes } from './collections.routes.js';
+export { default as usersRoutes } from './users.routes.js';
+export { default as addressesRoutes } from './addresses.routes.js';
+export { default as wishlistRoutes } from './wishlist.routes.js';
+export { default as reviewsRoutes } from './reviews.routes.js';
+export { default as paymentsRoutes } from './payments.routes.js';
+export { default as adminRoutes } from './admin.routes.js';

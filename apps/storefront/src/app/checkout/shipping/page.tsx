@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronRight, MapPin, Plus, Check, Truck, Shield, Package } from 'lucide-react';
 import Image from 'next/image';
 import { useCartStore, selectCartItems, selectCartSubtotal, selectIsCartEmpty } from '@/stores/cart.store';
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '@/config/constants';
 import { cn } from '@/lib/utils';
 
 const savedAddresses = [
@@ -53,7 +54,7 @@ export default function CheckoutShippingPage() {
     }
   }, [isMounted, isEmpty, router]);
 
-  const shipping = subtotal > 2000 ? 0 : 99;
+  const shipping = subtotal > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST;
   const total = subtotal + shipping;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -337,9 +338,9 @@ export default function CheckoutShippingPage() {
             </div>
 
             {/* Trust Badges */}
-            <div className="mt-6 grid grid-cols-3 gap-4">
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
-                { icon: Truck, label: 'Free Shipping', desc: 'Orders over ₹2,000' },
+                { icon: Truck, label: 'Free Shipping', desc: 'Orders over ₹5,000' },
                 { icon: Shield, label: '100% Secure', desc: 'Payment protection' },
                 { icon: Package, label: 'Easy Returns', desc: '15 day return policy' },
               ].map((badge) => {

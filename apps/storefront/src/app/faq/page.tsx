@@ -31,7 +31,7 @@ const faqs = {
   shipping: [
     {
       question: 'What are the shipping charges?',
-      answer: 'We offer free shipping on all orders above ₹2,000. For orders below ₹2,000, a flat shipping fee of ₹99 applies. Express shipping is available at checkout for an additional charge.',
+      answer: 'We offer free shipping on all orders above ₹5,000. For orders below ₹5,000, a flat shipping fee of ₹199 applies. Express shipping is available at checkout for an additional charge.',
     },
     {
       question: 'How long does delivery take?',

@@ -28,6 +28,7 @@ import { formatPriceCompact, cn } from '@/lib/utils';
 import { products } from '@/data/mock';
 import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 import { useCartStore, selectCartItems, selectCartItemCount, selectCartSubtotal } from '@/stores/cart.store';
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '@/config/constants';
 
 // Recommended products
 const recommendedProducts = products.slice(4, 8);
@@ -69,11 +70,10 @@ export default function CartPage() {
   };
 
   const discount = promoApplied ? Math.round(subtotal * 0.1) : 0;
-  const shipping = subtotal > 1999 ? 0 : 99;
+  const shipping = subtotal > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST;
   const total = subtotal - discount + shipping;
-  const freeShippingThreshold = 1999;
-  const amountToFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-  const savings = discount + (shipping === 0 ? 99 : 0);
+  const amountToFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const savings = discount + (shipping === 0 ? STANDARD_SHIPPING_COST : 0);
 
   const applyPromo = () => {
     if (promoCode.toLowerCase() === 'apostle10') {
@@ -231,7 +231,7 @@ export default function CartPage() {
                   <span className="text-sm font-semibold text-amber-900">
                     Add {formatPriceCompact(amountToFreeShipping)} more for FREE shipping!
                   </span>
-                  <p className="text-xs text-amber-700/70">Free shipping on orders above ₹1,999</p>
+                  <p className="text-xs text-amber-700/70">Free shipping on orders above ₹5,000</p>
                 </div>
               </div>
               <Link 
@@ -245,7 +245,7 @@ export default function CartPage() {
             <div className="w-full bg-amber-200/50 rounded-full h-2.5 overflow-hidden">
               <div
                 className="bg-gradient-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500 relative"
-                style={{ width: `${Math.min(100, (subtotal / freeShippingThreshold) * 100)}%` }}
+                style={{ width: `${Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%` }}
               >
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-orange-600 rounded-full" />
               </div>
@@ -382,9 +382,9 @@ export default function CartPage() {
             ))}
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-3 gap-3 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
               {[
-                { icon: Truck, label: 'Free Shipping', sub: 'Orders ₹1,999+', color: 'text-blue-600', bg: 'bg-blue-50' },
+                { icon: Truck, label: 'Free Shipping', sub: 'Orders ₹5,000+', color: 'text-blue-600', bg: 'bg-blue-50' },
                 { icon: RefreshCw, label: 'Easy Returns', sub: '7-day policy', color: 'text-purple-600', bg: 'bg-purple-50' },
                 { icon: Shield, label: 'Secure Payment', sub: '100% safe', color: 'text-green-600', bg: 'bg-green-50' },
               ].map((badge) => (
@@ -557,7 +557,7 @@ export default function CartPage() {
           </div>
         </div>
 
-        {/* Continue Shopping */}}
+        {/* Continue Shopping */}
         <div className="mt-12 text-center">
           <Link
             href="/shop"

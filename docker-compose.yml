@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: apostle-mongodb
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: apostle
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - apostle-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: apostle-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - apostle-network
+
+  # Backend API (optional - can also run locally)
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: apostle-backend
+    restart: unless-stopped
+    ports:
+      - '8000:8000'
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongodb:27017/apostle
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change-me-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-in-production}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      CORS_ORIGINS: http://localhost:3000,http://localhost:3001
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - apostle-network
+    profiles:
+      - full
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  apostle-network:
+    driver: bridge

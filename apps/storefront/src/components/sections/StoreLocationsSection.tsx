@@ -175,7 +175,7 @@ function StoreLocationsSectionComponent({
           <div className="inline-flex flex-col items-center p-8 bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl">
             <h3 className="text-xl font-semibold text-white mb-2">Can't visit a store?</h3>
             <p className="text-neutral-400 mb-6 max-w-sm">
-              Shop online and enjoy free shipping on orders over ₹2,000
+              Shop online and enjoy free shipping on orders over ₹5,000
             </p>
             <a
               href="/shop"

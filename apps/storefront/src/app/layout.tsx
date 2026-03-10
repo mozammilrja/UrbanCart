@@ -3,6 +3,8 @@ import { Inter } from "next/font/google"
 import localFont from "next/font/local"
 import "./globals.css"
 import { LayoutWrapper } from "@/components/layout"
+import { QueryProvider } from "@/lib/query-provider"
+import { AuthProvider } from "@/api/auth/provider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,7 +51,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased bg-[#f7f7f7] text-[#111] min-h-screen flex flex-col">
-        <LayoutWrapper>{children}</LayoutWrapper>
+        <QueryProvider><AuthProvider><LayoutWrapper>{children}</LayoutWrapper></AuthProvider></QueryProvider>
       </body>
     </html>
   )

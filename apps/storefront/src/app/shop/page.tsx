@@ -3,7 +3,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { ChevronRight, SlidersHorizontal, Grid3X3, LayoutGrid } from 'lucide-react';
-import { products } from '@/data/mock';
+import { useApiProducts } from '@/hooks/useApiProducts';
+import { products as mockProducts } from '@/data/mock';
 import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 import { 
   FiltersSidebar, 
@@ -15,72 +16,74 @@ import {
 } from '@/components/shop';
 import { cn } from '@/lib/utils';
 
-// Extract unique values from products
-const getUniqueCategories = () => {
-  const categories: Record<string, number> = {};
-  products.forEach((p) => {
-    categories[p.category] = (categories[p.category] || 0) + 1;
-  });
-  return Object.entries(categories).map(([value, count]) => ({
-    value,
-    label: value,
-    count,
-  }));
-};
 
-const getUniqueSizes = () => {
-  const sizes = new Set<string>();
-  products.forEach((p) => p.sizes.forEach((s) => sizes.add(s)));
-  const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL', 'One Size', 'S/M', 'L/XL'];
-  return Array.from(sizes)
-    .sort((a, b) => {
-      const aIdx = sizeOrder.indexOf(a);
-      const bIdx = sizeOrder.indexOf(b);
-      if (aIdx === -1 && bIdx === -1) return a.localeCompare(b);
-      if (aIdx === -1) return 1;
-      if (bIdx === -1) return -1;
-      return aIdx - bIdx;
-    })
-    .map((value) => ({ value, label: value }));
-};
 
-const getUniqueColors = () => {
-  const colorsMap = new Map<string, { name: string; hex: string }>();
-  products.forEach((p) =>
-    p.colors.forEach((c) => {
-      if (!colorsMap.has(c.hex)) {
-        colorsMap.set(c.hex, { name: c.name, hex: c.hex });
-      }
-    })
-  );
-  return Array.from(colorsMap.values()).map((c) => ({
-    value: c.hex,
-    label: c.name,
-    hex: c.hex,
-  }));
-};
 
-const getPriceRange = () => {
-  const prices = products.map((p) => p.price);
-  return {
-    min: Math.floor(Math.min(...prices) / 100) * 100,
-    max: Math.ceil(Math.max(...prices) / 100) * 100,
-  };
-};
-
-const categoryOptions = getUniqueCategories();
-const sizeOptions = getUniqueSizes();
-const colorOptions = getUniqueColors();
-const { min: priceMin, max: priceMax } = getPriceRange();
-
-const initialFilters: FiltersState = {
-  categories: [],
-  sizes: [],
-  colors: [],
-  priceRange: [priceMin, priceMax],
-};
 
 export default function ShopPage() {
+  const { data: products = mockProducts } = useApiProducts();
+
+  const categoryOptions = useMemo(() => {
+    const categories: Record<string, number> = {};
+    products.forEach((p) => {
+      categories[p.category] = (categories[p.category] || 0) + 1;
+    });
+    return Object.entries(categories).map(([value, count]) => ({
+      value,
+      label: value,
+      count,
+    }));
+  }, [products]);
+
+  const sizeOptions = useMemo(() => {
+    const sizes = new Set<string>();
+    products.forEach((p) => p.sizes.forEach((s) => sizes.add(s)));
+    const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL', 'One Size', 'S/M', 'L/XL'];
+    return Array.from(sizes)
+      .sort((a, b) => {
+        const aIdx = sizeOrder.indexOf(a);
+        const bIdx = sizeOrder.indexOf(b);
+        if (aIdx === -1 && bIdx === -1) return a.localeCompare(b);
+        if (aIdx === -1) return 1;
+        if (bIdx === -1) return -1;
+        return aIdx - bIdx;
+      })
+      .map((value) => ({ value, label: value }));
+  }, [products]);
+
+  const colorOptions = useMemo(() => {
+    const colorsMap = new Map<string, { name: string; hex: string }>();
+    products.forEach((p) =>
+      p.colors.forEach((c) => {
+        if (!colorsMap.has(c.hex)) {
+          colorsMap.set(c.hex, { name: c.name, hex: c.hex });
+        }
+      })
+    );
+    return Array.from(colorsMap.values()).map((c) => ({
+      value: c.hex,
+      label: c.name,
+      hex: c.hex,
+    }));
+  }, [products]);
+
+  const priceMin = useMemo(() => {
+    const prices = products.map((p) => p.price);
+    return prices.length ? Math.floor(Math.min(...prices) / 100) * 100 : 0;
+  }, [products]);
+
+  const priceMax = useMemo(() => {
+    const prices = products.map((p) => p.price);
+    return prices.length ? Math.ceil(Math.max(...prices) / 100) * 100 : 10000;
+  }, [products]);
+
+  const initialFilters: FiltersState = useMemo(() => ({
+    categories: [],
+    sizes: [],
+    colors: [],
+    priceRange: [priceMin, priceMax],
+  }), [priceMin, priceMax]);
+
   const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('recommended');
   const [filters, setFilters] = useState<FiltersState>(initialFilters);

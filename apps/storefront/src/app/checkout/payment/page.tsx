@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Script from 'next/script';
 import { ChevronRight, ChevronLeft, CreditCard, Smartphone, Building2, Wallet, Check, Shield } from 'lucide-react';
 import { useCartStore, selectCartItems, selectCartSubtotal, selectIsCartEmpty } from '@/stores/cart.store';
 import { useOrderStore } from '@/stores/order.store';
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '@/config/constants';
 
 const paymentMethods = [
   {
@@ -67,14 +69,12 @@ export default function CheckoutPaymentPage() {
     }
   }, [isMounted, isEmpty, router]);
 
-  const shipping = subtotal > 2000 ? 0 : 99;
+  const shipping = subtotal > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST;
   const total = subtotal + shipping;
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    // TODO: Integrate with Razorpay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     // Get shipping address from sessionStorage
     let shippingAddress = {
       name: 'Guest',
@@ -92,7 +92,7 @@ export default function CheckoutPaymentPage() {
     } catch (e) {
       console.error('Failed to parse shipping address', e);
     }
-    
+
     // Create order items from cart items
     const orderItems = cartItems.map(item => ({
       id: item.id,
@@ -102,35 +102,156 @@ export default function CheckoutPaymentPage() {
       color: item.color,
       price: item.product.price * item.quantity,
     }));
-    
-    // Create order in store
-    const order = addOrder({
-      items: orderItems,
-      subtotal,
-      shipping,
-      total,
-      paymentMethod: selectedMethod,
-      shippingAddress,
-    });
-    
-    // Store order info in sessionStorage for confirmation page
-    sessionStorage.setItem('lastOrder', JSON.stringify({
-      items: cartItems,
-      subtotal,
-      shipping,
-      total,
-      orderId: order.id,
-      orderDate: order.createdAt,
-    }));
-    
-    // Clear checkout data
-    sessionStorage.removeItem('checkoutShippingAddress');
-    clearCart();
-    router.push('/checkout/confirmation');
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      
+      // Step 1: Create order on backend
+      const orderRes = await fetch(`${apiUrl}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          items: orderItems.map(item => ({
+            product: item.product._id,
+            quantity: item.quantity,
+            size: item.size,
+            color: item.color,
+            price: item.product.price,
+          })),
+          shippingAddress,
+          paymentMethod: selectedMethod === 'cod' ? 'cod' : 'razorpay',
+        }),
+      });
+      
+      const orderData = await orderRes.json();
+
+      // COD — skip Razorpay
+      if (selectedMethod === 'cod' || !orderRes.ok) {
+        // Fallback to local order for now (backend may not be running)
+        const order = addOrder({
+          items: orderItems,
+          subtotal,
+          shipping,
+          total,
+          paymentMethod: selectedMethod,
+          shippingAddress,
+        });
+        
+        sessionStorage.setItem('lastOrder', JSON.stringify({
+          items: cartItems,
+          subtotal,
+          shipping,
+          total,
+          orderId: order.id,
+          orderDate: order.createdAt,
+        }));
+        
+        sessionStorage.removeItem('checkoutShippingAddress');
+        clearCart();
+        router.push('/checkout/confirmation');
+        return;
+      }
+
+      // Step 2: Create Razorpay payment order
+      const payRes = await fetch(`${apiUrl}/api/payments/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ orderId: orderData.data?.order?._id }),
+      });
+
+      if (!payRes.ok) {
+        throw new Error('Failed to create payment order');
+      }
+
+      const payData = await payRes.json();
+
+      // Step 3: Open Razorpay checkout
+      const rzp = new (window as any).Razorpay({
+        key: payData.data.key,
+        amount: payData.data.amount,
+        currency: payData.data.currency,
+        order_id: payData.data.razorpayOrderId,
+        name: 'APOSTLE',
+        description: 'Order Payment',
+        handler: async (response: any) => {
+          // Step 4: Verify payment
+          await fetch(`${apiUrl}/api/payments/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              orderId: orderData.data?.order?._id,
+            }),
+          });
+
+          // Create local order record
+          const order = addOrder({
+            items: orderItems,
+            subtotal,
+            shipping,
+            total,
+            paymentMethod: selectedMethod,
+            shippingAddress,
+          });
+
+          sessionStorage.setItem('lastOrder', JSON.stringify({
+            items: cartItems,
+            subtotal,
+            shipping,
+            total,
+            orderId: order.id,
+            orderDate: order.createdAt,
+          }));
+          
+          sessionStorage.removeItem('checkoutShippingAddress');
+          clearCart();
+          router.push('/checkout/confirmation');
+        },
+        prefill: {
+          name: shippingAddress.name,
+          contact: shippingAddress.phone,
+        },
+        theme: { color: '#111111' },
+        modal: {
+          ondismiss: () => setIsLoading(false),
+        },
+      });
+
+      rzp.open();
+    } catch {
+      // If backend is unreachable, fallback to local order
+      const order = addOrder({
+        items: orderItems,
+        subtotal,
+        shipping,
+        total,
+        paymentMethod: selectedMethod,
+        shippingAddress,
+      });
+
+      sessionStorage.setItem('lastOrder', JSON.stringify({
+        items: cartItems,
+        subtotal,
+        shipping,
+        total,
+        orderId: order.id,
+        orderDate: order.createdAt,
+      }));
+
+      sessionStorage.removeItem('checkoutShippingAddress');
+      clearCart();
+      router.push('/checkout/confirmation');
+    }
   };
 
   return (
     <div className="py-8">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Progress Steps */}
         <div className="flex items-center justify-center gap-4 mb-10">
@@ -241,7 +362,7 @@ export default function CheckoutPaymentPage() {
                       placeholder="1234 5678 9012 3456"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-[#333] mb-2">Expiry</label>
                       <input

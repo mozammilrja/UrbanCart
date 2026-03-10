@@ -220,6 +220,7 @@ export default function OrdersPage() {
 
       {/* Orders table */}
       <Card>
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -231,11 +232,11 @@ export default function OrdersPage() {
               </TableHead>
               <TableHead>Order ID</TableHead>
               <TableHead>Customer</TableHead>
-              <TableHead>Items</TableHead>
+              <TableHead className="hidden md:table-cell">Items</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Payment</TableHead>
-              <TableHead>Date</TableHead>
+              <TableHead className="hidden md:table-cell">Payment</TableHead>
+              <TableHead className="hidden lg:table-cell">Date</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
@@ -259,19 +260,19 @@ export default function OrdersPage() {
                     <p className="text-xs text-muted-foreground">{order.email}</p>
                   </div>
                 </TableCell>
-                <TableCell>{order.items}</TableCell>
+                <TableCell className="hidden md:table-cell">{order.items}</TableCell>
                 <TableCell className="font-medium">{formatPrice(order.total)}</TableCell>
                 <TableCell>
                   <Badge variant={statusColors[order.status]}>
                     {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </Badge>
                 </TableCell>
-                <TableCell>
+                <TableCell className="hidden md:table-cell">
                   <Badge variant={paymentColors[order.payment]}>
                     {order.payment.charAt(0).toUpperCase() + order.payment.slice(1)}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-muted-foreground text-sm">
+                <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">
                   {formatDate(order.date)}
                 </TableCell>
                 <TableCell>
@@ -303,6 +304,7 @@ export default function OrdersPage() {
             ))}
           </TableBody>
         </Table>
+        </div>
       </Card>
 
       {/* Pagination */}

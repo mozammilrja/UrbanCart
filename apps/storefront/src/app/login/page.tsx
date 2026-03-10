@@ -4,11 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/api/auth/provider';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login, isLoading: authLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,11 +21,16 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     
-    // TODO: Implement actual login logic
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    router.push('/account');
+    try {
+      await login({ email: formData.email, password: formData.password });
+      router.push('/account');
+    } catch (err: any) {
+      setError(err?.response?.data?.message || err?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,6 +49,13 @@ export default function LoginPage() {
           <h1 className="text-2xl font-light tracking-tight mb-6">Sign In</h1>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Error Message */}
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                {error}
+              </div>
+            )}
+
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-[#333] mb-2">

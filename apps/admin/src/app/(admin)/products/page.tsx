@@ -205,6 +205,7 @@ export default function ProductsPage() {
 
       {/* Products table */}
       <Card>
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -215,8 +216,8 @@ export default function ProductsPage() {
                 />
               </TableHead>
               <TableHead>Product</TableHead>
-              <TableHead>SKU</TableHead>
-              <TableHead>Category</TableHead>
+              <TableHead className="hidden md:table-cell">SKU</TableHead>
+              <TableHead className="hidden md:table-cell">Category</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Stock</TableHead>
               <TableHead>Status</TableHead>
@@ -245,8 +246,8 @@ export default function ProductsPage() {
                     <span className="font-medium">{product.name}</span>
                   </div>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{product.sku}</TableCell>
-                <TableCell>{product.category}</TableCell>
+                <TableCell className="hidden md:table-cell text-muted-foreground">{product.sku}</TableCell>
+                <TableCell className="hidden md:table-cell">{product.category}</TableCell>
                 <TableCell className="font-medium">{formatPrice(product.price)}</TableCell>
                 <TableCell>
                   <span className={product.stock === 0 ? 'text-destructive' : ''}>
@@ -290,6 +291,7 @@ export default function ProductsPage() {
             ))}
           </TableBody>
         </Table>
+        </div>
       </Card>
 
       {/* Pagination */}

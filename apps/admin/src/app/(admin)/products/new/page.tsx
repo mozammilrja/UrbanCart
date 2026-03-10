@@ -176,7 +176,7 @@ export default function NewProductPage() {
               <CardContent>
                 <div className="space-y-4">
                   {variants.map((variant) => (
-                    <div key={variant.id} className="grid gap-4 rounded-lg border p-4 sm:grid-cols-5">
+                    <div key={variant.id} className="grid gap-4 rounded-lg border p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                       <div className="space-y-2">
                         <Label>Size</Label>
                         <Select defaultValue={variant.size}>

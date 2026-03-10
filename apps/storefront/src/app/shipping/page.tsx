@@ -24,7 +24,7 @@ export default function ShippingPolicyPage() {
           <div className="bg-[#f5f5f5] rounded-xl p-5 text-center">
             <Truck className="w-6 h-6 mx-auto mb-3" />
             <p className="font-medium">Free Shipping</p>
-            <p className="text-sm text-[#666]">On orders over ₹2,000</p>
+            <p className="text-sm text-[#666]">On orders over ₹5,000</p>
           </div>
           <div className="bg-[#f5f5f5] rounded-xl p-5 text-center">
             <Clock className="w-6 h-6 mx-auto mb-3" />
@@ -49,11 +49,11 @@ export default function ShippingPolicyPage() {
             </thead>
             <tbody>
               <tr>
-                <td>Below ₹2,000</td>
-                <td>₹99</td>
+                <td>Below ₹5,000</td>
+                <td>₹199</td>
               </tr>
               <tr>
-                <td>₹2,000 and above</td>
+                <td>₹5,000 and above</td>
                 <td>Free</td>
               </tr>
               <tr>

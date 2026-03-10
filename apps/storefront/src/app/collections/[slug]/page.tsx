@@ -106,7 +106,7 @@ export default async function CollectionPage({ params }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
             <div className="flex items-center justify-center gap-4 p-6">
               <Truck className="w-5 h-5 text-white/70" />
-              <span className="text-sm text-white/70">Free Shipping Over ₹2,000</span>
+              <span className="text-sm text-white/70">Free Shipping Over ₹5,000</span>
             </div>
             <div className="flex items-center justify-center gap-4 p-6">
               <Package className="w-5 h-5 text-white/70" />

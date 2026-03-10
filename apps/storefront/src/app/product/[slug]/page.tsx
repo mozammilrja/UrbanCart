@@ -6,11 +6,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Heart, Minus, Plus, Check, ChevronRight, ShoppingBag } from 'lucide-react';
-import { products, getProductBySlug } from '@/data/mock';
+import { Heart, Minus, Plus, Check, ChevronRight, ShoppingBag, Star } from 'lucide-react';
+import { products as mockProducts, getProductBySlug as getMockProductBySlug } from '@/data/mock';
+import { useApiProduct } from '@/hooks/useApiProducts';
 import { formatPriceCompact, cn } from '@/lib/utils';
 import { useCartStore } from '@/stores/cart.store';
+import { useWishlistStore } from '@/stores';
 import { ProductGridSection } from '@/components/sections';
+import { PincodeChecker } from '@/components/product/PincodeChecker';
+import { ReviewsSection } from '@/components/product/ReviewsSection';
+import { SizeGuideModal } from '@/components/product/SizeGuideModal';
 
 interface Props {
   params: { slug: string };
@@ -18,7 +23,16 @@ interface Props {
 
 export default function ProductPage({ params }: Props) {
   const { slug } = params;
-  const product = getProductBySlug(slug);
+  const { data: apiProduct, isLoading } = useApiProduct(slug);
+  const product = apiProduct || getMockProductBySlug(slug);
+
+  if (isLoading) {
+    return (
+      <div className="pt-24 min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-900" />
+      </div>
+    );
+  }
 
   if (!product) {
     notFound();
@@ -27,15 +41,17 @@ export default function ProductPage({ params }: Props) {
   return <ProductDetail product={product} />;
 }
 
-function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof getProductBySlug>> }) {
+function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof getMockProductBySlug>> }) {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
+  const { isInWishlist, toggleItem: toggleWishlist } = useWishlistStore();
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name || null);
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const isWishlisted = isInWishlist(product._id);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -52,7 +68,7 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
     setSelectedImage(index);
   };
 
-  const relatedProducts = products.filter(
+  const relatedProducts = mockProducts.filter(
     (p) => p.categorySlug === product.categorySlug && p._id !== product._id
   ).slice(0, 4);
 
@@ -220,7 +236,10 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-medium tracking-widest uppercase">Size</span>
-                  <button className="text-xs text-[#777] underline hover:text-[#111] transition-colors">
+                  <button 
+                    onClick={() => setSizeGuideOpen(true)}
+                    className="text-xs text-[#777] underline hover:text-[#111] transition-colors"
+                  >
                     Size Guide
                   </button>
                 </div>
@@ -295,7 +314,7 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
                   )}
                 </button>
                 <button
-                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  onClick={() => toggleWishlist(product._id)}
                   className="w-14 h-14 border border-[#e5e5e5] flex items-center justify-center hover:border-[#111] transition-colors"
                 >
                   <Heart
@@ -321,11 +340,14 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
                 Buy Now
               </button>
 
+              {/* Pincode Checker */}
+              <PincodeChecker />
+
               {/* Features */}
               <div className="border-t border-[#e5e5e5] pt-6 space-y-3">
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-green-600" />
-                  <span>Free shipping on orders above ₹1,999</span>
+                  <span>Free shipping on orders above ₹5,000</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Check className="w-4 h-4 text-green-600" />
@@ -339,6 +361,9 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
             </div>
           </div>
         </div>
+
+        {/* Reviews Section */}
+        <ReviewsSection productId={product._id} />
       </div>
 
       {/* Related Products */}
@@ -351,6 +376,13 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
           bgColor="gray"
         />
       )}
+
+      {/* Size Guide Modal */}
+      <SizeGuideModal
+        isOpen={sizeGuideOpen}
+        onClose={() => setSizeGuideOpen(false)}
+        category={product.category}
+      />
     </div>
   );
 }

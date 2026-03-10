@@ -26,6 +26,7 @@ import {
 import { products } from '@/data/mock';
 import { formatPriceCompact, cn } from '@/lib/utils';
 import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
+import { useWishlistStore } from '@/stores';
 
 type SortOption = 'date-added' | 'name-asc' | 'name-desc' | 'price-low' | 'price-high';
 
@@ -37,21 +38,26 @@ const sortOptions: { value: SortOption; label: string }[] = [
   { value: 'price-high', label: 'Price: High to Low' },
 ];
 
-// Mock wishlist items for demo
-const initialWishlistItems = [products[2], products[4], products[6], products[9]];
-
-// Recommended products
+// Recommended products (static suggestions)
 const recommendedProducts = [products[1], products[3], products[5], products[7]];
 
 export default function WishlistPage() {
-  const [wishlistItems, setWishlistItems] = useState(initialWishlistItems);
+  const { items: wishlistItems, removeItem: removeFromWishlist, clearWishlist } = useWishlistStore();
+
+  // Resolve product IDs to full product objects
+  const resolvedProducts = useMemo(() => {
+    return wishlistItems
+      .map((item) => products.find((p) => p._id === item.productId))
+      .filter(Boolean) as typeof products;
+  }, [wishlistItems]);
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [addedToCart, setAddedToCart] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('date-added');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const sortedItems = useMemo(() => {
-    const sorted = [...wishlistItems];
+    const sorted = [...resolvedProducts];
     switch (sortBy) {
       case 'name-asc':
         return sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -64,10 +70,10 @@ export default function WishlistPage() {
       default:
         return sorted;
     }
-  }, [wishlistItems, sortBy]);
+  }, [resolvedProducts, sortBy]);
 
   const removeItem = (productId: string) => {
-    setWishlistItems((items) => items.filter((item) => item._id !== productId));
+    removeFromWishlist(productId);
   };
 
   const moveToCart = (productId: string) => {
@@ -78,21 +84,21 @@ export default function WishlistPage() {
   };
 
   const addAllToCart = () => {
-    wishlistItems.forEach((item, index) => {
+    resolvedProducts.forEach((item, index) => {
       setTimeout(() => {
         setAddedToCart(prev => [...prev, item._id]);
       }, index * 200);
     });
     setTimeout(() => {
-      setWishlistItems([]);
+      clearWishlist();
       setAddedToCart([]);
-    }, wishlistItems.length * 200 + 500);
+    }, resolvedProducts.length * 200 + 500);
   };
 
-  const totalValue = wishlistItems.reduce((sum, item) => sum + item.price, 0);
-  const avgPrice = wishlistItems.length > 0 ? totalValue / wishlistItems.length : 0;
+  const totalValue = resolvedProducts.reduce((sum, item) => sum + item.price, 0);
+  const avgPrice = resolvedProducts.length > 0 ? totalValue / resolvedProducts.length : 0;
 
-  if (wishlistItems.length === 0) {
+  if (resolvedProducts.length === 0) {
     return (
       <div className="pt-16 md:pt-20 min-h-screen bg-[#fafafa]">
         {/* Empty State Hero */}
@@ -194,7 +200,7 @@ export default function WishlistPage() {
                 Wishlist
               </h1>
               <p className="text-white/60 text-lg">
-                {wishlistItems.length} item{wishlistItems.length !== 1 ? 's' : ''} saved for later
+                {resolvedProducts.length} item{resolvedProducts.length !== 1 ? 's' : ''} saved for later
               </p>
             </div>
 
@@ -205,7 +211,7 @@ export default function WishlistPage() {
                   <Package className="w-4 h-4 text-white/50" />
                   <span className="text-white/50 text-xs uppercase tracking-wider">Items</span>
                 </div>
-                <p className="text-3xl font-bold text-white">{wishlistItems.length}</p>
+                <p className="text-3xl font-bold text-white">{resolvedProducts.length}</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 min-w-[140px]">
                 <div className="flex items-center gap-2 mb-2">
@@ -330,7 +336,7 @@ export default function WishlistPage() {
               Price Alerts
             </button>
             <button
-              onClick={() => setWishlistItems([])}
+              onClick={() => clearWishlist()}
               className="flex items-center gap-2 px-5 py-3 text-sm text-red-600 hover:text-white border border-red-200 rounded-full hover:bg-red-600 hover:border-red-600 transition-all bg-white shadow-sm"
             >
               <Trash2 className="w-4 h-4" />
@@ -349,7 +355,7 @@ export default function WishlistPage() {
               </div>
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-white mb-1">Ready to Make Them Yours?</h2>
-                <p className="text-white/60">Add all {wishlistItems.length} items to your cart with one click</p>
+                <p className="text-white/60">Add all {resolvedProducts.length} items to your cart with one click</p>
               </div>
             </div>
             <button 
@@ -561,7 +567,7 @@ export default function WishlistPage() {
           </div>
         </div>
 
-        {/* Continue Shopping */}}
+        {/* Continue Shopping */}
         <div className="mt-16 text-center">
           <Link
             href="/shop"

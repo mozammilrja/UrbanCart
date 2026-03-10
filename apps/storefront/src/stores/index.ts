@@ -3,10 +3,6 @@
  * Export all Zustand stores
  */
 
-// Auth Store
-export { useAuthStore, selectUser, selectIsAuthenticated, selectAuthLoading, selectAuthError } from './auth.store';
-export type { User } from './auth.store';
-
 // Cart Store
 export { useCartStore, selectCartItems, selectCartItemCount, selectCartSubtotal, selectIsCartEmpty, selectIsCartOpen, selectCouponCode } from './cart.store';
 export type { CartItem } from './cart.store';
