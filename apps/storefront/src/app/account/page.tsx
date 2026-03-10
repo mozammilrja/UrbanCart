@@ -18,7 +18,7 @@ import {
   Clock,
   Edit2,
 } from 'lucide-react';
-import { products } from '@/data/mock';
+import { useOrderStore, selectRecentOrders, type Order } from '@/stores/order.store';
 
 const user = {
   name: 'John Doe',
@@ -28,25 +28,6 @@ const user = {
   loyaltyPoints: 2450,
   tier: 'Gold',
 };
-
-const recentOrders = [
-  {
-    id: 'ORD-2024-001',
-    date: '28 Feb 2024',
-    status: 'Delivered',
-    total: 4999,
-    items: 2,
-    productIndex: 0,
-  },
-  {
-    id: 'ORD-2024-002',
-    date: '15 Feb 2024',
-    status: 'Processing',
-    total: 2499,
-    items: 1,
-    productIndex: 1,
-  },
-];
 
 const menuItems = [
   { icon: Package, label: 'My Orders', href: '/account/orders', description: "Track, return, or buy again" },
@@ -76,6 +57,20 @@ function getStatusColor(status: string) {
 
 export default function AccountPage() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const recentOrders = useOrderStore(selectRecentOrders);
+  
+  // Handle hydration
+  useEffect(() => {
+    useOrderStore.persist.rehydrate();
+    setIsMounted(true);
+  }, []);
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen bg-gradient-to-b from-[#f7f7f7] to-white">
@@ -133,11 +128,17 @@ export default function AccountPage() {
                 </Link>
               </div>
 
-              {recentOrders.length > 0 ? (
+              {!isMounted ? (
+                <div className="p-12 text-center">
+                  <div className="w-12 h-12 mx-auto bg-neutral-100 rounded-full animate-pulse mb-4" />
+                  <div className="h-4 w-32 mx-auto bg-neutral-100 rounded animate-pulse" />
+                </div>
+              ) : recentOrders.length > 0 ? (
                 <div className="divide-y divide-[#e5e5e5]">
                   {recentOrders.map((order) => {
-                    const product = products[order.productIndex];
-                    const imageUrl = product?.images?.[0];
+                    const firstItem = order.items[0];
+                    const imageUrl = firstItem?.product?.images?.[0];
+                    const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
                     return (
                     <Link
                       key={order.id}
@@ -148,7 +149,7 @@ export default function AccountPage() {
                         {imageUrl ? (
                           <Image 
                             src={imageUrl} 
-                            alt={product?.name || 'Order item'} 
+                            alt={firstItem?.product?.name || 'Order item'} 
                             width={80} 
                             height={80} 
                             className="w-full h-full object-cover" 
@@ -166,7 +167,7 @@ export default function AccountPage() {
                             {order.status}
                           </span>
                         </div>
-                        <p className="text-sm text-[#777] mt-1">{order.items} item{order.items > 1 ? 's' : ''} • {order.date}</p>
+                        <p className="text-sm text-[#777] mt-1">{itemCount} item{itemCount > 1 ? 's' : ''} • {formatDate(order.createdAt)}</p>
                         <p className="text-sm font-medium mt-1">₹{order.total.toLocaleString()}</p>
                       </div>
                       <ChevronRight className="w-5 h-5 text-[#ccc] group-hover:text-[#111] transition-colors flex-shrink-0" />

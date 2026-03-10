@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { 
   Carousel, 
@@ -9,30 +9,66 @@ import {
   CarouselPrevious, 
   CarouselNext 
 } from '@/components/ui/carousel';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 import { 
   ArrowRight, 
   Grid3X3, 
   LayoutGrid,
   SlidersHorizontal,
-  Sparkles,
   TrendingUp,
-  ChevronDown,
-  Check,
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
+import { 
+  FiltersSidebar, 
+  MobileFilterDrawer, 
+  ActiveFilters, 
+  SortDropdown,
+  type FiltersState,
+  type SortOption 
+} from '@/components/shop';
 
-type SortOption = 'default' | 'name-asc' | 'name-desc' | 'price-low' | 'price-high';
+// Extract unique values from products
+const getUniqueSizes = (products: Product[]) => {
+  const sizes = new Set<string>();
+  products.forEach((p) => p.sizes.forEach((s) => sizes.add(s)));
+  const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL', 'One Size', 'S/M', 'L/XL'];
+  return Array.from(sizes)
+    .sort((a, b) => {
+      const aIdx = sizeOrder.indexOf(a);
+      const bIdx = sizeOrder.indexOf(b);
+      if (aIdx === -1 && bIdx === -1) return a.localeCompare(b);
+      if (aIdx === -1) return 1;
+      if (bIdx === -1) return -1;
+      return aIdx - bIdx;
+    })
+    .map((value) => ({ value, label: value }));
+};
 
-const sortOptions: { value: SortOption; label: string }[] = [
-  { value: 'default', label: 'Default' },
-  { value: 'name-asc', label: 'Name A-Z' },
-  { value: 'name-desc', label: 'Name Z-A' },
-  { value: 'price-low', label: 'Price: Low to High' },
-  { value: 'price-high', label: 'Price: High to Low' },
-];
+const getUniqueColors = (products: Product[]) => {
+  const colorsMap = new Map<string, { name: string; hex: string }>();
+  products.forEach((p) =>
+    p.colors.forEach((c) => {
+      if (!colorsMap.has(c.hex)) {
+        colorsMap.set(c.hex, { name: c.name, hex: c.hex });
+      }
+    })
+  );
+  return Array.from(colorsMap.values()).map((c) => ({
+    value: c.hex,
+    label: c.name,
+    hex: c.hex,
+  }));
+};
+
+const getPriceRange = (products: Product[]) => {
+  const prices = products.map((p) => p.price);
+  return {
+    min: Math.floor(Math.min(...prices) / 100) * 100,
+    max: Math.ceil(Math.max(...prices) / 100) * 100,
+  };
+};
 
 interface CollectionProductsSectionProps {
   products: Product[];
@@ -46,24 +82,124 @@ export function CollectionProductsSection({
   recommendedProducts 
 }: CollectionProductsSectionProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'carousel'>('grid');
-  const [sortBy, setSortBy] = useState<SortOption>('default');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>('recommended');
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  
+  // Extract filter options from products
+  const sizeOptions = useMemo(() => getUniqueSizes(displayProducts), [displayProducts]);
+  const colorOptions = useMemo(() => getUniqueColors(displayProducts), [displayProducts]);
+  const { min: priceMin, max: priceMax } = useMemo(() => getPriceRange(displayProducts), [displayProducts]);
+  
+  const initialFilters: FiltersState = useMemo(() => ({
+    categories: [],
+    sizes: [],
+    colors: [],
+    priceRange: [priceMin, priceMax],
+  }), [priceMin, priceMax]);
+  
+  const [filters, setFilters] = useState<FiltersState>(initialFilters);
 
-  const sortedProducts = useMemo(() => {
-    const sorted = [...displayProducts];
-    switch (sortBy) {
-      case 'name-asc':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case 'name-desc':
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
-      case 'price-low':
-        return sorted.sort((a, b) => a.price - b.price);
-      case 'price-high':
-        return sorted.sort((a, b) => b.price - a.price);
-      default:
-        return sorted;
+  // Filter and sort products
+  const filteredAndSortedProducts = useMemo(() => {
+    let filtered = [...displayProducts];
+
+    // Filter by size
+    if (filters.sizes.length > 0) {
+      filtered = filtered.filter((p) =>
+        p.sizes.some((s) => filters.sizes.includes(s))
+      );
     }
-  }, [displayProducts, sortBy]);
+
+    // Filter by color
+    if (filters.colors.length > 0) {
+      filtered = filtered.filter((p) =>
+        p.colors.some((c) => filters.colors.includes(c.hex))
+      );
+    }
+
+    // Filter by price
+    filtered = filtered.filter(
+      (p) => p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
+    );
+
+    // Sort
+    switch (sortBy) {
+      case 'newest':
+        return filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+      case 'price-low':
+        return filtered.sort((a, b) => a.price - b.price);
+      case 'price-high':
+        return filtered.sort((a, b) => b.price - a.price);
+      case 'popularity':
+        return filtered.sort((a, b) => (b.stock || 0) - (a.stock || 0));
+      default:
+        return filtered;
+    }
+  }, [displayProducts, filters, sortBy]);
+
+  // Build active filters for chips
+  const activeFilters = useMemo(() => {
+    const active: Array<{
+      type: 'category' | 'size' | 'color' | 'price';
+      value: string;
+      label: string;
+      hex?: string;
+    }> = [];
+
+    filters.sizes.forEach((size) => {
+      active.push({ type: 'size', value: size, label: `Size: ${size}` });
+    });
+
+    filters.colors.forEach((hex) => {
+      const color = colorOptions.find((c) => c.hex === hex);
+      if (color) {
+        active.push({ type: 'color', value: hex, label: color.label, hex });
+      }
+    });
+
+    if (filters.priceRange[0] > priceMin || filters.priceRange[1] < priceMax) {
+      active.push({
+        type: 'price',
+        value: 'price',
+        label: `₹${filters.priceRange[0].toLocaleString('en-IN')} - ₹${filters.priceRange[1].toLocaleString('en-IN')}`,
+      });
+    }
+
+    return active;
+  }, [filters, colorOptions, priceMin, priceMax]);
+
+  const handleRemoveFilter = useCallback(
+    (filter: { type: 'category' | 'size' | 'color' | 'price'; value: string }) => {
+      setFilters((prev) => {
+        switch (filter.type) {
+          case 'size':
+            return {
+              ...prev,
+              sizes: prev.sizes.filter((s) => s !== filter.value),
+            };
+          case 'color':
+            return {
+              ...prev,
+              colors: prev.colors.filter((c) => c !== filter.value),
+            };
+          case 'price':
+            return { ...prev, priceRange: [priceMin, priceMax] };
+          default:
+            return prev;
+        }
+      });
+    },
+    [priceMin, priceMax]
+  );
+
+  const handleClearAll = useCallback(() => {
+    setFilters(initialFilters);
+  }, [initialFilters]);
+
+  const activeFiltersCount =
+    filters.sizes.length +
+    filters.colors.length +
+    (filters.priceRange[0] > priceMin || filters.priceRange[1] < priceMax ? 1 : 0);
 
   return (
     <>
@@ -77,9 +213,9 @@ export function CollectionProductsSection({
           }} />
         </div>
 
-        <div className="relative w-full">
-          {/* Section Header - Edge to Edge */}
-          <div className="px-3 sm:px-6 lg:px-10 mb-8 md:mb-12">
+        <div className="relative w-full px-4 sm:px-8 lg:px-12">
+          {/* Section Header */}
+          <div className="mb-8 md:mb-10">
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-4">
@@ -88,85 +224,42 @@ export function CollectionProductsSection({
                     The Collection
                   </span>
                 </div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-3">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-2">
                   {collectionName}
                 </h2>
-                <p className="text-base md:text-lg text-[#666] max-w-md">
-                  {displayProducts.length} exclusive pieces crafted for the bold
+                <p className="text-base text-neutral-500">
+                  <span className="font-semibold text-neutral-900">{filteredAndSortedProducts.length}</span> exclusive pieces
                 </p>
               </div>
               
-              {/* View Toggle & Filters */}
+              {/* Controls */}
               <div className="flex items-center gap-3 flex-wrap">
-                {/* Filter & Sort Dropdown */}
-                <div className="relative">
-                  <button 
-                    onClick={() => setIsFilterOpen(!isFilterOpen)}
-                    className="flex items-center gap-2 px-6 py-3 text-sm text-[#555] hover:text-[#111] bg-white border border-[#e0e0e0] rounded-full hover:border-[#111] hover:shadow-lg transition-all duration-300"
-                  >
-                    <SlidersHorizontal className="w-4 h-4" />
-                    <span className="font-medium">Filter & Sort</span>
-                    <ChevronDown className={cn(
-                      "w-4 h-4 transition-transform",
-                      isFilterOpen && "rotate-180"
-                    )} />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {isFilterOpen && (
-                    <>
-                      <div 
-                        className="fixed inset-0 z-40" 
-                        onClick={() => setIsFilterOpen(false)}
-                      />
-                      <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-[#e5e5e5] z-50 overflow-hidden">
-                        <div className="p-4 border-b border-[#e5e5e5]">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-sm">Sort By</h3>
-                            <button 
-                              onClick={() => setIsFilterOpen(false)}
-                              className="p-1 hover:bg-[#f5f5f5] rounded-full"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="p-2">
-                          {sortOptions.map((option) => (
-                            <button
-                              key={option.value}
-                              onClick={() => {
-                                setSortBy(option.value);
-                                setIsFilterOpen(false);
-                              }}
-                              className={cn(
-                                "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors",
-                                sortBy === option.value
-                                  ? "bg-[#111] text-white"
-                                  : "hover:bg-[#f5f5f5]"
-                              )}
-                            >
-                              <span>{option.label}</span>
-                              {sortBy === option.value && <Check className="w-4 h-4" />}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="p-3 border-t border-[#e5e5e5] bg-[#fafafa]">
-                          <p className="text-xs text-[#777]">{sortedProducts.length} products</p>
-                        </div>
-                      </div>
-                    </>
+                {/* Mobile Filter Button */}
+                <button
+                  onClick={() => setIsMobileFilterOpen(true)}
+                  className="lg:hidden flex items-center gap-2 px-4 py-2.5 bg-white border border-neutral-200 rounded-full text-sm font-medium hover:border-neutral-400 transition-colors"
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                  Filters
+                  {activeFiltersCount > 0 && (
+                    <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-neutral-900 rounded-full">
+                      {activeFiltersCount}
+                    </span>
                   )}
-                </div>
+                </button>
+
+                {/* Sort Dropdown */}
+                <SortDropdown value={sortBy} onChange={setSortBy} />
                 
-                <div className="flex items-center bg-white border border-[#e0e0e0] rounded-full overflow-hidden shadow-sm">
+                {/* View Toggle */}
+                <div className="flex items-center bg-white border border-neutral-200 rounded-full overflow-hidden">
                   <button
                     onClick={() => setViewMode('grid')}
                     className={cn(
-                      "px-5 py-3 transition-all duration-300",
+                      "p-2.5 transition-all duration-200",
                       viewMode === 'grid' 
-                        ? "bg-[#111] text-white" 
-                        : "text-[#777] hover:text-[#111] hover:bg-[#f5f5f5]"
+                        ? "bg-neutral-900 text-white" 
+                        : "text-neutral-500 hover:text-neutral-900"
                     )}
                     aria-label="Grid view"
                   >
@@ -175,10 +268,10 @@ export function CollectionProductsSection({
                   <button
                     onClick={() => setViewMode('carousel')}
                     className={cn(
-                      "px-5 py-3 transition-all duration-300",
+                      "p-2.5 transition-all duration-200",
                       viewMode === 'carousel' 
-                        ? "bg-[#111] text-white" 
-                        : "text-[#777] hover:text-[#111] hover:bg-[#f5f5f5]"
+                        ? "bg-neutral-900 text-white" 
+                        : "text-neutral-500 hover:text-neutral-900"
                     )}
                     aria-label="Carousel view"
                   >
@@ -189,63 +282,129 @@ export function CollectionProductsSection({
             </div>
           </div>
 
-          {/* Grid View - True Edge to Edge */}
-          {viewMode === 'grid' && (
-            <div className="px-2 sm:px-4 lg:px-6">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
-                {sortedProducts.map((product, index) => (
-                  <ProductCard 
-                    key={product._id}
-                    product={product}
-                    priority={index < 4}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Active Filters */}
+          <ActiveFilters
+            filters={activeFilters}
+            onRemove={handleRemoveFilter}
+            onClearAll={handleClearAll}
+            className="mb-6"
+          />
 
-          {/* Carousel View - Full Width */}
-          {viewMode === 'carousel' && (
-            <div className="relative px-2 sm:px-4 lg:px-6">
-              <Carousel
-                opts={{
-                  align: 'start',
-                  loop: true,
-                }}
-                className="w-full"
-              >
-                <CarouselContent className="-ml-2 sm:-ml-3 md:-ml-4">
-                  {sortedProducts.map((product) => (
-                    <CarouselItem 
-                      key={product._id} 
-                      className="pl-2 sm:pl-3 md:pl-4 basis-[60%] sm:basis-[45%] md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-                    >
-                      <ProductCard product={product} />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious 
-                  variant="light" 
-                  className="left-4 hidden md:flex w-12 h-12 bg-white shadow-xl border-0"
+          {/* Main Content with Sidebar */}
+          <div className="flex gap-8">
+            {/* Desktop Sidebar */}
+            <div className="hidden lg:block w-64 flex-shrink-0">
+              <div className="sticky top-24">
+                <FiltersSidebar
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                  categoryOptions={[]}
+                  colorOptions={colorOptions}
+                  sizeOptions={sizeOptions}
+                  priceMin={priceMin}
+                  priceMax={priceMax}
+                  productCount={filteredAndSortedProducts.length}
+                  onClearAll={handleClearAll}
                 />
-                <CarouselNext 
-                  variant="light" 
-                  className="right-4 hidden md:flex w-12 h-12 bg-white shadow-xl border-0"
-                />
-              </Carousel>
-              
-              {/* Mobile Swipe Hint */}
-              <div className="flex justify-center mt-6 md:hidden">
-                <span className="text-xs text-[#999] tracking-wider flex items-center gap-2">
-                  <span className="w-8 h-px bg-[#ccc]" />
-                  Swipe to explore
-                  <span className="w-8 h-px bg-[#ccc]" />
-                </span>
               </div>
             </div>
-          )}
+
+            {/* Products Area */}
+            <div className="flex-1 min-w-0">
+              {/* Grid View */}
+              {viewMode === 'grid' && (
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                  {filteredAndSortedProducts.map((product, index) => (
+                    <OptimizedProductCard 
+                      key={product._id}
+                      product={product}
+                      index={index}
+                      priority={index < 4}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Carousel View */}
+              {viewMode === 'carousel' && (
+                <div className="relative">
+                  <Carousel
+                    opts={{
+                      align: 'start',
+                      loop: true,
+                    }}
+                    className="w-full"
+                  >
+                    <CarouselContent className="-ml-4">
+                      {filteredAndSortedProducts.map((product, index) => (
+                        <CarouselItem 
+                          key={product._id} 
+                          className="pl-4 basis-[70%] sm:basis-[45%] md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
+                        >
+                          <OptimizedProductCard product={product} index={index} />
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious 
+                      variant="light" 
+                      className="left-2 hidden md:flex w-12 h-12 bg-white shadow-xl border-0"
+                    />
+                    <CarouselNext 
+                      variant="light" 
+                      className="right-2 hidden md:flex w-12 h-12 bg-white shadow-xl border-0"
+                    />
+                  </Carousel>
+                  
+                  {/* Mobile Swipe Hint */}
+                  <div className="flex justify-center mt-6 md:hidden">
+                    <span className="text-xs text-neutral-400 tracking-wider flex items-center gap-2">
+                      <span className="w-8 h-px bg-neutral-300" />
+                      Swipe to explore
+                      <span className="w-8 h-px bg-neutral-300" />
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Empty State */}
+              {filteredAndSortedProducts.length === 0 && (
+                <div className="text-center py-20">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-neutral-100 flex items-center justify-center">
+                    <SlidersHorizontal className="w-8 h-8 text-neutral-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+                    No products found
+                  </h3>
+                  <p className="text-neutral-500 mb-6 max-w-md mx-auto">
+                    Try adjusting your filters to see more products.
+                  </p>
+                  <button
+                    onClick={handleClearAll}
+                    className="px-6 py-3 bg-neutral-900 text-white rounded-full text-sm font-semibold hover:bg-neutral-800 transition-colors"
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* Mobile Filter Drawer */}
+      <MobileFilterDrawer
+        isOpen={isMobileFilterOpen}
+        onClose={() => setIsMobileFilterOpen(false)}
+        filters={filters}
+        onFiltersChange={setFilters}
+        categoryOptions={[]}
+        colorOptions={colorOptions}
+        sizeOptions={sizeOptions}
+        priceMin={priceMin}
+        priceMax={priceMax}
+        productCount={filteredAndSortedProducts.length}
+        onClearAll={handleClearAll}
+      />
 
       {/* You May Also Like - Full Width Dark */}
       <section className="py-16 md:py-24 bg-[#111] relative overflow-hidden">
@@ -288,12 +447,12 @@ export function CollectionProductsSection({
               className="w-full"
             >
               <CarouselContent className="-ml-2 sm:-ml-3 md:-ml-4">
-                {recommendedProducts.map((product) => (
+                {recommendedProducts.map((product, index) => (
                   <CarouselItem 
                     key={product._id} 
                     className="pl-2 sm:pl-3 md:pl-4 basis-[60%] sm:basis-[45%] md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
                   >
-                    <ProductCard product={product} />
+                    <OptimizedProductCard product={product} index={index} />
                   </CarouselItem>
                 ))}
               </CarouselContent>

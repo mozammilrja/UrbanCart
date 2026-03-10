@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import localFont from "next/font/local"
 import "./globals.css"
-import { Navbar, Footer } from "@/components/layout"
+import { LayoutWrapper } from "@/components/layout"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,9 +49,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased bg-[#f7f7f7] text-[#111] min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   )

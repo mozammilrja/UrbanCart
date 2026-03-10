@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Minus, 
   Plus, 
@@ -26,50 +26,48 @@ import {
 } from 'lucide-react';
 import { formatPriceCompact, cn } from '@/lib/utils';
 import { products } from '@/data/mock';
-import { ProductCard } from '@/components/ui/ProductCard';
-
-// Mock cart items for demo
-const initialCartItems = [
-  { product: products[0], quantity: 1, size: 'M', color: 'Black' },
-  { product: products[1], quantity: 2, size: 'L', color: 'Washed Black' },
-];
+import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
+import { useCartStore, selectCartItems, selectCartItemCount, selectCartSubtotal } from '@/stores/cart.store';
 
 // Recommended products
 const recommendedProducts = products.slice(4, 8);
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const cartItems = useCartStore(selectCartItems);
+  const totalItems = useCartStore(selectCartItemCount);
+  const subtotal = useCartStore(selectCartSubtotal);
+  const { updateQuantity, removeItem } = useCartStore();
+  
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
-  const [removingItem, setRemovingItem] = useState<number | null>(null);
+  const [removingItemId, setRemovingItemId] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const updateQuantity = (index: number, delta: number) => {
-    setCartItems((items) =>
-      items.map((item, i) =>
-        i === index
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
+  // Handle hydration
+  useEffect(() => {
+    useCartStore.persist.rehydrate();
+    setIsMounted(true);
+  }, []);
+
+  const handleUpdateQuantity = (itemId: string, delta: number) => {
+    const item = cartItems.find(i => i.id === itemId);
+    if (item) {
+      updateQuantity(itemId, item.quantity + delta);
+    }
   };
 
-  const removeItem = (index: number) => {
-    setRemovingItem(index);
+  const handleRemoveItem = (itemId: string) => {
+    setRemovingItemId(itemId);
     setTimeout(() => {
-      setCartItems((items) => items.filter((_, i) => i !== index));
-      setRemovingItem(null);
+      removeItem(itemId);
+      setRemovingItemId(null);
     }, 300);
   };
 
-  const moveToWishlist = (index: number) => {
-    removeItem(index);
+  const moveToWishlist = (itemId: string) => {
+    handleRemoveItem(itemId);
   };
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const discount = promoApplied ? Math.round(subtotal * 0.1) : 0;
   const shipping = subtotal > 1999 ? 0 : 99;
   const total = subtotal - discount + shipping;
@@ -82,6 +80,15 @@ export default function CartPage() {
       setPromoApplied(true);
     }
   };
+
+  // Show loading state during hydration
+  if (!isMounted) {
+    return (
+      <div className="pt-16 md:pt-20 min-h-screen bg-[#fafafa] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#111] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -140,9 +147,10 @@ export default function CartPage() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {recommendedProducts.map((product, index) => (
-              <ProductCard 
+              <OptimizedProductCard 
                 key={product._id}
                 product={product}
+                index={index}
                 priority={index < 4}
               />
             ))}
@@ -263,12 +271,12 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {cartItems.map((item, index) => (
+            {cartItems.map((item) => (
               <div
-                key={`${item.product._id}-${item.size}-${item.color}`}
+                key={item.id}
                 className={cn(
                   "bg-white rounded-2xl shadow-sm border border-[#e5e5e5] p-5 md:p-6 transition-all duration-300",
-                  removingItem === index && "opacity-50 scale-95"
+                  removingItemId === item.id && "opacity-50 scale-95"
                 )}
               >
                 <div className="flex gap-5 md:gap-6">
@@ -304,7 +312,7 @@ export default function CartPage() {
                         <p className="text-sm text-[#999] mt-1 capitalize">{item.product.category}</p>
                         <div className="flex flex-wrap items-center gap-2 mt-3">
                           <span className="px-3 py-1.5 bg-[#f5f5f5] rounded-lg text-xs font-medium">
-                            {item.color}
+                            {item.color.name}
                           </span>
                           <span className="px-3 py-1.5 bg-[#f5f5f5] rounded-lg text-xs font-medium">
                             Size: {item.size}
@@ -318,7 +326,7 @@ export default function CartPage() {
                         </div>
                       </div>
                       <button
-                        onClick={() => removeItem(index)}
+                        onClick={() => handleRemoveItem(item.id)}
                         className="p-2.5 h-fit text-[#ccc] hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                         aria-label="Remove item"
                       >
@@ -331,7 +339,7 @@ export default function CartPage() {
                       <div className="flex items-center gap-4">
                         <div className="flex items-center bg-[#f5f5f5] rounded-xl overflow-hidden">
                           <button
-                            onClick={() => updateQuantity(index, -1)}
+                            onClick={() => handleUpdateQuantity(item.id, -1)}
                             className="w-11 h-11 flex items-center justify-center hover:bg-[#e5e5e5] transition-colors disabled:opacity-30"
                             disabled={item.quantity <= 1}
                           >
@@ -341,14 +349,14 @@ export default function CartPage() {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(index, 1)}
+                            onClick={() => handleUpdateQuantity(item.id, 1)}
                             className="w-11 h-11 flex items-center justify-center hover:bg-[#e5e5e5] transition-colors"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
                         </div>
                         <button
-                          onClick={() => moveToWishlist(index)}
+                          onClick={() => moveToWishlist(item.id)}
                           className="flex items-center gap-1.5 px-3 py-2 text-xs text-[#777] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                         >
                           <Heart className="w-4 h-4" />
@@ -539,16 +547,17 @@ export default function CartPage() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {recommendedProducts.map((product, index) => (
-              <ProductCard 
+              <OptimizedProductCard 
                 key={product._id}
                 product={product}
+                index={index}
                 priority={index < 4}
               />
             ))}
           </div>
         </div>
 
-        {/* Continue Shopping */}
+        {/* Continue Shopping */}}
         <div className="mt-12 text-center">
           <Link
             href="/shop"

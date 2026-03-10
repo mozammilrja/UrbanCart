@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search as SearchIcon, X, TrendingUp, Clock, Sparkles, SlidersHorizontal, ArrowRight, ChevronRight, Grid3X3, LayoutGrid, ChevronDown, Check } from 'lucide-react';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 import { products } from '@/data/mock';
 import { cn } from '@/lib/utils';
 
@@ -303,8 +303,8 @@ export default function SearchPage() {
                   ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6" 
                   : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
               )}>
-                {sortedProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+                {sortedProducts.map((product, index) => (
+                  <OptimizedProductCard key={product._id} product={product} index={index} />
                 ))}
               </div>
             ) : (
@@ -430,8 +430,8 @@ export default function SearchPage() {
                 </Link>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                {products.slice(0, 4).map((product) => (
-                  <ProductCard key={product._id} product={product} />
+                {products.slice(0, 4).map((product, index) => (
+                  <OptimizedProductCard key={product._id} product={product} index={index} />
                 ))}
               </div>
             </section>

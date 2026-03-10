@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { 
   Search, 
   User, 
@@ -22,6 +23,19 @@ import {
   Package
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useCartStore } from '@/stores/cart.store';
+
+// Pages with fully light backgrounds that need dark navbar text
+// These pages have NO dark hero section at the top
+const lightBackgroundPages: string[] = [
+  '/search',
+  '/account',
+  '/product',
+  '/shop',
+];
+
+// Pages with dark hero sections - navbar should stay with white text initially
+// Most pages have dark headers, so we use the default white text behavior
 
 const ICON_SIZE = 25;
 
@@ -49,7 +63,24 @@ const quickActions = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount] = useState(2);
+  const [isMounted, setIsMounted] = useState(false);
+  const items = useCartStore((state) => state.items);
+  const pathname = usePathname();
+
+  // Calculate cart count from items
+  const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Rehydrate cart store on mount to prevent hydration mismatch
+  useEffect(() => {
+    useCartStore.persist.rehydrate();
+    setIsMounted(true);
+  }, []);
+  
+  // Home page gets transparent navbar, all other pages get white background
+  const isHomePage = pathname === '/';
+  
+  // Use dark text on non-home pages or when scrolled
+  const useDarkText = !isHomePage || isScrolled;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -85,7 +116,9 @@ export function Navbar() {
           'fixed z-50 transition-all duration-300',
           isScrolled
             ? 'top-3 left-4 right-4 bg-white/95 backdrop-blur-md shadow-lg rounded-full'
-            : 'top-0 left-0 right-0 bg-transparent'
+            : isHomePage
+              ? 'top-0 left-0 right-0 bg-transparent'
+              : 'top-0 left-0 right-0 bg-white shadow-sm'
         )}
       >
         <nav
@@ -109,7 +142,7 @@ export function Navbar() {
                     href={link.href}
                     className={cn(
                       "text-xs font-normal hover:opacity-60 transition-all",
-                      isScrolled ? "text-[#111]" : "text-white"
+                      useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
                     )}
                   >
                     {link.label}
@@ -119,10 +152,10 @@ export function Navbar() {
 
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className={cn("lg:hidden p-1 transition-colors", isScrolled ? "text-[#111]" : "text-white")}
+                className={cn("lg:hidden p-1 transition-colors", useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]")}
                 aria-label="Open menu"
               >
-                <Menu width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
+                <Menu width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} color="currentColor" />
               </button>
             </div>
 
@@ -131,7 +164,7 @@ export function Navbar() {
               href="/"
               className={cn(
                 "absolute left-1/2 -translate-x-1/2 text-[24px] sm:text-[28px] md:text-[32px] lg:text-[40px] tracking-[0.15em] sm:tracking-[0.2em] leading-none font-brand transition-colors",
-                isScrolled ? "text-[#111]" : "text-white"
+                useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
               )}
               aria-label="APOSTLE - Go to homepage"
             >
@@ -139,53 +172,65 @@ export function Navbar() {
             </Link>
 
             {/* Right Icons */}
-            <div className={cn(
-              "flex items-center justify-end gap-5 md:gap-6 flex-1 transition-colors",
-              isScrolled ? "text-[#111]" : "text-white"
-            )}>
+            <div className="flex items-center justify-end gap-5 md:gap-6 flex-1">
               <Link
                 href="/stores"
-                className="hidden md:flex hover:opacity-70 transition-opacity p-2"
+                className={cn(
+                  "hidden md:flex hover:opacity-70 transition-opacity p-2",
+                  useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                )}
                 aria-label="Find a store near you"
               >
-                <MapPin width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
+                <MapPin width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} color="currentColor" />
               </Link>
 
               <Link
                 href="/search"
-                className="hover:opacity-70 transition-opacity p-2"
+                className={cn(
+                  "hover:opacity-70 transition-opacity p-2",
+                  useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                )}
                 aria-label="Search products"
               >
-                <Search width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
+                <Search width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} color="currentColor" />
               </Link>
 
               <Link
                 href="/account"
-                className="hidden sm:flex hover:opacity-70 transition-opacity p-2"
+                className={cn(
+                  "hidden sm:flex hover:opacity-70 transition-opacity p-2",
+                  useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                )}
                 aria-label="My account"
               >
-                <User width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
+                <User width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} color="currentColor" />
               </Link>
 
               <Link
                 href="/wishlist"
-                className="hidden sm:flex hover:opacity-70 transition-opacity p-2"
+                className={cn(
+                  "hidden sm:flex hover:opacity-70 transition-opacity p-2",
+                  useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                )}
                 aria-label="View wishlist"
               >
-                <Heart width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
+                <Heart width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} color="currentColor" />
               </Link>
 
               <Link
                 href="/cart"
-                className="relative hover:opacity-70 transition-opacity p-2"
+                className={cn(
+                  "relative hover:opacity-70 transition-opacity p-2",
+                  useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                )}
                 aria-label="Shopping cart"
               >
-                <ShoppingBag width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
+                <ShoppingBag width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} color="currentColor" />
 
-                {cartCount > 0 && (
+                {isMounted && cartCount > 0 && (
                   <span className={cn(
                     "absolute -top-1 -right-1 w-[18px] h-[18px] text-[11px] flex items-center justify-center rounded-full",
-                    isScrolled ? "bg-black text-white" : "bg-white text-black"
+                    useDarkText ? "bg-black text-white" : "bg-white text-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
                   )}>
                     {cartCount}
                   </span>
@@ -194,10 +239,13 @@ export function Navbar() {
 
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="hidden lg:flex hover:opacity-70 transition-opacity p-2"
+                className={cn(
+                  "hidden lg:flex hover:opacity-70 transition-opacity p-2",
+                  useDarkText ? "text-[#111]" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                )}
                 aria-label="Open navigation menu"
               >
-                <Menu width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} />
+                <Menu width={ICON_SIZE} height={ICON_SIZE} strokeWidth={1.5} color="currentColor" />
               </button>
             </div>
           </div>
@@ -300,7 +348,7 @@ export function Navbar() {
                 >
                   <ShoppingBag className="w-5 h-5" />
                   View Cart
-                  {cartCount > 0 && (
+                  {isMounted && cartCount > 0 && (
                     <span className="px-2 py-0.5 bg-white text-[#111] text-xs font-bold rounded-full">
                       {cartCount}
                     </span>

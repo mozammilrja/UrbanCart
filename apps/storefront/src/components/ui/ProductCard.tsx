@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Heart, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Product } from '@/types';
 import { cn } from '@/lib/utils';
@@ -95,41 +95,66 @@ function ProductCardNav() {
 
 export function ProductCard({ product, className, priority = false }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
-  const images = product.images.length > 0 ? product.images.slice(0, 5) : ['/placeholder.jpg'];
+  const images = product.images.length > 0 ? product.images.slice(0, 5) : [];
   const hasMultipleImages = images.length > 1;
+
+  const handleImageError = useCallback((index: number) => {
+    setImageErrors(prev => ({ ...prev, [index]: true }));
+  }, []);
+
+  // Placeholder for missing/failed images
+  const renderPlaceholder = () => (
+    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
+      <span className="text-neutral-400 text-xs font-medium tracking-widest uppercase">
+        {product.category || 'Product'}
+      </span>
+    </div>
+  );
 
   return (
     <div className={cn('group relative', className)}>
       {/* Image Container with Embla Carousel */}
       <div className="relative overflow-hidden bg-[#f5f5f5]">
-        <Carousel
-          opts={{
-            loop: true,
-            dragFree: false,
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="ml-0">
-            {images.map((image, index) => (
-              <CarouselItem key={index} className="pl-0">
-                <Link href={`/product/${product.slug}`} className="block relative aspect-[3/4]">
-                  <Image
-                    src={image}
-                    alt={`${product.name} - Image ${index + 1}`}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    priority={priority && index === 0}
-                  />
-                </Link>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
+        {images.length > 0 ? (
+          <Carousel
+            opts={{
+              loop: true,
+              dragFree: false,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="ml-0">
+              {images.map((image, index) => (
+                <CarouselItem key={index} className="pl-0">
+                  <Link href={`/product/${product.slug}`} className="block relative aspect-[3/4]">
+                    {imageErrors[index] ? (
+                      renderPlaceholder()
+                    ) : (
+                      <Image
+                        src={image}
+                        alt={`${product.name} - Image ${index + 1}`}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        priority={priority && index === 0}
+                        onError={() => handleImageError(index)}
+                      />
+                    )}
+                  </Link>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
 
-          {/* Navigation (arrows + dots) */}
-          {hasMultipleImages && <ProductCardNav />}
-        </Carousel>
+            {/* Navigation (arrows + dots) */}
+            {hasMultipleImages && <ProductCardNav />}
+          </Carousel>
+        ) : (
+          <Link href={`/product/${product.slug}`} className="block relative aspect-[3/4]">
+            {renderPlaceholder()}
+          </Link>
+        )}
 
         {/* Badge */}
         {product.badge && (

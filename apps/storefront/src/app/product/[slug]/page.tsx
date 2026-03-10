@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Heart, Minus, Plus, Check, ChevronRight } from 'lucide-react';
+import { Heart, Minus, Plus, Check, ChevronRight, ShoppingBag } from 'lucide-react';
 import { products, getProductBySlug } from '@/data/mock';
 import { formatPriceCompact, cn } from '@/lib/utils';
+import { useCartStore } from '@/stores/cart.store';
 import { ProductGridSection } from '@/components/sections';
 
 interface Props {
@@ -26,23 +28,51 @@ export default function ProductPage({ params }: Props) {
 }
 
 function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof getProductBySlug>> }) {
+  const router = useRouter();
+  const addItem = useCartStore((state) => state.addItem);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name || null);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const selectedColorObj = product.colors.find(c => c.name === selectedColor) || product.colors[0];
+  
+  // Fallback placeholder image - using picsum for reliability
+  const placeholderImage = `https://picsum.photos/seed/${product._id}/800/1000`;
+  const currentImage = imageError ? placeholderImage : (product.images[selectedImage] || placeholderImage);
+
+  // Reset image error when image changes
+  const handleImageChange = (index: number) => {
+    setImageError(false);
+    setImageLoaded(false);
+    setSelectedImage(index);
+  };
 
   const relatedProducts = products.filter(
     (p) => p.categorySlug === product.categorySlug && p._id !== product._id
   ).slice(0, 4);
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
-      // Show size selection required
-      return;
-    }
-    // Add to cart logic
-    console.log('Add to cart:', { product, selectedSize, selectedColor, quantity });
+    if (!selectedSize) return;
+    if (!selectedColorObj) return;
+    
+    addItem(product, selectedSize, selectedColorObj, quantity);
+    setAddedToCart(true);
+    
+    // Reset after animation
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
+
+  const handleBuyNow = () => {
+    if (!selectedSize) return;
+    if (!selectedColorObj) return;
+    
+    addItem(product, selectedSize, selectedColorObj, quantity);
+    router.push('/checkout/shipping');
   };
 
   return (
@@ -75,13 +105,28 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
               transition={{ duration: 0.3 }}
               className="relative aspect-[3/4] bg-[#f5f5f5] overflow-hidden"
             >
+              {/* Loading placeholder - use CSS to hide/show to avoid hydration mismatch */}
+              <div 
+                className={cn(
+                  "absolute inset-0 flex items-center justify-center bg-[#f5f5f5] z-10 transition-opacity duration-200",
+                  imageLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
+                )}
+              >
+                <div className="w-8 h-8 border-2 border-[#ccc] border-t-[#111] rounded-full animate-spin" />
+              </div>
               <Image
-                src={product.images[selectedImage]}
+                src={currentImage}
                 alt={product.name}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
+                unoptimized
+                onLoad={() => setImageLoaded(true)}
+                onError={() => {
+                  setImageError(true);
+                  setImageLoaded(true);
+                }}
               />
               {product.badge && (
                 <span className="absolute top-4 left-4 bg-black text-white text-[10px] font-medium tracking-widest uppercase px-3 py-1.5">
@@ -96,7 +141,7 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
                 {product.images.map((image, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedImage(index)}
+                    onClick={() => handleImageChange(index)}
                     className={cn(
                       'relative w-20 h-24 flex-shrink-0 bg-[#f5f5f5] overflow-hidden transition-all',
                       selectedImage === index 
@@ -110,6 +155,7 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
                       fill
                       className="object-cover"
                       sizes="80px"
+                      unoptimized
                     />
                   </button>
                 ))}
@@ -223,18 +269,30 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 mb-8">
+              <div className="flex gap-3 mb-4">
                 <button
                   onClick={handleAddToCart}
                   disabled={!selectedSize}
                   className={cn(
-                    'flex-1 h-14 text-sm font-medium tracking-widest uppercase transition-all',
+                    'flex-1 h-14 text-sm font-medium tracking-widest uppercase transition-all flex items-center justify-center gap-2',
                     selectedSize
-                      ? 'bg-black text-white hover:bg-black/90'
+                      ? addedToCart
+                        ? 'bg-green-600 text-white'
+                        : 'bg-black text-white hover:bg-black/90'
                       : 'bg-[#e5e5e5] text-[#999] cursor-not-allowed'
                   )}
                 >
-                  Add to Cart
+                  {addedToCart ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Added to Cart
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="w-4 h-4" />
+                      Add to Cart
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={() => setIsWishlisted(!isWishlisted)}
@@ -248,6 +306,20 @@ function ProductDetail({ product }: { product: NonNullable<ReturnType<typeof get
                   />
                 </button>
               </div>
+
+              {/* Buy Now Button */}
+              <button
+                onClick={handleBuyNow}
+                disabled={!selectedSize}
+                className={cn(
+                  'w-full h-14 text-sm font-medium tracking-widest uppercase transition-all border-2 mb-8',
+                  selectedSize
+                    ? 'border-black text-black hover:bg-black hover:text-white'
+                    : 'border-[#e5e5e5] text-[#999] cursor-not-allowed'
+                )}
+              >
+                Buy Now
+              </button>
 
               {/* Features */}
               <div className="border-t border-[#e5e5e5] pt-6 space-y-3">

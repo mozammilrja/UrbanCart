@@ -10,7 +10,7 @@ import {
   CarouselPrevious, 
   CarouselNext 
 } from '@/components/ui/carousel';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 import { 
   ArrowRight,
   ChevronLeft,
@@ -540,12 +540,12 @@ export function CollectionsPageClient({
               className="w-full"
             >
               <CarouselContent className="-ml-2 sm:-ml-3 md:-ml-4">
-                {products.map((product) => (
+                {products.map((product, index) => (
                   <CarouselItem 
                     key={product._id} 
                     className="pl-2 sm:pl-3 md:pl-4 basis-[60%] sm:basis-[45%] md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
                   >
-                    <ProductCard product={product} />
+                    <OptimizedProductCard product={product} index={index} />
                   </CarouselItem>
                 ))}
               </CarouselContent>

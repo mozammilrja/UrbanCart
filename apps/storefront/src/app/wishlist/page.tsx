@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { products } from '@/data/mock';
 import { formatPriceCompact, cn } from '@/lib/utils';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { OptimizedProductCard } from '@/components/ui/OptimizedProductCard';
 
 type SortOption = 'date-added' | 'name-asc' | 'name-desc' | 'price-low' | 'price-high';
 
@@ -157,9 +157,10 @@ export default function WishlistPage() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {recommendedProducts.map((product, index) => (
-              <ProductCard 
+              <OptimizedProductCard 
                 key={product._id}
                 product={product}
+                index={index}
                 priority={index < 4}
               />
             ))}
@@ -550,16 +551,17 @@ export default function WishlistPage() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {recommendedProducts.map((product, index) => (
-              <ProductCard 
+              <OptimizedProductCard 
                 key={product._id}
                 product={product}
+                index={index}
                 priority={index < 4}
               />
             ))}
           </div>
         </div>
 
-        {/* Continue Shopping */}
+        {/* Continue Shopping */}}
         <div className="mt-16 text-center">
           <Link
             href="/shop"

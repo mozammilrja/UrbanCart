@@ -48,7 +48,7 @@ function HeroSectionComponent({
   image,
   mobileImage,
   ctaText = 'Shop now',
-  ctaHref = '/collections/all-products',
+  ctaHref = '/collections',
   splineUrl,
   showSpline = false,
   showOrb = true,
@@ -70,7 +70,7 @@ function HeroSectionComponent({
           fetchPriority="high"
           quality={85}
           className="hidden md:block object-cover object-center"
-          sizes="100vw"
+          sizes="(min-width: 768px) 100vw, 1px"
           placeholder="empty"
         />
 
@@ -84,7 +84,7 @@ function HeroSectionComponent({
             fetchPriority="high"
             quality={85}
             className="block md:hidden object-cover object-center"
-            sizes="100vw"
+            sizes="(max-width: 767px) 100vw, 1px"
             placeholder="empty"
           />
         )}
@@ -99,16 +99,16 @@ function HeroSectionComponent({
             fetchPriority="high"
             quality={85}
             className="block md:hidden object-cover object-center"
-            sizes="100vw"
+            sizes="(max-width: 767px) 100vw, 1px"
             placeholder="empty"
           />
         )}
 
         {/* Bottom CTA Link - CSS animation instead of Framer Motion for CLS */}
-        <div className="hero-desc absolute bottom-12 left-1/2 -translate-x-1/2 z-20 animate-fade-in-up">
+        <div className="hero-desc absolute bottom-12 left-0 right-0 z-20 animate-fade-in-up flex justify-center">
           <Link
             href={ctaHref}
-            className="text-white text-base font-normal tracking-wide border-b border-white/80 pb-1 hover:border-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
+            className="text-white text-base font-normal tracking-wide border-b border-white/80 pb-1 hover:border-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             aria-label={`${ctaText} - Browse our collection`}
           >
             {ctaText}

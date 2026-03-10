@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ProductGridSection } from '@/components/sections';
+import { FilterableProductGrid } from '@/components/sections';
 import { getCapsProducts } from '@/data/mock';
 
 export const metadata: Metadata = {
@@ -11,23 +11,23 @@ export default function CapsPage() {
   const capsProducts = getCapsProducts();
 
   return (
-    <div className="pt-16 md:pt-20">
+    <div className="pt-16 md:pt-20 min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-black text-white py-16 md:py-24">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tight mb-4">
+      <div className="bg-gradient-to-b from-neutral-100 to-white py-10 md:py-14">
+        <div className="w-full px-4 sm:px-8 lg:px-16 xl:px-24">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-neutral-900">
             Caps
           </h1>
-          <p className="text-base md:text-lg text-white/70 max-w-md mx-auto">
+          <p className="mt-3 text-neutral-500 max-w-2xl">
             Premium headwear crafted for the streets. Dad caps, bucket hats, and more.
           </p>
         </div>
       </div>
 
-      {/* Products */}
-      <ProductGridSection
+      {/* Products with Filters */}
+      <FilterableProductGrid
         products={capsProducts}
-        columns={4}
+        showHeader={false}
       />
     </div>
   );

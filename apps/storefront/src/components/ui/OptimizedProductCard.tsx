@@ -1,17 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { useState, memo, useCallback } from 'react';
-import { Heart, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, memo, useCallback, useRef, useEffect } from 'react';
+import { Heart, ChevronLeft, ChevronRight, Plus, Check } from 'lucide-react';
 import type { Product } from '@/types';
 import { cn } from '@/lib/utils';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  useCarousel,
-} from '@/components/ui/carousel';
+import { useCartStore } from '@/stores/cart.store';
 
 interface OptimizedProductCardProps {
   product: Product;
@@ -22,210 +17,430 @@ interface OptimizedProductCardProps {
   index?: number;
 }
 
-// Custom navigation component for product card carousel
-function ProductCardNav() {
-  const { scrollPrev, scrollNext, canScrollPrev, canScrollNext, selectedIndex, scrollSnaps, scrollTo } = useCarousel();
-  
-  return (
-    <>
-      {/* Left Arrow - 44px touch target for accessibility */}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          scrollPrev();
-        }}
-        disabled={!canScrollPrev}
-        aria-label="Previous image"
-        className={cn(
-          "absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
-          "opacity-0 group-hover:opacity-100 focus:opacity-100",
-          !canScrollPrev && "!opacity-0 pointer-events-none"
-        )}
-      >
-        <ChevronLeft className="w-5 h-5 text-[#333]" />
-      </button>
-      
-      {/* Right Arrow - 44px touch target for accessibility */}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          scrollNext();
-        }}
-        disabled={!canScrollNext}
-        aria-label="Next image"
-        className={cn(
-          "absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all duration-200",
-          "opacity-0 group-hover:opacity-100 focus:opacity-100",
-          !canScrollNext && "!opacity-0 pointer-events-none"
-        )}
-      >
-        <ChevronRight className="w-5 h-5 text-[#333]" />
-      </button>
-      
-      {/* Dots - Larger touch targets */}
-      {scrollSnaps.length > 1 && (
-        <div 
-          className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 sm:gap-2.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200"
-          role="tablist"
-          aria-label="Image gallery navigation"
-        >
-          {scrollSnaps.map((_, index) => (
-            <button
-              key={index}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                scrollTo(index);
-              }}
-              role="tab"
-              aria-selected={index === selectedIndex}
-              aria-label={`Go to image ${index + 1}`}
-              className={cn(
-                "h-2 sm:h-2.5 rounded-full transition-all duration-200 min-w-[8px]",
-                index === selectedIndex
-                  ? "w-5 sm:w-6 bg-white"
-                  : "w-2 sm:w-2.5 bg-white/60 hover:bg-white/80"
-              )}
-            />
-          ))}
-        </div>
-      )}
-    </>
-  );
-}
-
 /**
- * Performance-optimized ProductCard component.
- * Uses image carousel with prev/next navigation on hover.
- * Memoized to prevent unnecessary re-renders.
+ * Premium ProductCard component for luxury fashion ecommerce.
+ * Features image carousel, glassmorphism effects, and smooth animations.
  */
-function ProductCardComponent({ 
-  product, 
-  className, 
+function ProductCardComponent({
+  product,
+  className,
   priority = false,
-  index = 0
+  index = 0,
 }: OptimizedProductCardProps) {
+  const router = useRouter();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
-
-  const images = product.images.length > 0 ? product.images.slice(0, 5) : ['/placeholder-product.jpg'];
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [imageError, setImageError] = useState<Record<number, boolean>>({});
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const addItem = useCartStore((state) => state.addItem);
+  const productUrl = `/product/${product.slug || product._id}`;
+  
+  const images = product.images.length > 0 ? product.images : [];
   const hasMultipleImages = images.length > 1;
+  
+  // Navigate to product - used for card click
+  const handleNavigate = useCallback(() => {
+    router.push(productUrl);
+  }, [router, productUrl]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handlePrevImage = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  }, [images.length]);
+
+  const handleNextImage = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  }, [images.length]);
+
+  const handleDotClick = useCallback((e: React.MouseEvent, idx: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex(idx);
+  }, []);
 
   const handleWishlistClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted(prev => !prev);
+    setIsWishlisted((prev) => !prev);
   }, []);
+
+  const handleColorSelect = useCallback((e: React.MouseEvent, idx: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedColorIndex(idx);
+    
+    // Change image based on color selection
+    // If color has specific image, use it; otherwise map to image index
+    const color = product.colors[idx];
+    if (color?.image) {
+      // Find image index that matches or just use color index
+      const imgIdx = images.findIndex(img => img === color.image);
+      setCurrentImageIndex(imgIdx >= 0 ? imgIdx : Math.min(idx, images.length - 1));
+    } else if (images.length > 1) {
+      // Map color index to image index (cycle through available images)
+      setCurrentImageIndex(idx % images.length);
+    }
+  }, [product.colors, images]);
+
+  const handleSizeSelect = useCallback((e: React.MouseEvent, idx: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedSizeIndex(idx);
+  }, []);
+
+  const handleQuickAdd = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const selectedSize = product.sizes[selectedSizeIndex] || product.sizes[0] || 'One Size';
+    const selectedColor = product.colors[selectedColorIndex] || product.colors[0] || { name: 'Default', hex: '#000000' };
+
+    addItem(product, selectedSize, selectedColor, 1);
+    setAddedToCart(true);
+
+    timeoutRef.current = setTimeout(() => setAddedToCart(false), 2000);
+  }, [product, addItem, selectedSizeIndex, selectedColorIndex]);
+
+  const handleImageError = useCallback((idx: number) => {
+    setImageError((prev) => ({ ...prev, [idx]: true }));
+  }, []);
+
+  // Placeholder when no image or error
+  const renderPlaceholder = () => (
+    <div
+      className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200"
+      aria-hidden="true"
+    >
+      <span className="text-neutral-400 text-sm font-medium tracking-widest uppercase">
+        {product.category}
+      </span>
+    </div>
+  );
 
   return (
     <article
       className={cn(
-        'group relative',
-        'animate-fade-in-up',
+        'group relative flex flex-col cursor-pointer',
+        'transition-all duration-500 ease-out',
         className
       )}
-      style={{ 
-        animationDelay: `${Math.min(index * 50, 300)}ms`,
-        animationFillMode: 'forwards'
+      onClick={handleNavigate}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleNavigate()}
+      style={{
+        animationDelay: `${Math.min(index * 60, 300)}ms`,
       }}
     >
-      {/* Image Container with Carousel */}
-      <div className="relative overflow-hidden bg-[#f5f5f5]">
-        <Carousel
-          opts={{
-            loop: true,
-            dragFree: false,
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="ml-0">
-            {images.map((image, imgIndex) => (
-              <CarouselItem key={imgIndex} className="pl-0">
-                <Link 
-                  href={`/product/${product.slug}`} 
-                  className="block relative aspect-[3/4] w-full focus:outline-none focus:ring-2 focus:ring-black focus:ring-inset"
-                  aria-label={`View ${product.name} - RS. ${product.price.toLocaleString()}`}
-                >
+      {/* Image Container */}
+      <div className="relative overflow-hidden rounded-xl bg-neutral-100 z-10">
+        {/* Aspect ratio wrapper */}
+        <div className="relative aspect-[3/4]">
+          {/* Images */}
+          {images.length > 0 ? (
+            images.map((src, idx) => (
+              <div
+                key={idx}
+                className={cn(
+                  'absolute inset-0 transition-opacity duration-500 ease-out',
+                  idx === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                )}
+              >
+                {imageError[idx] ? (
+                  renderPlaceholder()
+                ) : (
                   <Image
-                    src={image}
-                    alt={`${product.name} - Image ${imgIndex + 1}`}
+                    src={src}
+                    alt={`${product.name} - Image ${idx + 1}`}
                     fill
-                    sizes="(max-width: 640px) 75vw, (max-width: 1024px) 45vw, 25vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    priority={priority && imgIndex === 0}
-                    loading={priority && imgIndex === 0 ? 'eager' : 'lazy'}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className={cn(
+                      'object-cover transition-transform duration-700 ease-out',
+                      isHovered && 'scale-105'
+                    )}
+                    priority={priority && idx === 0}
+                    onError={() => handleImageError(idx)}
                   />
-                </Link>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-
-          {/* Navigation (arrows + dots) */}
-          {hasMultipleImages && <ProductCardNav />}
-        </Carousel>
-
-        {/* Badge */}
-        {product.badge && (
-          <span 
-            className="absolute top-3 left-3 bg-black text-white text-[10px] font-medium tracking-widest uppercase px-2.5 py-1 z-10"
-            role="status"
-            aria-label={`Product badge: ${product.badge}`}
-          >
-            {product.badge}
-          </span>
-        )}
-
-        {/* Wishlist Button */}
-        <button
-          onClick={handleWishlistClick}
-          className={cn(
-            'absolute top-3 right-3 bg-white/90 hover:bg-white p-2 rounded-full shadow-sm transition-all z-20',
-            'opacity-0 group-hover:opacity-100 focus:opacity-100',
-            'focus:outline-none focus:ring-2 focus:ring-black'
+                )}
+              </div>
+            ))
+          ) : (
+            renderPlaceholder()
           )}
-          aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
-          aria-pressed={isWishlisted}
-        >
-          <Heart
+
+          {/* Subtle gradient overlay */}
+          <div
             className={cn(
-              'w-4 h-4 transition-colors duration-200',
-              isWishlisted ? 'fill-red-500 stroke-red-500' : 'stroke-[#333] fill-transparent'
+              'absolute inset-0 z-20 pointer-events-none transition-opacity duration-300',
+              'bg-gradient-to-t from-black/20 via-transparent to-transparent',
+              isHovered ? 'opacity-100' : 'opacity-0'
             )}
-            strokeWidth={1.5}
-            aria-hidden="true"
           />
-        </button>
+
+          {/* Navigation Arrows */}
+          {hasMultipleImages && (
+            <>
+              <button
+                onClick={handlePrevImage}
+                className={cn(
+                  'absolute left-2 top-1/2 -translate-y-1/2 z-30',
+                  'flex h-9 w-9 items-center justify-center',
+                  'rounded-full bg-white/90 backdrop-blur-sm shadow-lg',
+                  'text-neutral-700 hover:bg-white hover:scale-105',
+                  'transition-all duration-200 ease-out',
+                  'opacity-0 group-hover:opacity-100',
+                  'focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2'
+                )}
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="h-5 w-5" strokeWidth={1.5} />
+              </button>
+              <button
+                onClick={handleNextImage}
+                className={cn(
+                  'absolute right-2 top-1/2 -translate-y-1/2 z-30',
+                  'flex h-9 w-9 items-center justify-center',
+                  'rounded-full bg-white/90 backdrop-blur-sm shadow-lg',
+                  'text-neutral-700 hover:bg-white hover:scale-105',
+                  'transition-all duration-200 ease-out',
+                  'opacity-0 group-hover:opacity-100',
+                  'focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2'
+                )}
+                aria-label="Next image"
+              >
+                <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
+              </button>
+            </>
+          )}
+
+          {/* Pagination Dots */}
+          {hasMultipleImages && (
+            <div
+              className={cn(
+                'absolute bottom-20 left-1/2 -translate-x-1/2 z-40',
+                'flex items-center gap-1.5',
+                'transition-opacity duration-300',
+                isHovered ? 'opacity-100' : 'opacity-0'
+              )}
+              role="tablist"
+              aria-label="Image gallery"
+            >
+              {images.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => handleDotClick(e, idx)}
+                  role="tab"
+                  aria-selected={idx === currentImageIndex}
+                  aria-label={`View image ${idx + 1}`}
+                  className={cn(
+                    'h-1.5 rounded-full transition-all duration-300',
+                    idx === currentImageIndex
+                      ? 'w-6 bg-white'
+                      : 'w-1.5 bg-white/60 hover:bg-white/80'
+                  )}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Badge */}
+          {product.badge && (
+            <div className="absolute top-3 left-3 z-30">
+              <span
+                className={cn(
+                  'inline-block px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase rounded-md',
+                  product.badge === 'NEW' && 'bg-black text-white',
+                  product.badge === 'DROP' && 'bg-black text-white',
+                  product.badge === 'LIMITED' && 'bg-amber-500 text-white',
+                  product.badge === 'SOLD OUT' && 'bg-neutral-400 text-white'
+                )}
+              >
+                {product.badge}
+              </span>
+            </div>
+          )}
+
+          {/* Wishlist Button - Glassmorphism */}
+          <button
+            onClick={handleWishlistClick}
+            className={cn(
+              'absolute top-3 right-3 z-30',
+              'flex h-10 w-10 items-center justify-center',
+              'rounded-full backdrop-blur-md transition-all duration-300',
+              'focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2',
+              isWishlisted
+                ? 'bg-red-50 shadow-lg scale-100'
+                : 'bg-white/70 shadow-md opacity-0 group-hover:opacity-100 hover:bg-white hover:scale-110'
+            )}
+            aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+            aria-pressed={isWishlisted}
+          >
+            <Heart
+              className={cn(
+                'h-5 w-5 transition-all duration-200',
+                isWishlisted
+                  ? 'fill-red-500 stroke-red-500'
+                  : 'stroke-neutral-600'
+              )}
+              strokeWidth={1.5}
+            />
+          </button>
+
+          {/* Quick Add Overlay */}
+          <div
+            className={cn(
+              'absolute bottom-0 left-0 right-0 z-30 p-3',
+              'transition-all duration-300 ease-out',
+              isHovered
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-2 pointer-events-none'
+            )}
+          >
+            <button
+              onClick={handleQuickAdd}
+              disabled={addedToCart || product.badge === 'SOLD OUT'}
+              className={cn(
+                'w-full flex items-center justify-center gap-2',
+                'px-4 py-2.5 rounded-full',
+                'text-sm font-medium tracking-wide',
+                'backdrop-blur-md transition-all duration-300',
+                'focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2',
+                addedToCart
+                  ? 'bg-emerald-500 text-white'
+                  : product.badge === 'SOLD OUT'
+                  ? 'bg-neutral-400/90 text-white cursor-not-allowed'
+                  : 'bg-white/90 text-neutral-900 hover:bg-white shadow-lg hover:shadow-xl'
+              )}
+            >
+              {addedToCart ? (
+                <>
+                  <Check className="h-4 w-4" strokeWidth={2} />
+                  Added to Cart
+                </>
+              ) : product.badge === 'SOLD OUT' ? (
+                'Sold Out'
+              ) : (
+                <>
+                  <Plus className="h-4 w-4" strokeWidth={2} />
+                  Quick Add
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Product Info */}
-      <div className="mt-4 flex items-start gap-3">
-        <button
-          className="p-1 hover:opacity-60 transition-opacity flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-black rounded"
-          aria-label={`Quick add ${product.name} to cart`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Plus className="w-5 h-5 text-[#333]" strokeWidth={1.5} aria-hidden="true" />
-        </button>
-        <div className="flex-1 min-w-0">
-          <Link 
-            href={`/product/${product.slug}`}
-            className="focus:outline-none focus:underline"
-          >
-            <h3 className="text-sm font-normal text-[#111] hover:opacity-60 transition-opacity line-clamp-1">
-              {product.name}
-            </h3>
-          </Link>
-          <span className="text-sm text-[#666] mt-0.5 block" aria-label={`Price: ${product.price.toLocaleString()} Rupees`}>
-            RS. {product.price.toLocaleString()}
-          </span>
+      {/* Product Information */}
+      <div className="mt-4 space-y-2">
+        {/* Title */}
+        <h3 className="text-[15px] font-medium text-neutral-900 leading-snug line-clamp-1 group-hover:text-neutral-600 transition-colors duration-200">
+          {product.name}
+        </h3>
+
+        {/* Price Row with Colors & Sizes */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Price */}
+          <div className="flex items-baseline gap-2">
+            <span className="text-lg font-bold text-neutral-900">
+              ₹{product.price.toLocaleString('en-IN')}
+            </span>
+            {product.comparePrice && product.comparePrice > product.price && (
+              <span className="text-sm text-neutral-400 line-through">
+                ₹{product.comparePrice.toLocaleString('en-IN')}
+              </span>
+            )}
+          </div>
+
+          {/* Colors & Sizes - Interactive, no navigation */}
+          <div className="flex items-center gap-3">
+            {/* Color Swatches */}
+            {product.colors.length > 0 && (
+              <div className="flex items-center gap-2">
+                {product.colors.slice(0, 4).map((color, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={cn(
+                      'relative h-5 w-5 rounded-full cursor-pointer transition-all duration-200 flex-shrink-0',
+                      'hover:scale-110 active:scale-95',
+                      'focus:outline-none',
+                      selectedColorIndex === i 
+                        ? 'shadow-[0_0_0_2px_white,0_0_0_4px_#171717]' 
+                        : 'shadow-[0_0_0_1px_rgba(0,0,0,0.1)]'
+                    )}
+                    style={{ backgroundColor: color.hex }}
+                    aria-label={`Select ${color.name} color`}
+                    aria-pressed={selectedColorIndex === i}
+                    onClick={(e) => handleColorSelect(e, i)}
+                  />
+                ))}
+                {product.colors.length > 4 && (
+                  <span className="text-[10px] font-medium text-neutral-400 ml-0.5">
+                    +{product.colors.length - 4}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Divider */}
+            {product.colors.length > 0 && product.sizes.length > 0 && (
+              <span className="w-px h-4 bg-neutral-200" />
+            )}
+
+            {/* Sizes */}
+            {product.sizes.length > 0 && (
+              <div className="flex items-center gap-1.5">
+                {product.sizes.slice(0, 4).map((size, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={cn(
+                      'min-w-[26px] h-7 text-xs font-semibold px-2 rounded cursor-pointer',
+                      'transition-all duration-200',
+                      'hover:scale-105 active:scale-95',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-neutral-900',
+                      selectedSizeIndex === i
+                        ? 'bg-neutral-900 text-white shadow-md scale-105'
+                        : 'text-neutral-600 bg-neutral-100 hover:bg-neutral-200 hover:text-neutral-900'
+                    )}
+                    aria-label={`Select size ${size}`}
+                    aria-pressed={selectedSizeIndex === i}
+                    onClick={(e) => handleSizeSelect(e, i)}
+                  >
+                    {size}
+                  </button>
+                ))}
+                {product.sizes.length > 4 && (
+                  <span className="text-[10px] font-medium text-neutral-400 ml-0.5">
+                    +{product.sizes.length - 4}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </article>
   );
 }
 
-// Memoize with custom comparison
 export const OptimizedProductCard = memo(ProductCardComponent, (prevProps, nextProps) => {
   return (
     prevProps.product._id === nextProps.product._id &&

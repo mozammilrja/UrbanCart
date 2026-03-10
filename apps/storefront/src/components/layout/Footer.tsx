@@ -165,19 +165,23 @@ function DraggableBag() {
         onTouchStart={handleTouchStart}
         onKeyDown={handleKeyDown}
         tabIndex={0}
-        className="absolute inset-0 bg-white rounded-sm shadow-lg flex items-center justify-center border border-gray-200 cursor-grab active:cursor-grabbing select-none touch-none [transform-style:preserve-3d] transition-shadow hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#111] focus:ring-offset-2"
+        className="absolute inset-0 bg-white rounded-sm shadow-lg flex items-center justify-center cursor-grab active:cursor-grabbing select-none touch-none [transform-style:preserve-3d] transition-shadow hover:shadow-xl focus:outline-none"
         style={{
           transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
         }}
         role="img"
         aria-label="Interactive 3D shopping bag. Use arrow keys to rotate."
       >
-        {/* Bag handle */}
-        <div className="absolute -top-3 sm:-top-4 inset-x-0 mx-auto w-10 sm:w-12 h-5 sm:h-6 border-2 border-gray-300 rounded-t-full bg-transparent [transform:translateZ(2px)]" />
+        {/* Die-cut handle - front (cutout style) */}
+        <div className="absolute top-2 sm:top-3 inset-x-0 mx-auto w-8 sm:w-10 h-4 sm:h-5 rounded-b-full bg-[#f5f5f5] [transform:translateZ(2px)]" />
+        {/* Die-cut handle - back */}
+        <div className="absolute top-2 sm:top-3 inset-x-0 mx-auto w-8 sm:w-10 h-4 sm:h-5 rounded-b-full bg-[#f5f5f5] [transform:rotateY(180deg)_translateZ(2px)]" />
         {/* Brand text on bag - front */}
         <span className="text-xs sm:text-sm md:text-base lg:text-lg font-bold tracking-widest text-[#333] [transform:translateZ(1px)]">APOSTLE</span>
         {/* Back face */}
         <div className="absolute inset-0 bg-white rounded-sm flex items-center justify-center [transform:rotateY(180deg)_translateZ(1px)] [backface-visibility:hidden]">
+          {/* Die-cut handle on back */}
+          <div className="absolute top-2 sm:top-3 inset-x-0 mx-auto w-8 sm:w-10 h-4 sm:h-5 rounded-b-full bg-[#f5f5f5]" />
           <span className="text-xs sm:text-sm md:text-base lg:text-lg font-bold tracking-widest text-[#333]">APOSTLE</span>
         </div>
       </div>
